@@ -13,11 +13,11 @@ public class EntityDropParticleFX extends EntityFX {
 	private Material field_40103_a;
 	private int field_40104_aw;
 
-	public EntityDropParticleFX(World var1, double var2, double var4, double var6, Material var8) {
-		super(var1, var2, var4, var6, 0.0D, 0.0D, 0.0D);
+	public EntityDropParticleFX(World par1World, double par2, double par4, double par6, Material par8Material) {
+		super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
 		this.motionX = this.motionY = this.motionZ = 0.0D;
-		if (var8 == Material.water) {
- //Spout HD start
+		if (par8Material == Material.water) {
+			//Spout HD start
 			if (Colorizer.computeWaterColor(this.worldObj.getWorldChunkManager(), this.posX, this.posY, this.posZ)) {
 				this.particleRed = Colorizer.waterColor[0];
 				this.particleGreen = Colorizer.waterColor[1];
@@ -28,9 +28,8 @@ public class EntityDropParticleFX extends EntityFX {
 				this.particleGreen = 0.3F;
 				this.particleBlue = 1.0F;
 			}
- //Spout HD end
-		}
-		else {
+			//Spout HD end
+		} else {
 			this.particleRed = 1.0F;
 			this.particleGreen = 0.0F;
 			this.particleBlue = 0.0F;
@@ -39,22 +38,22 @@ public class EntityDropParticleFX extends EntityFX {
 		this.setParticleTextureIndex(113);
 		this.setSize(0.01F, 0.01F);
 		this.particleGravity = 0.06F;
-		this.field_40103_a = var8;
+		this.field_40103_a = par8Material;
 		this.field_40104_aw = 40;
 		this.particleMaxAge = (int)(64.0D / (Math.random() * 0.8D + 0.2D));
 		this.motionX = this.motionY = this.motionZ = 0.0D;
 	}
 
-	public void renderParticle(Tessellator var1, float var2, float var3, float var4, float var5, float var6, float var7) {
-		super.renderParticle(var1, var2, var3, var4, var5, var6, var7);
+	public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7) {
+		super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
 	}
 
-	public int getEntityBrightnessForRender(float var1) {
-		return this.field_40103_a == Material.water ? super.getEntityBrightnessForRender(var1) : 257;
+	public int getEntityBrightnessForRender(float par1) {
+		return this.field_40103_a == Material.water?super.getEntityBrightnessForRender(par1):257;
 	}
 
-	public float getEntityBrightness(float var1) {
-		return this.field_40103_a == Material.water ? super.getEntityBrightness(var1) : 1.0F;
+	public float getEntityBrightness(float par1) {
+		return this.field_40103_a == Material.water?super.getEntityBrightness(par1):1.0F;
 	}
 
 	public void onUpdate() {
@@ -65,8 +64,7 @@ public class EntityDropParticleFX extends EntityFX {
 			this.particleRed = 0.2F;
 			this.particleGreen = 0.3F;
 			this.particleBlue = 1.0F;
-		}
-		else {
+		} else {
 			this.particleRed = 1.0F;
 			this.particleGreen = 16.0F / (float)(40 - this.field_40104_aw + 16);
 			this.particleBlue = 4.0F / (float)(40 - this.field_40104_aw + 8);
@@ -78,8 +76,7 @@ public class EntityDropParticleFX extends EntityFX {
 			this.motionY *= 0.02D;
 			this.motionZ *= 0.02D;
 			this.setParticleTextureIndex(113);
-		}
-		else {
+		} else {
 			this.setParticleTextureIndex(112);
 		}
 
@@ -95,8 +92,7 @@ public class EntityDropParticleFX extends EntityFX {
 			if (this.field_40103_a == Material.water) {
 				this.setEntityDead();
 				this.worldObj.spawnParticle("splash", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
-			}
-			else {
+			} else {
 				this.setParticleTextureIndex(114);
 			}
 
@@ -105,7 +101,7 @@ public class EntityDropParticleFX extends EntityFX {
 		}
 
 		Material var1 = this.worldObj.getBlockMaterial(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
-		if (var1.getIsLiquid() || var1.isSolid()) {
+		if (var1.isLiquid() || var1.isSolid()) {
 			double var2 = (double)((float)(MathHelper.floor_double(this.posY) + 1) - BlockFluid.getFluidHeightPercent(this.worldObj.getBlockMetadata(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))));
 			if (this.posY < var2) {
 				this.setEntityDead();
