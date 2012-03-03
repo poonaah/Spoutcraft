@@ -1,472 +1,624 @@
-/*Spout removed file
+package net.minecraft.src;
 
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Collections;
+import net.minecraft.client.Minecraft;
+import org.lwjgl.input.Keyboard;
 
-import net.minecraft.src.GuiButton;
+public class GuiMultiplayer extends GuiScreen
+{
+    /** Number of outstanding ThreadPollServers threads */
+    private static int threadsPending = 0;
 
-import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.opengl.Texture;
-import org.spoutcraft.client.SpoutClient;
-import org.spoutcraft.client.gui.server.*;
-import org.spoutcraft.client.io.CustomTextureManager;
+    /** Lock object for use with synchronized() */
+    private static Object lock = new Object();
 
-public class GuiMultiplayer extends GuiScreen {
+    /**
+     * A reference to the screen object that created this. Used for navigating between screens.
+     */
+    private GuiScreen parentScreen;
 
-	public static int pinglimit = 0;
-	private static Object synchronize = new Object();
-	public final ServerListInfo serverInfo = new ServerListInfo();
-	public String indexString = "";
-	private final DateFormat dateFormatter = new SimpleDateFormat();
-	protected GuiScreen parentScreen;
-	protected String screenTitle = "Server Browser";
-	private int selectedWorld;
-	private GuiSlotServer worldSlotContainer;
-	private String field_22098_o;
-	private String field_22097_p;
-	private GuiButton buttonSelect;
-	private GuiButton buttonAdd;
-	private GuiButton buttonNextCountry;
-	private GuiButton buttonPrevCountry;
-	private GuiButton buttonNextTenPage;
-	private GuiButton buttonPrevTenPage;
-	private GuiButton buttonNextPage;
-	private GuiButton buttonPrevPage;
-	private boolean first = true;
-	private String tooltip = null;
+    /** Slot container for the server list */
+    private GuiSlotServer serverSlotContainer;
 
+    /** List of ServerNBTStorage objects */
+    private List serverList;
 
-	public GuiMultiplayer(GuiScreen var1) {	
-		this.parentScreen = var1;
-		tabs.add(new ServerTab("Featured", "http://servers.spout.org/api.php?type=1&featured"));
-		tabs.add(new ServerTab("Popular", "http://servers.spout.org/api.php?type=1&popular"));
-		tabs.add(new ServerTab("Country", "http://servers.spout.org/api.php?type=1&all", true));
-		tabs.add(new ServerTab("A-Z", "http://servers.spout.org/api.php?type=1&az"));
-		tabs.add(new ServerTab("Z-A", "http://servers.spout.org/api.php?type=1&za"));
-		tabs.add(new ServerTab("Random", "http://servers.spout.org/api.php?type=1&random"));
-	}
+    /** Index of the currently selected server */
+    private int selectedServer;
 
-	public void initGui() {
-		synchronized(serverInfo) {
-			this.serverInfo.status = "Done";
-		}
-		StringTranslate var1 = StringTranslate.getInstance();
-		this.screenTitle = var1.translateKey("Server Browser");
-		this.field_22098_o = var1.translateKey("Unknown");
-		this.field_22097_p = var1.translateKey("aaa");
-		this.worldSlotContainer = new GuiSlotServer(this);
-		this.worldSlotContainer.registerScrollButtons(this.controlList, 4, 5);
-		this.initButtons();
-		this.loadSaves();
-	}
+    /** The 'Edit' button */
+    private GuiButton buttonEdit;
 
-	public void loadSaves() {
-		this.selectedWorld = -1;
-		if(this.first) {
-			this.first = false;
-			this.getServer();
-		}
+    /** The 'Join Server' button */
+    private GuiButton buttonSelect;
 
-	}
+    /** The 'Delete' button */
+    private GuiButton buttonDelete;
 
-	public String getServerName(int var1) {
-		synchronized(serverInfo) {
-			return ((ServerSlot)this.serverInfo.serverList.get(var1)).name;
-		}
-	}
+    /** The 'Delete' button was clicked */
+    private boolean deleteClicked;
 
-	public String getCountry(int var1) {
-		synchronized(serverInfo) {
-			return ((ServerSlot)this.serverInfo.serverList.get(var1)).country;
-		}
-	}
+    /** The 'Add server' button was clicked */
+    private boolean addClicked;
 
-	public void initButtons() {
-		this.controlList.add(this.buttonSelect = new GuiButton(1, this.width / 2 - 74, this.height - 52, 70, 20, "Join Server"));
-		this.controlList.add(new GuiButton(2, this.width / 2 - 154, this.height - 28, 150, 20, "Favorites"));
-		this.controlList.add(new GuiButton(3, this.width / 2 + 4, this.height - 52, 150, 20, "Refresh"));
-		this.controlList.add(new GuiButton(0, this.width / 2 + 4, this.height - 28, 150, 20, "Main Menu"));
-		this.controlList.add(this.buttonPrevCountry = new GuiButton(6, this.width / 2 - 154, this.height - 76, 25, 20, "-"));
-		this.controlList.add(this.buttonNextCountry = new GuiButton(7, this.width / 2 + 130, this.height - 76, 25, 20, "+"));
-		this.controlList.add(this.buttonPrevPage = new GuiButton(8, this.width / 2 - 94, this.height - 76, 25, 20, "<"));
-		this.controlList.add(this.buttonNextPage = new GuiButton(9, this.width / 2 + 70, this.height - 76, 25, 20, ">"));
-		this.controlList.add(this.buttonPrevTenPage = new GuiButton(10, this.width / 2 - 124, this.height - 76, 25, 20, "<<"));
-		this.controlList.add(this.buttonNextTenPage = new GuiButton(11, this.width / 2 + 100, this.height - 76, 25, 20, ">>"));
-		this.controlList.add(this.buttonAdd = new GuiButton(4, this.width / 2 - 154, this.height - 52, 70, 20, "Add Fav"));
-		this.buttonSelect.enabled = false;
-		this.buttonAdd.enabled = false;
-	}
+    /** The 'Edit' button was clicked */
+    private boolean editClicked;
 
-	protected void actionPerformed(GuiButton var1) {
-		if(var1.enabled) {
-			synchronized(serverInfo) {
-				if(var1.id == 2) {
-					this.mc.displayGuiScreen(new GuiFavorites(this));
-				} else if(var1.id == 1) {
-					this.selectWorld(this.selectedWorld);
-				} else if(var1.id == 3) {
-					this.getServer();
-				} else if(var1.id == 4) {
-					ServerSlot slot = (ServerSlot)this.serverInfo.serverList.get(this.selectedWorld);
-					SpoutClient.getInstance().getServerManager().getFavorites().addServer(slot.name, slot.ip, slot.port.equals("")?25565:Integer.valueOf(slot.port), slot.uniqueid);
-					SpoutClient.getInstance().getServerManager().getFavorites().save();
-					mc.displayGuiScreen(new GuiFavorites(this));
-				} else if(var1.id == 0) {
-					this.mc.displayGuiScreen(new GuiMainMenu());
-				} else if(var1.id == 8) {
-					if(serverInfo.page > 0) {
-						serverInfo.page--;
-						updateList();
-					}
-				} else if(var1.id == 9) {
-					if(serverInfo.page < serverInfo.pages - 1) {
-						serverInfo.page++;
-						updateList();
-					}
-				} else if(var1.id == 10) {
-					if(serverInfo.page > 0) {
-						serverInfo.page-=10;
-						if(serverInfo.page < 0) {
-							serverInfo.page = 0;
-						}
-						updateList();
-					}
-				} else if(var1.id == 11) {
-					if(serverInfo.page < serverInfo.pages - 1) {
-						serverInfo.page+=10;
-						if(serverInfo.page > serverInfo.pages - 1) {
-							serverInfo.page = serverInfo.pages - 1;
-						}
-						updateList();
-					}
-				} else if(var1.id == 6) {
-					if(serverInfo.activeCountry > 0) {
-						serverInfo.activeCountry--;
-						serverInfo.page = 0;
-						updateList();
-					}
-				} else if(var1.id == 7) {
-					if(serverInfo.activeCountry < serverInfo.countryMappings.size() - 1) {
-						serverInfo.activeCountry++;
-						serverInfo.page = 0;
-						updateList();
-					}
-				} else {
-					this.worldSlotContainer.actionPerformed(var1);
-				}
-			}
+    /** The 'Direct Connect' button was clicked */
+    private boolean directClicked;
+    private String field_35350_v;
 
-		}
-	}
+    /**
+     * Temporary ServerNBTStorage used by the Edit/Add/Direct Connect dialogs
+     */
+    private ServerNBTStorage tempServer;
 
-	public void selectWorld(int id) {
-		synchronized(serverInfo) {
-			this.mc.displayGuiScreen(new GuiConnecting(this.mc, ((ServerSlot)this.serverInfo.serverList.get(id)).ip, ((ServerSlot)this.serverInfo.serverList.get(id)).port == ""?25565:Integer.parseInt(((ServerSlot)this.serverInfo.serverList.get(id)).port)));
-		}
-	}
-	
-	public void elementInfo(int id) {
-		synchronized(serverInfo) {
-			ServerSlot info = (ServerSlot)this.serverInfo.serverList.get(id);
-			//this.mc.displayGuiScreen(new GuiServerInfo(info, this));
-		}
-	}
+    public GuiMultiplayer(GuiScreen par1GuiScreen)
+    {
+        serverList = new ArrayList();
+        selectedServer = -1;
+        deleteClicked = false;
+        addClicked = false;
+        editClicked = false;
+        directClicked = false;
+        field_35350_v = null;
+        tempServer = null;
+        parentScreen = par1GuiScreen;
+    }
 
-	public void updateList() {
-		synchronized(serverInfo) {
-			worldSlotContainer.amountScrolled = 0f;
-			if (serverInfo.countries.size() == 0) {
-				indexString = "Empty (0/0)";
-				serverInfo.serverList = new ArrayList();
-			} else {
-				String country = serverInfo.countries.get(serverInfo.activeCountry);
-				ArrayList fullList = serverInfo.countryMappings.get(country);
-				if (tabs.get(current_tab).pages) { Collections.sort(fullList); }
-				serverInfo.pages = (fullList.size() + 9) / 10;
-				int last = Math.min(fullList.size(), (serverInfo.page + 1) * 10);
-				int first = serverInfo.page * 10;
-				serverInfo.serverList = fullList.subList(first, last);
-				indexString = country + " (" + (serverInfo.page + 1) + "/" + serverInfo.pages + ")";
-			}
-			this.buttonNextPage.enabled = serverInfo.page < serverInfo.pages - 1;
-			this.buttonPrevPage.enabled = serverInfo.page > 0;
-			this.buttonNextTenPage.enabled = serverInfo.page < serverInfo.pages - 1;
-			this.buttonPrevTenPage.enabled = serverInfo.page > 0;
-			this.buttonPrevCountry.enabled = serverInfo.activeCountry > 0 && tabs.get(current_tab).pages;
-			this.buttonNextCountry.enabled = serverInfo.activeCountry < serverInfo.countries.size() - 1 && tabs.get(current_tab).pages;
-		}
-	}
+    /**
+     * Called from the main game loop to update the screen.
+     */
+    public void updateScreen()
+    {
+    }
 
-	public void deleteWorld(boolean var1, int var2) {}
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
+    public void initGui()
+    {
+        loadServerList();
+        Keyboard.enableRepeatEvents(true);
+        controlList.clear();
+        serverSlotContainer = new GuiSlotServer(this);
+        initGuiControls();
+    }
 
-	ArrayList<ServerTab> tabs = new ArrayList<ServerTab>();
-	int current_tab = 0;
-	
-	public void drawScreen(int x, int y, float z) {
-		synchronized(serverInfo) {
-			this.tooltip = null;
-			this.worldSlotContainer.drawScreen(x, y, z);
-			this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 16777215);
-			renderTabs();
-			//this.drawCenteredString(this.fontRenderer, "Spoutcraft Server Browser", this.width / 2, this.height - 86, 5263440);
-			this.drawCenteredString(this.fontRenderer, indexString , this.width / 2, this.height - 71, 5263440);
-			this.drawString(this.fontRenderer, "Displaying " + this.serverInfo.serverList.size() + " servers", 2, 20, 5263440);
-			this.drawString(this.fontRenderer, "Status: " + this.serverInfo.status, 2, 10, 5263440);
-			if(this.tooltip != null) {
-				this.drawTooltip(this.tooltip, x, y);
-			}
-		}
-		super.drawScreen(x, y, z);
-	}
-	
-	public void renderTabs() {
-		int offset = 0;
-		double s = 0.5;
-		Texture tabTexture = CustomTextureManager.getTextureFromJar("/res/tab.png");
-		Texture tabSelectedTexture = CustomTextureManager.getTextureFromJar("/res/tab_s.png");
-		GL11.glPushMatrix();
-		GL11.glEnable(GL11.GL_BLEND); 
-		  GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA); 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		for (ServerTab tab : tabs) {
-			if (tabTexture != null) {
-				GL11.glPushMatrix();
-				Texture cTexture = tabs.indexOf(tab) == current_tab ? tabSelectedTexture : tabTexture;
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, cTexture.getTextureID());
-				GL11.glTranslatef(this.width / 2 + offset, 20, 0); // moves texture into place
-				Tessellator tessellator = Tessellator.instance;
-				tessellator.startDrawingQuads();
-				tessellator.addVertexWithUV(0.0D, 15, -90, 0.0D, 0.0D); // draw corners
-				tessellator.addVertexWithUV(34, 15, -90, cTexture.getWidth(), 0.0D);
-				tessellator.addVertexWithUV(34, 0.0D, -90, cTexture.getWidth(), cTexture.getHeight());
-				tessellator.addVertexWithUV(0.0D, 0.0D, -90, 0.0D, cTexture.getHeight());
-				tessellator.draw();
-				GL11.glPopMatrix();
-	
-				GL11.glPushMatrix();
-				GL11.glTranslatef((float) (this.width / 2 + 17 - this.fontRenderer.getStringWidth(tab.title) / 4 + offset), 24F, 0F);
-				GL11.glScaled(s, s, s);
-				this.drawString(this.fontRenderer, tab.title, 0, 0, 0xFFFFFF);
-				GL11.glPopMatrix();
-				offset += 35;
-			}
-		}
-		GL11.glDepthMask(true);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glPopMatrix();
-	}
-	
-	protected void drawTooltip(String var1, int var2, int var3) {
-		if(var1 != null) {
-			int var4 = var2 + 12;
-			int var5 = var3 - 12;
-			int var6 = this.fontRenderer.getStringWidth(var1);
-			this.drawGradientRect(var4 - 3, var5 - 3, var4 + var6 + 3, var5 + 8 + 3, -1073741824, -1073741824);
-			this.fontRenderer.drawStringWithShadow(var1, var4, var5, -1);
-		}
-	}
-	
-	private int parseIntWithDefault(String var1, int var2) {
-		try {
-			return Integer.parseInt(var1.trim());
-		} catch (Exception var4) {
-			return var2;
-		}
-	}
-	
-	@Override
-	protected void mouseClicked(int var1, int var2, int var3) {
-		super.mouseClicked(var1, var2, var3);
-		if (var1 >= this.width / 2 && var1 <= this.width / 2 + tabs.size() * 35 - 2 && var2 >= 20 && var2 <= 33) {
-			int var4 = (var1 - this.width / 2) / 35;
-			current_tab = var4;
-			getServer();
-		}
-		worldSlotContainer.onClick(var1, var2, var3);
-	}
-	
-	private void func_35328_b(ServerSlot var1) throws IOException {
-		String var2 = var1.ip + ":" + var1.port;
-		String[] splitPacket = var2.split(":");
-		if(var2.startsWith("[")) {
-			int var4 = var2.indexOf("]");
-			if(var4 > 0) {
-				String var5 = var2.substring(1, var4);
-				String var6 = var2.substring(var4 + 1).trim();
-				if(var6.startsWith(":") && var6.length() > 0) {
-					var6 = var6.substring(1);
-					splitPacket = new String[]{var5, var6};
-				} else {
-					splitPacket = new String[]{var5};
-				}
-			}
-		}
+    /**
+     * Load the server list from servers.dat
+     */
+    private void loadServerList()
+    {
+        try
+        {
+            NBTTagCompound nbttagcompound = CompressedStreamTools.read(new File(mc.mcDataDir, "servers.dat"));
+            NBTTagList nbttaglist = nbttagcompound.getTagList("servers");
+            serverList.clear();
 
-		if(splitPacket.length > 2) {
-			splitPacket = new String[]{var2};
-		}
+            for (int i = 0; i < nbttaglist.tagCount(); i++)
+            {
+                serverList.add(ServerNBTStorage.createServerNBTStorage((NBTTagCompound)nbttaglist.tagAt(i)));
+            }
+        }
+        catch (Exception exception)
+        {
+            exception.printStackTrace();
+        }
+    }
 
-		String var29 = splitPacket[0];
-		int var30 = splitPacket.length > 1?this.parseIntWithDefault(splitPacket[1], 25565):25565;
-		Socket var31 = null;
-		DataInputStream var7 = null;
-		DataOutputStream var8 = null;
+    /**
+     * Save the server list to servers.dat
+     */
+    private void saveServerList()
+    {
+        try
+        {
+            NBTTagList nbttaglist = new NBTTagList();
 
-		try {
-			var31 = new Socket();
-			var31.setSoTimeout(3000);
-			var31.setTcpNoDelay(true);
-			var31.setTrafficClass(18);
-			var31.connect(new InetSocketAddress(var29, var30), 3000);
-			var7 = new DataInputStream(var31.getInputStream());
-			var8 = new DataOutputStream(var31.getOutputStream());
-			var8.write(254);
-			if(var7.read() != 255) {
-				throw new IOException("Bad message");
-			}
-		
-			String sPacket = Packet.readString(var7, 256);
+            for (int i = 0; i < serverList.size(); i++)
+            {
+                nbttaglist.appendTag(((ServerNBTStorage)serverList.get(i)).getCompoundTag());
+            }
 
-			char[] cPacket = sPacket.toCharArray();
+            NBTTagCompound nbttagcompound = new NBTTagCompound();
+            nbttagcompound.setTag("servers", nbttaglist);
+            CompressedStreamTools.safeWrite(nbttagcompound, new File(mc.mcDataDir, "servers.dat"));
+        }
+        catch (Exception exception)
+        {
+            exception.printStackTrace();
+        }
+    }
 
-			int i;
-			for(i = 0; i < cPacket.length; ++i) {
-				if(cPacket[i] != 167 && ChatAllowedCharacters.allowedCharacters.indexOf(cPacket[i]) < 0) {
-					cPacket[i] = 63;
-				}
-			}
+    /**
+     * Populate the GuiScreen controlList
+     */
+    public void initGuiControls()
+    {
+        StringTranslate stringtranslate = StringTranslate.getInstance();
+        controlList.add(buttonEdit = new GuiButton(7, width / 2 - 154, height - 28, 70, 20, stringtranslate.translateKey("selectServer.edit")));
+        controlList.add(buttonDelete = new GuiButton(2, width / 2 - 74, height - 28, 70, 20, stringtranslate.translateKey("selectServer.delete")));
+        controlList.add(buttonSelect = new GuiButton(1, width / 2 - 154, height - 52, 100, 20, stringtranslate.translateKey("selectServer.select")));
+        controlList.add(new GuiButton(4, width / 2 - 50, height - 52, 100, 20, stringtranslate.translateKey("selectServer.direct")));
+        controlList.add(new GuiButton(3, width / 2 + 4 + 50, height - 52, 100, 20, stringtranslate.translateKey("selectServer.add")));
+        controlList.add(new GuiButton(8, width / 2 + 4, height - 28, 70, 20, stringtranslate.translateKey("selectServer.refresh")));
+        controlList.add(new GuiButton(0, width / 2 + 4 + 76, height - 28, 75, 20, stringtranslate.translateKey("gui.cancel")));
+        boolean flag = selectedServer >= 0 && selectedServer < serverSlotContainer.getSize();
+        buttonSelect.enabled = flag;
+        buttonEdit.enabled = flag;
+        buttonDelete.enabled = flag;
+    }
 
-			sPacket = new String(cPacket);
-			splitPacket = sPacket.split("\u00a7");
+    /**
+     * Called when the screen is unloaded. Used to disable keyboard repeat events
+     */
+    public void onGuiClosed()
+    {
+        Keyboard.enableRepeatEvents(false);
+    }
 
-			i = -1;
-			int var12 = -1;
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton par1GuiButton)
+    {
+        if (!par1GuiButton.enabled)
+        {
+            return;
+        }
 
-			try {
-				i = Integer.parseInt(splitPacket[1]);
-				var12 = Integer.parseInt(splitPacket[2]);
-			} catch (Exception var27) { }
+        if (par1GuiButton.id == 2)
+        {
+            String s = ((ServerNBTStorage)serverList.get(selectedServer)).name;
 
-			String sMOTD = "???";
-			if(splitPacket[0].length() > 34)
-			{
-				sMOTD = splitPacket[0].substring(0, 29) + " ...";
-			}
-			else sMOTD = splitPacket[0];
-	
-			var1.msg = "\u00a77" + sMOTD;
-			if(i >= 0 && var12 > 0) {
-				var1.status = "\u00a77" + i + "\u00a78/\u00a77" + var12;
-				var1.players = i;
-				var1.maxPlayers = var12;
-			} else {
-				var1.status = "\u00a78???";
-				var1.players = 0;
-				var1.maxPlayers = 0;
-			}
+            if (s != null)
+            {
+                deleteClicked = true;
+                StringTranslate stringtranslate = StringTranslate.getInstance();
+                String s1 = stringtranslate.translateKey("selectServer.deleteQuestion");
+                String s2 = (new StringBuilder()).append("'").append(s).append("' ").append(stringtranslate.translateKey("selectServer.deleteWarning")).toString();
+                String s3 = stringtranslate.translateKey("selectServer.deleteButton");
+                String s4 = stringtranslate.translateKey("gui.cancel");
+                GuiYesNo guiyesno = new GuiYesNo(this, s1, s2, s3, s4, selectedServer);
+                mc.displayGuiScreen(guiyesno);
+            }
+        }
+        else if (par1GuiButton.id == 1)
+        {
+            joinServer(selectedServer);
+        }
+        else if (par1GuiButton.id == 4)
+        {
+            directClicked = true;
+            mc.displayGuiScreen(new GuiScreenServerList(this, tempServer = new ServerNBTStorage(StatCollector.translateToLocal("selectServer.defaultName"), "")));
+        }
+        else if (par1GuiButton.id == 3)
+        {
+            addClicked = true;
+            mc.displayGuiScreen(new GuiScreenAddServer(this, tempServer = new ServerNBTStorage(StatCollector.translateToLocal("selectServer.defaultName"), "")));
+        }
+        else if (par1GuiButton.id == 7)
+        {
+            editClicked = true;
+            ServerNBTStorage servernbtstorage = (ServerNBTStorage)serverList.get(selectedServer);
+            mc.displayGuiScreen(new GuiScreenAddServer(this, tempServer = new ServerNBTStorage(servernbtstorage.name, servernbtstorage.host)));
+        }
+        else if (par1GuiButton.id == 0)
+        {
+            mc.displayGuiScreen(parentScreen);
+        }
+        else if (par1GuiButton.id == 8)
+        {
+            mc.displayGuiScreen(new GuiMultiplayer(parentScreen));
+        }
+        else
+        {
+            serverSlotContainer.actionPerformed(par1GuiButton);
+        }
+    }
 
-		} finally {
-			try {
-				if(var7 != null) {
-					var7.close();
-				}
-			} catch (Throwable var26) { }
-			try {
-				if(var8 != null) {
-					var8.close();
-				}
-			} catch (Throwable var25) { }
-			try {
-				if(var31 != null) {
-					var31.close();
-				}
-			} catch (Throwable var24) { }
-		}
-	}
+    /**
+     * Deletes the selected world.
+     */
+    public void deleteWorld(boolean par1, int par2)
+    {
+        if (deleteClicked)
+        {
+            deleteClicked = false;
 
-	public void getServer() {
-		ServerListThread serverList = new ServerListThread(this, tabs.get(current_tab));
-		serverList.init();
-	}
+            if (par1)
+            {
+                serverList.remove(par2);
+                saveServerList();
+            }
 
-	public static List getSize(GuiMultiplayer var0) {
-		synchronized(var0.serverInfo) {
-			return var0.serverInfo.serverList;
-		}
-	}
+            mc.displayGuiScreen(this);
+        }
+        else if (directClicked)
+        {
+            directClicked = false;
 
-	public static int onElementSelected(GuiMultiplayer var0, int var1) {
-		return var0.selectedWorld = var1;
-	}
-	
-	public static void onElementInfo(GuiMultiplayer var0, int var1) {
-		var0.elementInfo(var1);
-	}
+            if (par1)
+            {
+                joinServer(tempServer);
+            }
+            else
+            {
+                mc.displayGuiScreen(this);
+            }
+        }
+        else if (addClicked)
+        {
+            addClicked = false;
 
-	public static int getSelectedWorld(GuiMultiplayer var0) {
-		return var0.selectedWorld;
-	}
+            if (par1)
+            {
+                serverList.add(tempServer);
+                saveServerList();
+            }
 
-	public static GuiButton getSelectButton(GuiMultiplayer var0) {
-		return var0.buttonSelect;
-	}
+            mc.displayGuiScreen(this);
+        }
+        else if (editClicked)
+        {
+            editClicked = false;
 
-	public static GuiButton getSelectAdd(GuiMultiplayer var0) {
-		return var0.buttonAdd;
-	}
+            if (par1)
+            {
+                ServerNBTStorage servernbtstorage = (ServerNBTStorage)serverList.get(selectedServer);
+                servernbtstorage.name = tempServer.name;
+                servernbtstorage.host = tempServer.host;
+                saveServerList();
+            }
 
-	public static String func_22087_f(GuiMultiplayer var0) {
-		return var0.field_22098_o;
-	}
+            mc.displayGuiScreen(this);
+        }
+    }
 
-	public static void selectWorld(GuiMultiplayer var0, int var1) {
-		var0.selectWorld(var1);
-	}
-	
-	public static DateFormat getDateFormatter(GuiMultiplayer var0) {
-		return var0.dateFormatter;
-	}
-	
-	public static Object getSyncObject() {
-		return synchronize;
-	}
+    private int parseIntWithDefault(String par1Str, int par2)
+    {
+        try
+        {
+            return Integer.parseInt(par1Str.trim());
+        }
+        catch (Exception exception)
+        {
+            return par2;
+        }
+    }
 
-	public static String func_22088_h(GuiMultiplayer var0) {
-		return var0.field_22097_p;
-	}
-	
-	public static int getPingLimit() {
-		return pinglimit;
-	}
-	
-	public static void incrementPingLimit() {
-		pinglimit++;
-	}
-	
-	public static void decrementPingLimit() {
-		pinglimit--;
-	}
-	
-	public static void updateServerNBT(GuiMultiplayer var0, ServerSlot var1) throws IOException {
-		var0.func_35328_b(var1);
-	}
-	
-	public static void tooltip(GuiMultiplayer var0, String message) {
-		var0.tooltip = message;
-	}
+    /**
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+     */
+    protected void keyTyped(char par1, int par2)
+    {
+        if (par1 == '\r')
+        {
+            actionPerformed((GuiButton)controlList.get(2));
+        }
+    }
 
+    /**
+     * Called when the mouse is clicked.
+     */
+    protected void mouseClicked(int par1, int par2, int par3)
+    {
+        super.mouseClicked(par1, par2, par3);
+    }
+
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int par1, int par2, float par3)
+    {
+        field_35350_v = null;
+        StringTranslate stringtranslate = StringTranslate.getInstance();
+        drawDefaultBackground();
+        serverSlotContainer.drawScreen(par1, par2, par3);
+        drawCenteredString(fontRenderer, stringtranslate.translateKey("multiplayer.title"), width / 2, 20, 0xffffff);
+        super.drawScreen(par1, par2, par3);
+
+        if (field_35350_v != null)
+        {
+            func_35325_a(field_35350_v, par1, par2);
+        }
+    }
+
+    /**
+     * Join server by slot index
+     */
+    private void joinServer(int par1)
+    {
+        joinServer((ServerNBTStorage)serverList.get(par1));
+    }
+
+    /**
+     * Join server by ServerNBTStorage
+     */
+    private void joinServer(ServerNBTStorage par1ServerNBTStorage)
+    {
+        String s = par1ServerNBTStorage.host;
+        String as[] = s.split(":");
+
+        if (s.startsWith("["))
+        {
+            int i = s.indexOf("]");
+
+            if (i > 0)
+            {
+                String s1 = s.substring(1, i);
+                String s2 = s.substring(i + 1).trim();
+
+                if (s2.startsWith(":") && s2.length() > 0)
+                {
+                    s2 = s2.substring(1);
+                    as = new String[2];
+                    as[0] = s1;
+                    as[1] = s2;
+                }
+                else
+                {
+                    as = new String[1];
+                    as[0] = s1;
+                }
+            }
+        }
+
+        if (as.length > 2)
+        {
+            as = new String[1];
+            as[0] = s;
+        }
+
+        mc.displayGuiScreen(new GuiConnecting(mc, as[0], as.length <= 1 ? 25565 : parseIntWithDefault(as[1], 25565)));
+    }
+
+    /**
+     * Poll server for MOTD, lag, and player count/max
+     */
+    private void pollServer(ServerNBTStorage par1ServerNBTStorage) throws IOException
+    {
+        String s = par1ServerNBTStorage.host;
+        String as[] = s.split(":");
+
+        if (s.startsWith("["))
+        {
+            int i = s.indexOf("]");
+
+            if (i > 0)
+            {
+                String s2 = s.substring(1, i);
+                String s3 = s.substring(i + 1).trim();
+
+                if (s3.startsWith(":") && s3.length() > 0)
+                {
+                    s3 = s3.substring(1);
+                    as = new String[2];
+                    as[0] = s2;
+                    as[1] = s3;
+                }
+                else
+                {
+                    as = new String[1];
+                    as[0] = s2;
+                }
+            }
+        }
+
+        if (as.length > 2)
+        {
+            as = new String[1];
+            as[0] = s;
+        }
+
+        String s1 = as[0];
+        int j = as.length <= 1 ? 25565 : parseIntWithDefault(as[1], 25565);
+        Socket socket = null;
+        DataInputStream datainputstream = null;
+        DataOutputStream dataoutputstream = null;
+
+        try
+        {
+            socket = new Socket();
+            socket.setSoTimeout(3000);
+            socket.setTcpNoDelay(true);
+            socket.setTrafficClass(18);
+            socket.connect(new InetSocketAddress(s1, j), 3000);
+            datainputstream = new DataInputStream(socket.getInputStream());
+            dataoutputstream = new DataOutputStream(socket.getOutputStream());
+            dataoutputstream.write(254);
+
+            if (datainputstream.read() != 255)
+            {
+                throw new IOException("Bad message");
+            }
+
+            String s4 = Packet.readString(datainputstream, 256);
+            char ac[] = s4.toCharArray();
+
+            for (int k = 0; k < ac.length; k++)
+            {
+                if (ac[k] != '\247' && ChatAllowedCharacters.allowedCharacters.indexOf(ac[k]) < 0)
+                {
+                    ac[k] = '?';
+                }
+            }
+
+            s4 = new String(ac);
+            String as1[] = s4.split("\247");
+            s4 = as1[0];
+            int l = -1;
+            int i1 = -1;
+
+            try
+            {
+                l = Integer.parseInt(as1[1]);
+                i1 = Integer.parseInt(as1[2]);
+            }
+            catch (Exception exception) { }
+
+            par1ServerNBTStorage.motd = (new StringBuilder()).append("\2477").append(s4).toString();
+
+            if (l >= 0 && i1 > 0)
+            {
+                par1ServerNBTStorage.playerCount = (new StringBuilder()).append("\2477").append(l).append("\2478/\2477").append(i1).toString();
+            }
+            else
+            {
+                par1ServerNBTStorage.playerCount = "\2478???";
+            }
+        }
+        finally
+        {
+            try
+            {
+                if (datainputstream != null)
+                {
+                    datainputstream.close();
+                }
+            }
+            catch (Throwable throwable) { }
+
+            try
+            {
+                if (dataoutputstream != null)
+                {
+                    dataoutputstream.close();
+                }
+            }
+            catch (Throwable throwable1) { }
+
+            try
+            {
+                if (socket != null)
+                {
+                    socket.close();
+                }
+            }
+            catch (Throwable throwable2) { }
+        }
+    }
+
+    protected void func_35325_a(String par1Str, int par2, int par3)
+    {
+        if (par1Str == null)
+        {
+            return;
+        }
+        else
+        {
+            int i = par2 + 12;
+            int j = par3 - 12;
+            int k = fontRenderer.getStringWidth(par1Str);
+            drawGradientRect(i - 3, j - 3, i + k + 3, j + 8 + 3, 0xc0000000, 0xc0000000);
+            fontRenderer.drawStringWithShadow(par1Str, i, j, -1);
+            return;
+        }
+    }
+
+    /**
+     * Return the List of ServerNBTStorage objects
+     */
+    static List getServerList(GuiMultiplayer par0GuiMultiplayer)
+    {
+        return par0GuiMultiplayer.serverList;
+    }
+
+    /**
+     * Set index of the currently selected server
+     */
+    static int setSelectedServer(GuiMultiplayer par0GuiMultiplayer, int par1)
+    {
+        return par0GuiMultiplayer.selectedServer = par1;
+    }
+
+    /**
+     * Return index of the currently selected server
+     */
+    static int getSelectedServer(GuiMultiplayer par0GuiMultiplayer)
+    {
+        return par0GuiMultiplayer.selectedServer;
+    }
+
+    /**
+     * Return buttonSelect GuiButton
+     */
+    static GuiButton getButtonSelect(GuiMultiplayer par0GuiMultiplayer)
+    {
+        return par0GuiMultiplayer.buttonSelect;
+    }
+
+    /**
+     * Return buttonEdit GuiButton
+     */
+    static GuiButton getButtonEdit(GuiMultiplayer par0GuiMultiplayer)
+    {
+        return par0GuiMultiplayer.buttonEdit;
+    }
+
+    /**
+     * Return buttonDelete GuiButton
+     */
+    static GuiButton getButtonDelete(GuiMultiplayer par0GuiMultiplayer)
+    {
+        return par0GuiMultiplayer.buttonDelete;
+    }
+
+    /**
+     * Join server by slot index (called on double click from GuiSlotServer)
+     */
+    static void joinServer(GuiMultiplayer par0GuiMultiplayer, int par1)
+    {
+        par0GuiMultiplayer.joinServer(par1);
+    }
+
+    /**
+     * Get lock object for use with synchronized()
+     */
+    static Object getLock()
+    {
+        return lock;
+    }
+
+    /**
+     * Return number of outstanding ThreadPollServers threads
+     */
+    static int getThreadsPending()
+    {
+        return threadsPending;
+    }
+
+    /**
+     * Increment number of outstanding ThreadPollServers threads by 1
+     */
+    static int incrementThreadsPending()
+    {
+        return threadsPending++;
+    }
+
+    /**
+     * Poll server for MOTD, lag, and player count/max
+     */
+    static void pollServer(GuiMultiplayer par0GuiMultiplayer, ServerNBTStorage par1ServerNBTStorage) throws IOException
+    {
+        par0GuiMultiplayer.pollServer(par1ServerNBTStorage);
+    }
+
+    /**
+     * Decrement number of outstanding ThreadPollServers threads by 1
+     */
+    static int decrementThreadsPending()
+    {
+        return threadsPending--;
+    }
+
+    static String func_35327_a(GuiMultiplayer par0GuiMultiplayer, String par1Str)
+    {
+        return par0GuiMultiplayer.field_35350_v = par1Str;
+    }
 }
-*/
