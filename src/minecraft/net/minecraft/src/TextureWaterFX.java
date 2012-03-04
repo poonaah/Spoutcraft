@@ -7,13 +7,12 @@ import net.minecraft.src.Block;
 import net.minecraft.src.TextureFX;
 
 public class TextureWaterFX extends TextureFX {
-//Spout HD start
+	//Spout HD start
 	protected float[] field_1158_g;
 	protected float[] field_1157_h;
 	protected float[] field_1156_i;
 	protected float[] field_1155_j;
 	private int tickCounter;
-
 
 	public TextureWaterFX() {
 		super(Block.waterMoving.blockIndexInTexture);
@@ -23,7 +22,8 @@ public class TextureWaterFX extends TextureFX {
 		this.field_1155_j = new float[TileSize.int_numPixels];
 		this.tickCounter = 0;
 	}
-//Spout HD end
+	//Spout HD end
+	
 	public void onTick() {
 		++this.tickCounter;
 
@@ -32,7 +32,7 @@ public class TextureWaterFX extends TextureFX {
 		float var3;
 		int var5;
 		int var6;
-//Spout HD start
+		//Spout HD start
 		for(var1 = 0; var1 < TileSize.int_size; ++var1) {
 			for(var2 = 0; var2 < TileSize.int_size; ++var2) {
 				var3 = 0.0F;
@@ -60,19 +60,20 @@ public class TextureWaterFX extends TextureFX {
 				}
 			}
 		}
-//Spout HD end
+		//Spout HD end
+
 		float[] var12 = this.field_1157_h;
 		this.field_1157_h = this.field_1158_g;
 		this.field_1158_g = var12;
-//Spout HD start
+		//Spout HD start
 		for(var2 = 0; var2 < TileSize.int_numPixels; ++var2) {
-//Spout HD end
+			//Spout HD end
 			var3 = this.field_1158_g[var2];
-			if(var3 > 1.0F) {
+			if (var3 > 1.0F) {
 				var3 = 1.0F;
 			}
 
-			if(var3 < 0.0F) {
+			if (var3 < 0.0F) {
 				var3 = 0.0F;
 			}
 
@@ -81,7 +82,7 @@ public class TextureWaterFX extends TextureFX {
 			var6 = (int)(50.0F + var13 * 64.0F);
 			int var7 = 255;
 			int var8 = (int)(146.0F + var13 * 50.0F);
-			if(this.anaglyphEnabled) {
+			if (this.anaglyphEnabled) {
 				int var9 = (var5 * 30 + var6 * 59 + var7 * 11) / 100;
 				int var10 = (var5 * 30 + var6 * 70) / 100;
 				int var11 = (var5 * 30 + var7 * 70) / 100;
