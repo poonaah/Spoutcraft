@@ -10,8 +10,8 @@ import net.minecraft.src.World;
 
 public class EntityRainFX extends EntityFX {
 
-	public EntityRainFX(World var1, double var2, double var4, double var6) {
-		super(var1, var2, var4, var6, 0.0D, 0.0D, 0.0D);
+	public EntityRainFX(World par1World, double par2, double par4, double par6) {
+		super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
 		this.motionX *= 0.30000001192092896D;
 		this.motionY = (double)((float)Math.random() * 0.2F + 0.1F);
 		this.motionZ *= 0.30000001192092896D;
@@ -34,8 +34,8 @@ public class EntityRainFX extends EntityFX {
 		this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D));
 	}
 
-	public void renderParticle(Tessellator var1, float var2, float var3, float var4, float var5, float var6, float var7) {
-		super.renderParticle(var1, var2, var3, var4, var5, var6, var7);
+	public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7) {
+		super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
 	}
 
 	public void onUpdate() {
@@ -61,7 +61,7 @@ public class EntityRainFX extends EntityFX {
 		}
 
 		Material var1 = this.worldObj.getBlockMaterial(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
-		if (var1.getIsLiquid() || var1.isSolid()) {
+		if (var1.isLiquid() || var1.isSolid()) {
 			double var2 = (double)((float)(MathHelper.floor_double(this.posY) + 1) - BlockFluid.getFluidHeightPercent(this.worldObj.getBlockMetadata(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))));
 			if (this.posY < var2) {
 				this.setEntityDead();
