@@ -1,19 +1,3 @@
-/*
- * This file is part of Spoutcraft (http://wiki.getspout.org/).
- * 
- * Spoutcraft is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Spoutcraft is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.minecraft.client;
 
 import java.awt.BorderLayout;
@@ -136,35 +120,11 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
-//Spout Start
-import com.pclewis.mcpatcher.mod.TextureUtils;
-
-import org.bukkit.ChatColor;
-import org.spoutcraft.client.SpoutClient;
-import org.spoutcraft.client.config.ConfigReader;
-import org.spoutcraft.client.controls.SimpleKeyBindingManager;
-import org.spoutcraft.client.gui.ScreenUtil;
-import org.spoutcraft.client.gui.addon.GuiAddonsLocal;
-import org.spoutcraft.client.gui.settings.GameSettingsScreen;
-import org.spoutcraft.client.packet.PacketScreenAction;
-import org.spoutcraft.client.packet.ScreenAction;
-import org.spoutcraft.client.packet.SpoutPacket;
-import org.spoutcraft.client.spoutworth.SpoutWorth;
-import org.spoutcraft.spoutcraftapi.addon.AddonLoadOrder;
-import org.spoutcraft.spoutcraftapi.entity.Player;
-import org.spoutcraft.spoutcraftapi.event.screen.ScreenCloseEvent;
-import org.spoutcraft.spoutcraftapi.event.screen.ScreenEvent;
-import org.spoutcraft.spoutcraftapi.event.screen.ScreenOpenEvent;
-import org.spoutcraft.spoutcraftapi.gui.PopupScreen;
-import org.spoutcraft.spoutcraftapi.gui.Screen;
-import org.spoutcraft.spoutcraftapi.gui.ScreenType;
-
-//Spout End
 
 public abstract class Minecraft implements Runnable {
 
 	public static byte[] field_28006_b = new byte[10485760];
-	public static Minecraft theMinecraft; //Spout private -> public
+	private static Minecraft theMinecraft;
 	public PlayerController playerController;
 	private boolean fullscreen = false;
 	private boolean hasCrashed = false;
@@ -227,13 +187,6 @@ public abstract class Minecraft implements Runnable {
 	public boolean isRaining = false;
 	long systemTime = System.currentTimeMillis();
 	private int joinPlayerCounter = 0;
-	// Spout Start
-	private boolean shutdown = false;
-	public static boolean spoutcraftLauncher = false;
-	public static boolean portable = false;
-	public static int framesPerSecond = 0;
-	public static Thread mainThread;
-	// Spout End
 
 	public Minecraft(Component par1Component, Canvas par2Canvas, MinecraftApplet par3MinecraftApplet, int par4, int par5, boolean par6) {
 		StatList.func_27360_a();
@@ -250,13 +203,6 @@ public abstract class Minecraft implements Runnable {
 		}
 
 		theMinecraft = this;
-		// Spout Start
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			public void run() {
-				shutdownMinecraftApplet();
-			}
-		}));
-		// Spout End
 	}
 
 	public void onMinecraftCrash(UnexpectedThrowable par1UnexpectedThrowable) {
@@ -319,15 +265,7 @@ public abstract class Minecraft implements Runnable {
 		this.saveLoader = new AnvilSaveConverter(new File(this.mcDataDir, "saves"));
 		this.gameSettings = new GameSettings(this, this.mcDataDir);
 		this.texturePackList = new TexturePackList(this, this.mcDataDir);
-		// Spout Start
-		System.out.println("Launching Spoutcraft " + SpoutClient.getClientVersion());
-		System.out.println("OpenGL: " + GL11.glGetString(GL11.GL_RENDERER) + " version " + GL11.glGetString(GL11.GL_VERSION) + ", " + GL11.glGetString(GL11.GL_VENDOR) + "\n");
-		// Spout End
 		this.renderEngine = new RenderEngine(this.texturePackList, this.gameSettings);
-		// Spout Start
-		TextureUtils.setTileSize();
-		this.renderEngine.setTileSize(this);
-		// Spout End
 		this.loadScreen();
 		this.fontRenderer = new FontRenderer(this.gameSettings, "/font/default.png", this.renderEngine, false);
 		this.standardGalacticFontRenderer = new FontRenderer(this.gameSettings, "/font/alternate.png", this.renderEngine, false);
@@ -391,33 +329,11 @@ public abstract class Minecraft implements Runnable {
 
 		this.checkGLError("Post startup");
 		this.ingameGUI = new GuiIngame(this);
-		//Spout start
-		if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
-			this.displayGuiScreen(new org.spoutcraft.client.gui.server.GuiFavorites(new GuiMainMenu()));
-		}
-		else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			this.displayGuiScreen(new GuiSelectWorld(new GuiMainMenu()));
-		}
-		else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			this.displayGuiScreen(new GuiAddonsLocal());
-		}
-		else if (Keyboard.isKeyDown(Keyboard.KEY_T)) {
-			this.displayGuiScreen(new org.spoutcraft.client.gui.texturepacks.GuiTexturePacks());
-		}
-		else if (Keyboard.isKeyDown(Keyboard.KEY_O)) {
-			this.displayGuiScreen(new GameSettingsScreen(new GuiMainMenu()));
-		}
-		else if (this.serverName != null) {
+		if (this.serverName != null) {
 			this.displayGuiScreen(new GuiConnecting(this, this.serverName, this.serverPort));
 		} else {
 			this.displayGuiScreen(new GuiMainMenu());
 		}
-
-		this.loadingScreen = new LoadingScreenRenderer(this);
-
-		SpoutClient.getInstance().loadAddons();
-		SpoutClient.getInstance().enableAddons(AddonLoadOrder.GAMESTART);
-		// Spout End
 
 		this.loadingScreen = new LoadingScreenRenderer(this);
 	}
@@ -471,21 +387,7 @@ public abstract class Minecraft implements Runnable {
 
 	public static File getMinecraftDir() {
 		if (minecraftDir == null) {
-			// Spout Start
-			String workingDirName = "minecraft";
-			if (spoutcraftLauncher)
-				workingDirName = "spoutcraft";
-			if (portable) {
-				File portableDir = new File(workingDirName);
-				if (portableDir.exists() || portableDir.mkdirs()) {
-					minecraftDir = portableDir;
-				} else {
-					throw new RuntimeException("The working directory could not be created: " + portableDir);
-				}
-			} else {
-				minecraftDir = getAppDir(workingDirName);
-			}
-			// Spout End
+			minecraftDir = getAppDir("minecraft");
 		}
 
 		return minecraftDir;
@@ -529,113 +431,43 @@ public abstract class Minecraft implements Runnable {
 	public ISaveFormat getSaveLoader() {
 		return this.saveLoader;
 	}
-	// Spout Start
-	private GuiScreen previousScreen = null;
 
-	public void displayGuiScreen(GuiScreen screen) {
-		displayGuiScreen(screen, true);
-	}
-
-	public void displayGuiScreen(GuiScreen screen, boolean notify) {
-		// Part of Original function
-		if (screen == null && this.theWorld == null) {
-			screen = new GuiMainMenu();
-		} else if (screen == null && this.thePlayer.health <= 0) {
-			screen = new GuiGameOver();
-		}
-
-		ScreenType display = ScreenUtil.getType(screen);
-
-		if (notify && thePlayer != null && theWorld != null) {
-			// Screen closed
-			ScreenEvent event = null;
-			SpoutPacket packet = null;
-			Screen widget = null;
-			if (this.currentScreen != null && screen == null) {
-				packet = new PacketScreenAction(ScreenAction.Close, ScreenUtil.getType(this.currentScreen));
-				event = ScreenCloseEvent.getInstance((Player)thePlayer.spoutEntity, currentScreen.getScreen(), display);
-				widget = currentScreen.getScreen();
-			}
-			// Screen opened
-			if (screen != null && this.currentScreen == null) {
-				packet = new PacketScreenAction(ScreenAction.Open, display);
-				event = ScreenOpenEvent.getInstance((Player)thePlayer.spoutEntity, screen.getScreen(), display);
-				widget = screen.getScreen();
-			}
-			// Screen swapped
-			if (screen != null && this.currentScreen != null) { // Hopefully just a submenu
-				packet = new PacketScreenAction(ScreenAction.Open, display);
-				event = ScreenOpenEvent.getInstance((Player)thePlayer.spoutEntity, screen.getScreen(), display);
-				widget = screen.getScreen();
-			}
-			boolean cancel = false;
-			if (event != null) {
-				SpoutClient.getInstance().getAddonManager().callEvent(event);
-				cancel = event.isCancelled();
-			}
-			if (!cancel && packet != null) {
-				SpoutClient.getInstance().getPacketManager().sendSpoutPacket(packet);
-				if (widget instanceof PopupScreen) {
-					((PopupScreen)widget).close();
-				}
-			}
-			if (cancel) {
-				return;
-			}
-		}
-		if (!(this.currentScreen instanceof GuiUnused)) {
+	public void displayGuiScreen(GuiScreen par1GuiScreen) {
+		if (!(this.currentScreen instanceof GuiErrorScreen)) {
 			if (this.currentScreen != null) {
 				this.currentScreen.onGuiClosed();
 			}
 
-			if (screen instanceof GuiMainMenu) {
+			if (par1GuiScreen instanceof GuiMainMenu) {
 				this.statFileWriter.func_27175_b();
 			}
 
-			boolean wasSandboxed = SpoutClient.isSandboxed();
-			if (wasSandboxed) {
-				SpoutClient.disableSandbox();
-			}
 			this.statFileWriter.syncStats();
-			if (wasSandboxed) {
-				SpoutClient.enableSandbox();
+			if (par1GuiScreen == null && this.theWorld == null) {
+				par1GuiScreen = new GuiMainMenu();
+			} else if (par1GuiScreen == null && this.thePlayer.getEntityHealth() <= 0) {
+				par1GuiScreen = new GuiGameOver();
 			}
 
-			if (screen instanceof GuiMainMenu) {
+			if (par1GuiScreen instanceof GuiMainMenu) {
+				this.gameSettings.showDebugInfo = false;
 				this.ingameGUI.clearChatMessages();
 			}
 
-			if (previousScreen != null || screen != null) {
-				previousScreen = this.currentScreen;
-			}
-
-			this.currentScreen = screen;
-
-			if (screen != null) {
-				if (ConfigReader.chatGrabsMouse || !(screen instanceof GuiChat)) {
-					this.setIngameNotInFocus();
-				}
+			this.currentScreen = (GuiScreen)par1GuiScreen;
+			if (par1GuiScreen != null) {
+				this.setIngameNotInFocus();
 				ScaledResolution var2 = new ScaledResolution(this.gameSettings, this.displayWidth, this.displayHeight);
 				int var3 = var2.getScaledWidth();
 				int var4 = var2.getScaledHeight();
-				screen.setWorldAndResolution(this, var3, var4);
+				((GuiScreen)par1GuiScreen).setWorldAndResolution(this, var3, var4);
 				this.skipRenderWorld = false;
 			} else {
 				this.setIngameFocus();
 			}
+
 		}
 	}
-
-	public void displayPreviousScreen() {
-		displayGuiScreen(previousScreen, false);
-		previousScreen = null;
-	}
-
-	public void clearPreviousScreen() {
-		previousScreen = null;
-	}
-
-	// Spout End
 
 	private void checkGLError(String par1Str) {
 		int var2 = GL11.glGetError();
@@ -649,14 +481,6 @@ public abstract class Minecraft implements Runnable {
 	}
 
 	public void shutdownMinecraftApplet() {
-		// Spout Start
-		if (shutdown) {
-			return;
-		}
-		SpoutClient.getInstance().disableAddons();
-		shutdown = true;
-		SpoutClient.disableSandbox();
-		// Spout End
 		try {
 			this.statFileWriter.func_27175_b();
 			this.statFileWriter.syncStats();
@@ -702,7 +526,6 @@ public abstract class Minecraft implements Runnable {
 
 	public void run() {
 		this.running = true;
-		mainThread = Thread.currentThread(); //Spout
 
 		try {
 			this.startGame();
@@ -725,27 +548,6 @@ public abstract class Minecraft implements Runnable {
 					this.displayGuiScreen(new GuiMemoryErrorScreen());
 					System.gc();
 				}
-				//Spout start
-				catch (Throwable t) {
-					//try to handle errors gracefuly
-					try {
-						if (SpoutClient.isSandboxed()) {
-							SpoutClient.disableSandbox(); 
-						}
-						this.theWorld = null;
-						this.changeWorld1((World)null);
-
-						this.displayGuiScreen(new org.spoutcraft.client.gui.error.GuiUnexpectedError());
-
-						t.printStackTrace();
-					}
-					catch (Throwable failed) {
-						SpoutClient.disableSandbox(); 
-						failed.printStackTrace();
-						throw new RuntimeException(t);
-					}
-				}
-				//Spout End
 			}
 		} catch (MinecraftError var12) {
 			;
@@ -763,16 +565,6 @@ public abstract class Minecraft implements Runnable {
 		if (this.mcApplet != null && !this.mcApplet.isActive()) {
 			this.running = false;
 		} else {
-			//Spout start
-			if (theWorld == null && !(currentScreen instanceof GuiMainMenu)) {
-				try {
-					Thread.sleep(25);
-				}
-				catch(InterruptedException e) {
-
-				}
-			}
-			//Spout end
 			AxisAlignedBB.clearBoundingBoxPool();
 			Vec3D.initialize();
 			PlayerUsageSnooper.field_48478_a.func_48472_a();
@@ -899,10 +691,6 @@ public abstract class Minecraft implements Runnable {
 				this.debug = this.fpsCounter + " fps, " + WorldRenderer.chunksUpdated + " chunk updates";
 				WorldRenderer.chunksUpdated = 0;
 				this.debugUpdateTime += 1000L;
-				//Spout start 
-				framesPerSecond = fpsCounter;
-				SpoutWorth.getInstance().updateFPS(framesPerSecond);
-				//Spout end
 			}
 
 			Profiler.endSection();
@@ -973,12 +761,6 @@ public abstract class Minecraft implements Runnable {
 	}
 
 	private void displayDebugInfo(long par1) {
-		//Spout start
-		//Only show if no other screens are up
-		if (currentScreen != null) {
-			return;
-		}
-		//Spout end
 		List var3 = Profiler.getProfilingData(this.debugProfilerName);
 		ProfilerResult var4 = (ProfilerResult)var3.remove(0);
 		long var5 = 16666666L;
@@ -1142,30 +924,16 @@ public abstract class Minecraft implements Runnable {
 		this.running = false;
 	}
 
-	// Spout Start
-	// Moved setIngameFocus() implementation to setIngameFoxus(boolean)
 	public void setIngameFocus() {
-		setIngameFocus(true);
-	}
-
-	public void setIngameFocus(boolean close) {
 		if (Display.isActive()) {
 			if (!this.inGameHasFocus) {
 				this.inGameHasFocus = true;
 				this.mouseHelper.grabMouseCursor();
-				if (close) {
-					this.displayGuiScreen((GuiScreen)null);
-				}
+				this.displayGuiScreen((GuiScreen)null);
 				this.leftClickCounter = 10000;
 			}
 		}
-		if(close) {
-			//Clear all pressed keys
-			Keyboard.destroy();
-			Keyboard.create();
-		}
 	}
-	// Spout End
 
 	public void setIngameNotInFocus() {
 		if (this.inGameHasFocus) {
@@ -1356,7 +1124,7 @@ public abstract class Minecraft implements Runnable {
 			if (var1 instanceof ChunkProviderLoadOrGenerate) {
 				ChunkProviderLoadOrGenerate var2 = (ChunkProviderLoadOrGenerate)var1;
 				var3 = MathHelper.floor_float((float)((int)this.thePlayer.posX)) >> 4;
-		int var4 = MathHelper.floor_float((float)((int)this.thePlayer.posZ)) >> 4;
+				int var4 = MathHelper.floor_float((float)((int)this.thePlayer.posZ)) >> 4;
 				var2.setCurrentChunkOver(var3, var4);
 			}
 		}
@@ -1438,9 +1206,6 @@ public abstract class Minecraft implements Runnable {
 			Profiler.endStartSection("keyboard");
 
 			while (Keyboard.next()) {
-				//Spout Start
-				((SimpleKeyBindingManager)SpoutClient.getInstance().getKeyBindingManager()).pressKey(Keyboard.getEventKey(), Keyboard.getEventKeyState(), ScreenUtil.getType(currentScreen).getCode());
-				//Spout End
 				KeyBinding.setKeyBindState(Keyboard.getEventKey(), Keyboard.getEventKeyState());
 				if (Keyboard.getEventKeyState()) {
 					KeyBinding.onTick(Keyboard.getEventKey());
@@ -1528,34 +1293,26 @@ public abstract class Minecraft implements Runnable {
 				this.displayGuiScreen(new GuiChat());
 			}
 
-			//Spout start
-			//Open chat in SP with debug key
-			if (!isMultiplayerWorld() && Keyboard.getEventKey() == Keyboard.KEY_GRAVE) {
-				this.displayGuiScreen(new GuiChat());
-				thePlayer.sendChatMessage(ChatColor.RED + "Debug Console Opened");
-			}
-			//Spout end
-
 			if (this.thePlayer.isUsingItem()) {
 				if (!this.gameSettings.keyBindUseItem.pressed) {
 					this.playerController.onStoppedUsingItem(this.thePlayer);
 				}
 
 				label309:
-					while (true) {
-						if (!this.gameSettings.keyBindAttack.isPressed()) {
-							while (this.gameSettings.keyBindUseItem.isPressed()) {
-								;
-							}
+				while (true) {
+					if (!this.gameSettings.keyBindAttack.isPressed()) {
+						while (this.gameSettings.keyBindUseItem.isPressed()) {
+							;
+						}
 
-							while (true) {
-								if (this.gameSettings.keyBindPickBlock.isPressed()) {
-									continue;
-								}
-								break label309;
+						while (true) {
+							if (this.gameSettings.keyBindPickBlock.isPressed()) {
+								continue;
 							}
+							break label309;
 						}
 					}
+				}
 			} else {
 				while (this.gameSettings.keyBindAttack.isPressed()) {
 					this.clickMouse(0);
@@ -1646,13 +1403,7 @@ public abstract class Minecraft implements Runnable {
 		return this.theWorld != null && this.theWorld.isRemote;
 	}
 
-	//Spout start
-	public void startWorld(String var1, String var2, WorldSettings var3) {
-		startWorld(var1, var2, var3, 128);
-	}
-
-	public void startWorld(String par1Str, String par2Str, WorldSettings par3WorldSettings int height) { //Spout added height
-		//Spout end
+	public void startWorld(String par1Str, String par2Str, WorldSettings par3WorldSettings) {
 		this.changeWorld1((World)null);
 		System.gc();
 		if (this.saveLoader.isOldMapFormat(par1Str)) {
@@ -1665,7 +1416,7 @@ public abstract class Minecraft implements Runnable {
 
 			ISaveHandler var4 = this.saveLoader.getSaveLoader(par1Str, false);
 			World var5 = null;
-			var5 = new World(var4, par2Str, par3WorldSettings, height);
+			var5 = new World(var4, par2Str, par3WorldSettings);
 			if (var5.isNewWorld) {
 				this.statFileWriter.readStat(StatList.createWorldStat, 1);
 				this.statFileWriter.readStat(StatList.startGameStat, 1);
@@ -1757,11 +1508,6 @@ public abstract class Minecraft implements Runnable {
 	}
 
 	public void changeWorld(World par1World, String par2Str, EntityPlayer par3EntityPlayer) {
-		// Spout Start
-		if (par1World != null) {
-			SpoutClient.getInstance().enableAddons(AddonLoadOrder.PREWORLD);
-		}
-		// Spout End
 		this.statFileWriter.func_27175_b();
 		this.statFileWriter.syncStats();
 		this.renderViewEntity = null;
@@ -1819,8 +1565,8 @@ public abstract class Minecraft implements Runnable {
 			if (var4 instanceof ChunkProviderLoadOrGenerate) {
 				ChunkProviderLoadOrGenerate var5 = (ChunkProviderLoadOrGenerate)var4;
 				int var6 = MathHelper.floor_float((float)((int)this.thePlayer.posX)) >> 4;
-		int var7 = MathHelper.floor_float((float)((int)this.thePlayer.posZ)) >> 4;
-		var5.setCurrentChunkOver(var6, var7);
+				int var7 = MathHelper.floor_float((float)((int)this.thePlayer.posZ)) >> 4;
+				var5.setCurrentChunkOver(var6, var7);
 			}
 
 			par1World.spawnPlayerWithLoadedChunks(this.thePlayer);
@@ -1829,21 +1575,10 @@ public abstract class Minecraft implements Runnable {
 				par1World.saveWorldIndirectly(this.loadingScreen);
 			}
 
-			this.renderViewEntity = this.thePlayer;// Spout Start
-			SpoutClient.getInstance().onWorldEnter();
-			SpoutClient.getInstance().enableAddons(AddonLoadOrder.POSTWORLD);
-		}
-		else {
+			this.renderViewEntity = this.thePlayer;
+		} else {
 			this.saveLoader.flushCache();
 			this.thePlayer = null;
-			if (renderEngine.oldPack != null) {
-				renderEngine.texturePack.setTexturePack(renderEngine.oldPack);
-				renderEngine.oldPack = null;
-			}
-			renderEngine.refreshTextures();
-			SpoutClient.getInstance().onWorldExit();
-			SpoutClient.getInstance().disableAddons();
-			// Spout End
 		}
 
 		System.gc();
@@ -2008,7 +1743,7 @@ public abstract class Minecraft implements Runnable {
 
 	public static void startMainThread1(String par0Str, String par1Str) {
 		try {
-			startMainThread(par0Str, par1Str, (String)null);
+		startMainThread(par0Str, par1Str, (String)null);
 		}
 		catch (LWJGLException e) {
 		}
