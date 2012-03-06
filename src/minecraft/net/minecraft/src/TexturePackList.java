@@ -72,7 +72,7 @@ public class TexturePackList {
 
 		while(i.hasNext()) {
 			TexturePackBase texturePack = (TexturePackBase)i.next();
-			texturePack.func_6484_b(this.mc);
+			texturePack.unbindThumbnailTexture(this.mc);
 			this.field_6538_d.remove(texturePack.texturePackID);
 		}
 
@@ -108,6 +108,27 @@ public class TexturePackList {
 						var1.add(var12);
 					}
 					catch (IOException var9) {
+						var9.printStackTrace();
+					}
+				}
+ 				else if (var6.isDirectory() && (new File(var6, "pack.txt")).exists()) {
+					var7 = var6.getName() + ":folder:" + var6.lastModified();
+
+					try {
+						if (!this.field_6538_d.containsKey(var7)) {
+							TexturePackFolder var8 = new TexturePackFolder(var6);
+							var8.texturePackID = var7;
+							this.field_6538_d.put(var7, var8);
+							var8.func_6485_a(this.mc);
+						}
+
+						var14 = (TexturePackBase)this.field_6538_d.get(var7);
+						if (var14.texturePackFileName.equals(this.currentTexturePack)) {
+							this.selectedTexturePack = var14;
+						}
+
+						var1.add(var14);
+					} catch (IOException var9) {
 						var9.printStackTrace();
 					}
 				}
