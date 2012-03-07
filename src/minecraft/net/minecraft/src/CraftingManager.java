@@ -112,7 +112,7 @@ public class CraftingManager {
 		//System.out.println(this.recipes.size() + " recipes"); //Spout removed
 	}
 
-	public void addRecipe(ItemStack par1ItemStack, Object... par2ArrayOfObj5) {	 //Spout default -> public
+	public void addRecipe(ItemStack par1ItemStack, Object... par2ArrayOfObj) {	 //Spout default -> public
 		String var3 = "";
 		int var4 = 0;
 		int var5 = 0;

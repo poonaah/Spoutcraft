@@ -20,7 +20,7 @@ public class ItemMonsterPlacer extends Item {
 
 	public int getColorFromDamage(int par1, int par2) {
 		EntityEggInfo var3 = (EntityEggInfo)EntityList.entityEggs.get(Integer.valueOf(par1));
-		return var3 != null ? (par2 == 0 ? Colorizer.colorizeSpawnerEgg(var3.field_46061_b, par1, par2) : Colorizer.colorizeSpawnerEgg(var3.field_46062_c, par1, par2)) : Colorizer.colorizeSpawnerEgg(16777215, par1, par2); //Spout HD
+		return var3 != null ? (par2 == 0 ? Colorizer.colorizeSpawnerEgg(var3.primaryColor, par1, par2) : Colorizer.colorizeSpawnerEgg(var3.secondaryColor, par1, par2)) : Colorizer.colorizeSpawnerEgg(16777215, par1, par2); //Spout HD
 	}
 
 	public boolean func_46058_c() {

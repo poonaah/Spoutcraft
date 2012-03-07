@@ -327,7 +327,7 @@ public class RenderGlobal implements IWorldAccess {
 
 			for (var6 = 0; var6 < var5.size(); ++var6) {
 				var7 = (Entity)var5.get(var6);
-				if (var7.isInRangeToRenderVec3D(par1Vec3D) && (var7.ignoreFrustrumCheck || par2ICamera.isBoundingBoxInFrustum(var7.boundingBox)) && (var7 != this.mc.renderViewEntity || this.mc.gameSettings.thirdPersonView != 0 || this.mc.renderViewEntity.isPlayerSleeping()) && this.worldObj.blockExists(MathHelper.floor_double(var7.posX), 0, MathHelper.floor_double(var7.posZ))) {
+				if (var7.isInRangeToRenderVec3D(par1Vec3D) && (var7.ignoreFrustumCheck || par2ICamera.isBoundingBoxInFrustum(var7.boundingBox)) && (var7 != this.mc.renderViewEntity || this.mc.gameSettings.thirdPersonView != 0 || this.mc.renderViewEntity.isPlayerSleeping()) && this.worldObj.blockExists(MathHelper.floor_double(var7.posX), 0, MathHelper.floor_double(var7.posZ))) {
 					++this.countEntitiesRendered;
 					RenderManager.instance.renderEntity(var7, par3);
 				}
@@ -341,7 +341,7 @@ public class RenderGlobal implements IWorldAccess {
 				TileEntity tileentity = (TileEntity) this.tileEntities.get(var6);
 				this.worldObj.checkEntityTile(tileentity);
 				if (!tileentity.isInvalid()) {
-					TileEntityRenderer.instance.renderTileEntity(tileentity, var3);
+					TileEntityRenderer.instance.renderTileEntity(tileentity, par3);
 				}
 				// Spout end
 			}
@@ -838,6 +838,7 @@ public class RenderGlobal implements IWorldAccess {
 			float var17 = (float)(var26 + 1) / 4.0F;
 			float var18 = (float)(var27 + 1) / 2.0F;
 			var21.startDrawingQuads();
+			double multiplier = (SpoutClient.getInstance().getSkyManager().getMoonSizePercent() / 100D);
 			var21.addVertexWithUV((double)(-var11), -100.0D / multiplier, (double)var11, (double)var17, (double)var18);
 			var21.addVertexWithUV((double)var11, -100.0D / multiplier, (double)var11, (double)var15, (double)var18);
 			var21.addVertexWithUV((double)var11, -100.0D / multiplier, (double)(-var11), (double)var15, (double)var16);
@@ -846,7 +847,7 @@ public class RenderGlobal implements IWorldAccess {
 			}
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			var12 = this.worldObj.getStarBrightness(par1) * var7;
-			if (var12 > 0.0F && ConfigReader.stars) //Spout added stars condition) {
+			if (var12 > 0.0F && ConfigReader.stars) { //Spout (added stars condition)
 				GL11.glColor4f(var12, var12, var12, var12);
 				GL11.glCallList(this.starGLCallList);
 			}
@@ -917,7 +918,7 @@ public class RenderGlobal implements IWorldAccess {
 			return;
 		}
 		// Spout End
-		if (!this.mc.theWorld.worldProvider.isAlternateDimension && ConfigReader.sky) { // Spout
+		if (!this.mc.theWorld.worldProvider.hasNoSky && ConfigReader.sky) { // Spout
 			if (ConfigReader.fancyClouds) { // Spout
 				this.renderCloudsFancy(par1);
 			} else {
@@ -1001,7 +1002,7 @@ public class RenderGlobal implements IWorldAccess {
 		double var10 = (this.mc.renderViewEntity.prevPosZ + (this.mc.renderViewEntity.posZ - this.mc.renderViewEntity.prevPosZ) * (double)par1) / (double)var4 + 0.33D;
 		// Spout Start
 		//float var12 = this.worldObj.worldProvider.getCloudHeight() - var2 + 0.33F;
-		float var12 = SpoutClient.getInstance().getSkyManager().getCloudHeight() - var2 + 0.33F + ;
+		float var12 = SpoutClient.getInstance().getSkyManager().getCloudHeight() - var2 + 0.33F;
 		// Spout End
 		int var13 = MathHelper.floor_double(var8 / 2048.0D);
 		int var14 = MathHelper.floor_double(var10 / 2048.0D);
@@ -1015,7 +1016,7 @@ public class RenderGlobal implements IWorldAccess {
 		float var17 = (float)var15.yCoord;
 		float var18 = (float)var15.zCoord;
 		// Spout Start
-		Color cloudColor = SpoutClie5nt.getInstance().getSkyManager().getCloudColor();
+		Color cloudColor = SpoutClient.getInstance().getSkyManager().getCloudColor();
 		if (cloudColor != null) {
 			var16 = cloudColor.getRedF();
 			var17 = cloudColor.getGreenF();

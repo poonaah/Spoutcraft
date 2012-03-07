@@ -2,8 +2,11 @@ package net.minecraft.src;
 
 import java.util.List;
 import net.minecraft.client.Minecraft;
+
+import org.bukkit.ChatColor;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+import org.spoutcraft.client.config.ConfigReader;
 
 public class GuiEditSign extends GuiScreen
 {
@@ -49,7 +52,7 @@ public class GuiEditSign extends GuiScreen
 		if (!ConfigReader.sendColorsAsUnicode) {
 			unicode.displayString = "Send As Plain Text";
 		}
-		if (!this.mc.theWorld.multiplayerWorld) {
+		if (!this.mc.theWorld.isRemote) {
 			unicode.drawButton = false;
 			unicode.enabled = false;
 		}
@@ -105,7 +108,7 @@ public class GuiEditSign extends GuiScreen
 			mc.displayGuiScreen(null);
 		}
 		//Spout start
-		else if (guibutton.id == 1 && unicode.enabled) {
+		else if (par1GuiButton.id == 1 && unicode.enabled) {
 			ConfigReader.sendColorsAsUnicode = !ConfigReader.sendColorsAsUnicode;
 			if (ConfigReader.sendColorsAsUnicode) {
 				unicode.displayString = "Send As Unicode";
@@ -207,7 +210,7 @@ public class GuiEditSign extends GuiScreen
 	/**
 	 * Draws the screen and all the components in it.
 	 */
-	public void drawScreen(int par1, int par2, float par3)
+	public void drawScreen(int x, int y, float z)
 	{
 		drawDefaultBackground();
 		drawCenteredString(fontRenderer, screenTitle, width / 2, 40, 0xffffff);
@@ -283,7 +286,7 @@ public class GuiEditSign extends GuiScreen
 		entitySign.columnBeingEdited = -1;
 		//Spout end
 		GL11.glPopMatrix();
-		super.drawScreen(par1, par2, par3);
+		super.drawScreen(x, y, z);
 		//Spout start
 		if (unicode.enabled && isInBoundingRect(unicode.xPosition, unicode.yPosition, unicode.height, unicode.width, x, y)) {
 			this.drawTooltip("Some servers censor unicode characters. \nIf yours does, try sending as plain text.", x, y);
@@ -293,7 +296,7 @@ public class GuiEditSign extends GuiScreen
 
 	//Spout start
 	public boolean sendAsUnicode() {
-		return ConfigReader.sendColorsAsUnicode && this.mc.theWorld.multiplayerWorld;
+		return ConfigReader.sendColorsAsUnicode && this.mc.theWorld.isRemote;
 	}
 	//Spout end
 

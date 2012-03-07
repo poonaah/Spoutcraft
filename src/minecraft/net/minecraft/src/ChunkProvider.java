@@ -96,8 +96,10 @@ public class ChunkProvider implements IChunkProvider {
 				}
 			}
 
-			this.chunkMap.add(var3, var5);
-			this.chunkList.add(var5);
+			//Spout start
+			this.chunkMap.put(var3, var5);
+			//this.chunkList.add(var5);
+			//Spout end
 			if (var5 != null) {
 				var5.func_4143_d();
 				var5.onChunkLoad();
@@ -108,8 +110,8 @@ public class ChunkProvider implements IChunkProvider {
 		
 		//Spout start
 		if (var5 != null && Thread.currentThread() == Minecraft.mainThread) {
-			lastX = var1;
-			lastZ = var2;
+			lastX = par1;
+			lastZ = par2;
 			last = var5;
 			cacheMisses++;
 		}
@@ -243,13 +245,16 @@ public class ChunkProvider implements IChunkProvider {
 			}
 		}
 
+		//Spout start
+		Chunk[] chunks = chunkMap.values(new Chunk[chunkMap.size()]);
 		for (var1 = 0; var1 < 10; ++var1) {
-			if (this.field_35392_h >= this.chunkList.size()) {
+			if (this.field_35392_h >= chunks.length) {
+				//Spout end
 				this.field_35392_h = 0;
 				break;
 			}
 
-			Chunk var4 = (Chunk)this.chunkList.get(this.field_35392_h++);
+			Chunk var4 = chunks[this.field_35392_h++]; //Spout
 			EntityPlayer var5 = this.worldObj.func_48456_a((double)(var4.xPosition << 4) + 8.0D, (double)(var4.zPosition << 4) + 8.0D, 288.0D);
 			if (var5 == null) {
 				this.dropChunk(var4.xPosition, var4.zPosition);

@@ -333,7 +333,7 @@ public class EntityRenderer {
 		this.cloudFog = this.mc.renderGlobal.func_27307_a(var4, var6, var8, par1);
 	}
 
-	private void setupCameraTransform(float var1, int var2) {
+	private void setupCameraTransform(float par1, int par2) {
 		// Spout Start
 		this.farPlaneDistance = (float) (32 << 3 - this.mc.gameSettings.renderDistance);
 		if (ConfigReader.farView) {
@@ -452,7 +452,7 @@ public class EntityRenderer {
 
 	// Spout End
 
-	private void renderHand(float var1, int var2) {
+	private void renderHand(float par1, int par2) {
 		if (this.debugViewDirection <= 0) {
 			GL11.glMatrixMode(GL11.GL_PROJECTION);
 			GL11.glLoadIdentity();
@@ -629,7 +629,7 @@ public class EntityRenderer {
 	}
 	}//Spout
 
-	public void updateCameraAndRender(float var1) {
+	public void updateCameraAndRender(float par1) {
 		// Spout Start
 		World world = this.mc.theWorld;
 		RenderBlocks.fancyGrass = ConfigReader.fancyGrass;
@@ -644,7 +644,7 @@ public class EntityRenderer {
 		Block.leaves.setGraphicsLevel(ConfigReader.fancyTrees);
 
 		if (!ConfigReader.weather && world != null && world.worldInfo != null) {
-			world.worldInfo.setIsRaining(false);
+			world.worldInfo.setRaining(false);
 		}
 
 		if (world != null) {
@@ -765,7 +765,7 @@ public class EntityRenderer {
 						}
 					}
 
-					this.mc.ingameGUI.renderGameOverlay(var1, this.mc.currentScreen != null, var16, var17);
+					this.mc.ingameGUI.renderGameOverlay(par1, this.mc.currentScreen != null, var16, var17);
 					if (ConfigReader.fastDebug != 0) {
 						this.mc.gameSettings.showDebugInfo = false;
 					}
@@ -1115,8 +1115,6 @@ public class EntityRenderer {
 					var16 = 10;
 				}
 
-				BiomeGenBase[] var17 = var44.getWorldChunkManager().loadRendererData(var45 - var16, var47 - var16, var16 * 2 + 1, var16 * 2 + 1);
-				float[] var18 = var44.getWorldChunkManager().initTemperatureCache(var45 - var16, var47 - var16, var16 * 2 + 1, var16 * 2 + 1);
 				boolean var19 = false;
 				byte var20 = -1;
 				float var21 = (float) this.rendererUpdateCount + var1;
@@ -1132,7 +1130,7 @@ public class EntityRenderer {
 						int var24 = (var22 - var47 + 16) * 32 + var23 - var45 + 16;
 						float var25 = this.rainXCoords[var24] * 0.5F;
 						float var26 = this.rainYCoords[var24] * 0.5F;
-						BiomeGenBase var27 = var17[var48++];
+						BiomeGenBase var27 = var44.func_48454_a(var22, var23);
 
 						boolean forceSnow = false;
 						boolean forceRain = false;
@@ -1162,7 +1160,7 @@ public class EntityRenderer {
 
 							if (var29 != var30 || forceRain || forceSnow) {
 								this.random.setSeed((long)(var23 * var23 * GL11.GL_RGBA_MODE + var23 * 45238971 ^ var22 * var22 * 418711 + var22 * 13761));
-								float var33 = var18[var48 - 1];
+								float var33 = var27.func_48411_i();
 								float var34;
 								double var37;
 								double temp = var44.getWorldChunkManager().getTemperatureAtHeight(var33, var28);

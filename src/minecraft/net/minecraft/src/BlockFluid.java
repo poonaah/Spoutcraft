@@ -29,7 +29,7 @@ public abstract class BlockFluid extends Block {
 		if (this.blockMaterial != Material.water) {
 			return 0xffffff;
 		}
-		int color = var1.getWaterColorCache(var2, var3, var4);
+		int color = par1IBlockAccess.getWaterColorCache(par2, par3, par4);
 		if (color == -1 || ConfigReader.fancyBiomeColors) {
 		
 			int var5 = 0;
@@ -40,10 +40,10 @@ public abstract class BlockFluid extends Block {
 				for (int var9 = -1; var9 <= 1; ++var9) {
 					int var10;
 					if(!ConfigReader.waterBiomeColors) {
-						var10 = var1.getWorldChunkManager().getBiomeGenAt(par2 + var9, par4 + var8).waterColorMultiplier;
+						var10 = par1IBlockAccess.getWorldChunkManager().getBiomeGenAt(par2 + var9, par4 + var8).waterColorMultiplier;
 					}
 					else {
-						 var10 = Colorizer.colorizeWater(var1.getWorldChunkManager(), par2 + var9, par4 + var8);
+						 var10 = Colorizer.colorizeWater(par1IBlockAccess.getWorldChunkManager(), par2 + var9, par4 + var8);
 					}
 					var5 += (var10 & 16711680) >> 16;
 					var6 += (var10 & 65280) >> 8;
@@ -52,7 +52,7 @@ public abstract class BlockFluid extends Block {
 			}
 
 			color = (var5 / 9 & 255) << 16 | (var6 / 9 & 255) << 8 | var7 / 9 & 255;
-			var1.setWaterColorCache(var2, var3, var4, color);
+			par1IBlockAccess.setWaterColorCache(par2, par3, par4, color);
 		}
 		return color;
 		//Spout end - Biome Water

@@ -27,9 +27,6 @@ public class WorldInfo {
 	private int gameType;
 	private boolean mapFeaturesEnabled;
 	private boolean hardcore;
-	//Spout start
-	private int height = 128;
-	//Spout end
 
 	public WorldInfo(NBTTagCompound par1NBTTagCompound) {
 		this.terrainType = WorldType.field_48635_b;
@@ -74,12 +71,6 @@ public class WorldInfo {
 			this.playerTag = par1NBTTagCompound.getCompoundTag("Player");
 			this.dimension = this.playerTag.getInteger("Dimension");
 		}
-		
-		//Spout save map height
-		if (var1.hasKey("MapHeight")) {
-			height = var1.getInteger("MapHeight");
-		}
-
 	}
 
 	public WorldInfo(WorldSettings par1WorldSettings, String par2Str) {
@@ -115,9 +106,6 @@ public class WorldInfo {
 		this.thunderTime = par1WorldInfo.thunderTime;
 		this.thundering = par1WorldInfo.thundering;
 		this.hardcore = par1WorldInfo.hardcore;
-		//Spout start
-		this.height = par1WorldInfo.height;
-		//Spout end
 	}
 
 	public NBTTagCompound getNBTTagCompound() {
@@ -165,20 +153,7 @@ public class WorldInfo {
 		if (par2NBTTagCompound != null) {
 			par1NBTTagCompound.setCompoundTag("Player", par2NBTTagCompound);
 		}
-		//Spout start
-		par1NBTTagCompound.setInteger("MapHeight", height);
-		//Spout end
 	}
-	
-	//Spout start
-	public int getMapHeight() {
-		return this.height;
-	}
-	
-	public void setMapHeight(int height) {
-		this.height = height;
-	}
-	//Spout end
 
 	public long getSeed() {
 		return this.randomSeed;

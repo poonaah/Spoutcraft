@@ -1,11 +1,17 @@
 package net.minecraft.src;
 
-import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+import org.spoutcraft.client.SpoutClient;
+import org.spoutcraft.client.config.ConfigReader;
+import org.spoutcraft.spoutcraftapi.gui.ChatTextBox;
+import org.spoutcraft.spoutcraftapi.gui.Color;
+import org.spoutcraft.spoutcraftapi.gui.InGameHUD;
+import org.spoutcraft.spoutcraftapi.gui.ServerPlayerList;
 
 public class GuiIngame extends Gui
 {
@@ -166,9 +172,9 @@ public class GuiIngame extends Gui
 				GL11.glTranslatef(0.0F, 32.0F, 0.0F);
 			}
 			if (ConfigReader.fastDebug != 2) {
-				font.drawStringWithShadow("Minecraft 1.1.0 (" + this.mc.debug + ")", 2, 2, 16777215);
+				font.drawStringWithShadow("Minecraft 1.2.3 (" + this.mc.debug + ")", 2, 2, 16777215);
 				font.drawStringWithShadow(this.mc.debugInfoRenders(), 2, 12, 16777215);
-				font.drawStringWithShadow(this.mc.func_6262_n(), 2, 22, 16777215);
+				font.drawStringWithShadow(this.mc.getEntityDebug(), 2, 22, 16777215);
 				font.drawStringWithShadow(this.mc.debugInfoEntities(), 2, 32, 16777215);
 				font.drawStringWithShadow(this.mc.func_21002_o(), 2, 42, 16777215);
 				long maxMem = Runtime.getRuntime().maxMemory();
@@ -191,20 +197,13 @@ public class GuiIngame extends Gui
 				}
 				if (mc.isMultiplayerWorld() && SpoutClient.getInstance().isSpoutEnabled()) {
 					this.drawString(font, "Spout Map Data Cache Info:", 2, 64 + offset, 0xE0E000);
-					this.drawString(font, "Average packet size: " + ChunkCache.averageChunkSize.get() + " bytes", 2, 72 + offset, 14737632);
-					this.drawString(font, "Cache hit percent: " + ChunkCache.hitPercentage.get(), 2, 80 + offset, 14737632);
+					this.drawString(font, "Average packet size: " + org.spoutcraft.client.chunkcache.ChunkCache.averageChunkSize.get() + " bytes", 2, 72 + offset, 14737632);
+					this.drawString(font, "Cache hit percent: " + org.spoutcraft.client.chunkcache.ChunkCache.hitPercentage.get(), 2, 80 + offset, 14737632);
 					long currentTime = System.currentTimeMillis();
-					long downBandwidth = (8 * ChunkCache.totalPacketDown.get()) / (currentTime - ChunkCache.loggingStart.get());
-					long upBandwidth = (8 * ChunkCache.totalPacketUp.get()) / (currentTime - ChunkCache.loggingStart.get());
+					long downBandwidth = (8 * org.spoutcraft.client.chunkcache.ChunkCache.totalPacketDown.get()) / (currentTime - org.spoutcraft.client.chunkcache.ChunkCache.loggingStart.get());
+					long upBandwidth = (8 * org.spoutcraft.client.chunkcache.ChunkCache.totalPacketUp.get()) / (currentTime - org.spoutcraft.client.chunkcache.ChunkCache.loggingStart.get());
 					this.drawString(font, "Bandwidth (Up): " + Math.max(1, upBandwidth) + "kbps", 2, 88 + offset, 14737632);
 					this.drawString(font, "Bandwidth (Down): " + Math.max(1, downBandwidth) + "kbps", 2, 96 + offset, 14737632);
-					this.drawString(font, "Chunk Cache Hits: " + ((float)ChunkProviderClient.cacheHits / (ChunkProviderClient.cacheMisses + ChunkProviderClient.cacheHits + 1F)) * 100 + "%", 2, 104 + offset, 14737632);
-				}
-				else if (mc.isMultiplayerWorld()) {
-					this.drawString(font, "Chunk Cache Hits: " + ((float)ChunkProviderClient.cacheHits / (ChunkProviderClient.cacheMisses + ChunkProviderClient.cacheHits + 1F)) * 100 + "%", 2, 64 + offset, 14737632);
-				}
-				else {
-					this.drawString(font, "Chunk Cache Hits: " + ((float)ChunkProvider.cacheHits / (ChunkProvider.cacheMisses + ChunkProvider.cacheHits + 1F)) * 100 + "%", 2, 64 + offset, 14737632);
 				}
 			}
 			else {
@@ -334,7 +333,7 @@ public class GuiIngame extends Gui
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 				GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
 				if(var20 < var44.size()) {
-					GuiSavingLevelString var50 = (GuiSavingLevelString)var44.get(var20);
+					GuiPlayerInfo var50 = (GuiPlayerInfo)var44.get(var20);
 					font.drawStringWithShadow(var50.name, var47, var22, 16777215);
 					this.mc.renderEngine.bindTexture(this.mc.renderEngine.getTexture("/gui/icons.png"));
 					boolean var48 = false;
@@ -559,7 +558,7 @@ public class GuiIngame extends Gui
 	public void addChatMessage(String par1Str)
 	{
 		//Spout start
-		if (!ConfigReader.showJoinMessages && s.toLowerCase().contains("joined the game")) {
+		if (!ConfigReader.showJoinMessages && par1Str.toLowerCase().contains("joined the game")) {
 			return;
 		}
 		//Spout end

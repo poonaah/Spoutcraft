@@ -45,7 +45,7 @@ public class Packet18Animation extends Packet {
 			SpoutClient.getInstance().getPacketManager().sendSpoutPacket(new PacketFullVersion(Long.toString(SpoutClient.getClientVersion())));
 			System.out.println("Detected Spout server.");
 		} else {
-			par1NetHandler.handleArmAnimation(this);
+			par1NetHandler.handleAnimation(this);
 		}
 		//Spout End
 	}

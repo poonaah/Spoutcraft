@@ -19,10 +19,10 @@ public class FontRenderer {
 	public int FONT_HEIGHT = 8;
 	public Random fontRandom = new Random();
 	private byte[] glyphWidth = new byte[65536];
-	private final int[] glyphTextureName = new int[256];
+	private int[] glyphTextureName = new int[256];
 	private int[] colorCode = new int[32];
 	private int boundTextureName;
-	private final RenderEngine renderEngine;
+	private RenderEngine renderEngine;
 	private float posX;
 	private float posY;
 	public boolean unicodeFlag;

@@ -2,18 +2,8 @@ package net.minecraft.src;
 
 import java.util.List;
 import java.util.Random;
-import net.minecraft.src.BiomeGenBase;
-import net.minecraft.src.Block;
-import net.minecraft.src.Chunk;
-import net.minecraft.src.ChunkPosition;
-import net.minecraft.src.EnumCreatureType;
-import net.minecraft.src.IChunkProvider;
-import net.minecraft.src.IProgressUpdate;
-import net.minecraft.src.MapGenVillage;
-import net.minecraft.src.World;
 
 public class ChunkProviderFlat implements IChunkProvider {
-
 	private World worldObj;
 	private Random random;
 	private final boolean useStructures;
@@ -40,11 +30,10 @@ public class ChunkProviderFlat implements IChunkProvider {
 						var6 = Block.grass.blockID;
 					}
 
-					par1ArrayOfByte[var3 << worldObj.xShift | var4 << worldObj.heightShift | var5] = (byte)var6; //Spout modified shifts
+					par1ArrayOfByte[var3 << 11 | var4 << 7 | var5] = (byte)var6;
 				}
 			}
 		}
-
 	}
 
 	public Chunk loadChunk(int par1, int par2) {
@@ -52,7 +41,7 @@ public class ChunkProviderFlat implements IChunkProvider {
 	}
 
 	public Chunk provideChunk(int par1, int par2) {
-		byte[] var3 = new byte['\u8000'];
+		byte[] var3 = new byte[32768];
 		this.generate(var3);
 		Chunk var4 = new Chunk(this.worldObj, var3, par1, par2);
 		if (this.useStructures) {
@@ -75,7 +64,6 @@ public class ChunkProviderFlat implements IChunkProvider {
 		if (this.useStructures) {
 			this.villageGen.generateStructuresInChunk(this.worldObj, this.random, par2, par3);
 		}
-
 	}
 
 	public boolean saveChunks(boolean par1, IProgressUpdate par2IProgressUpdate) {

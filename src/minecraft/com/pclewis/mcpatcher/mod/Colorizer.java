@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Map.Entry;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.src.BiomeGenBase;
 import net.minecraft.src.Block;
 import net.minecraft.src.Entity;
@@ -58,24 +60,24 @@ public class Colorizer {
 	private static int[] stemColors;
 	private static ArrayList potions = new ArrayList();
 	private static final Random random = new Random();
-	private static final boolean useWaterColors = MCPatcherUtils.getBoolean("Custom Colors", "water", true);
-	private static final boolean useSwampColors = MCPatcherUtils.getBoolean("Custom Colors", "swamp", true);
-	private static final boolean useTreeColors = MCPatcherUtils.getBoolean("Custom Colors", "tree", true);
-	private static final boolean usePotionColors = MCPatcherUtils.getBoolean("Custom Colors", "potion", true);
-	private static final boolean useParticleColors = MCPatcherUtils.getBoolean("Custom Colors", "particle", true);
-	private static final boolean useLightmaps = MCPatcherUtils.getBoolean("Custom Colors", "lightmaps", true);
-	private static final boolean useFogColors = MCPatcherUtils.getBoolean("Custom Colors", "fog", true);
-	private static final boolean useCloudType = MCPatcherUtils.getBoolean("Custom Colors", "clouds", true);
-	private static final boolean useRedstoneColors = MCPatcherUtils.getBoolean("Custom Colors", "redstone", true);
-	private static final boolean useStemColors = MCPatcherUtils.getBoolean("Custom Colors", "stem", true);
-	private static final boolean useEggColors = MCPatcherUtils.getBoolean("Custom Colors", "egg", true);
-	private static final boolean useMapColors = MCPatcherUtils.getBoolean("Custom Colors", "map", true);
-	private static final boolean useSheepColors = MCPatcherUtils.getBoolean("Custom Colors", "sheep", true);
-	private static final boolean useBlockColors = MCPatcherUtils.getBoolean("Custom Colors", "otherBlocks", true);
-	private static final boolean useTextColors = MCPatcherUtils.getBoolean("Custom Colors", "text", true);
-	private static final int fogBlendRadius = MCPatcherUtils.getInt("Custom Colors", "fogBlendRadius", 7);
+	private static final boolean useWaterColors = true;
+	private static final boolean useSwampColors = true;
+	private static final boolean useTreeColors = true;
+	private static final boolean usePotionColors = true;
+	private static final boolean useParticleColors = true;
+	private static final boolean useLightmaps = true;
+	private static final boolean useFogColors = true;
+	private static final boolean useCloudType = true;
+	private static final boolean useRedstoneColors = true;
+	private static final boolean useStemColors = true;
+	private static final boolean useEggColors = true;
+	private static final boolean useMapColors = true;
+	private static final boolean useSheepColors = true;
+	private static final boolean useBlockColors = true;
+	private static final boolean useTextColors = true;
+	private static final int fogBlendRadius = 7;
 	private static final float fogBlendScale = getBlendScale(fogBlendRadius);
-	private static final int blockBlendRadius = MCPatcherUtils.getInt("Custom Colors", "blockBlendRadius", 1);
+	private static final int blockBlendRadius = 1;
 	private static final float blockBlendScale = getBlendScale(blockBlendRadius);
 	static TexturePackBase lastTexturePack;
 	private static final int LIGHTMAP_SIZE = 16;
@@ -218,11 +220,6 @@ public class Colorizer {
 			} else {
 				var4 = MCPatcherUtils.readImage(lastTexturePack.getResourceAsStream(var3));
 				lightmaps.put(Integer.valueOf(var2), var4);
-				if (var4 == null) {
-					MCPatcherUtils.log("using default lighting for world %d", new Object[]{Integer.valueOf(var2)});
-				} else {
-					MCPatcherUtils.log("using %s", new Object[]{var3});
-				}
 			}
 
 			if (var4 == null) {
@@ -231,7 +228,6 @@ public class Colorizer {
 				int var5 = var4.getWidth();
 				int var6 = var4.getHeight();
 				if (var6 != 32) {
-					MCPatcherUtils.error("%s must be exactly %d pixels high", new Object[]{var3, Integer.valueOf(32)});
 					lightmaps.put(Integer.valueOf(var2), (Object)null);
 					return false;
 				} else {
@@ -240,7 +236,7 @@ public class Colorizer {
 					int[] var8 = new int[256];
 					float var9 = clamp(var1.lightningFlash > 0?1.0F:1.1666666F * (var1.func_35464_b(1.0F) - 0.2F)) * (float)(var5 - 1);
 					float var10 = clamp(var0.torchFlickerX + 0.5F) * (float)(var5 - 1);
-					float var11 = clamp(MCPatcherUtils.getMinecraft().gameSettings.gammaSetting);
+					float var11 = clamp(Minecraft.theMinecraft.gameSettings.gammaSetting);
 					float[] var12 = new float[48];
 					float[] var13 = new float[48];
 					float[] var14 = new float[3];
@@ -270,7 +266,7 @@ public class Colorizer {
 						}
 					}
 
-					MCPatcherUtils.getMinecraft().renderEngine.createTextureFromBytes(var8, 16, 16, var0.lightmapTexture);
+					Minecraft.theMinecraft.renderEngine.createTextureFromBytes(var8, 16, 16, var0.lightmapTexture);
 					return true;
 				}
 			}
@@ -330,10 +326,8 @@ public class Colorizer {
 		checkUpdate();
 		if (var0 == null) {
 			BiomeHelper.instance = new BiomeHelper.Stub();
-		} else if (var1) {
-			BiomeHelper.instance = new BiomeHelper.New(var0);
 		} else {
-			BiomeHelper.instance = new BiomeHelper.Old(var0);
+			BiomeHelper.instance = new BiomeHelper.New(var0);
 		}
 	}
 
@@ -347,7 +341,6 @@ public class Colorizer {
 				BiomeGenBase var2 = (BiomeGenBase)var1.next();
 				int var3 = ColorMap.getX((double)var2.temperature, (double)var2.rainfall);
 				int var4 = ColorMap.getY((double)var2.temperature, (double)var2.rainfall);
-				MCPatcherUtils.log("setupBiome #%d \"%s\" %06x (%d,%d)", new Object[]{Integer.valueOf(var2.biomeID), var2.biomeName, Integer.valueOf(var2.waterColorMultiplier), Integer.valueOf(var3), Integer.valueOf(var4)});
 			}
 		}
 	}
@@ -426,13 +419,11 @@ public class Colorizer {
 	}
 
 	public static void setupPotion(Potion var0) {
-		MCPatcherUtils.log("setupPotion #%d \"%s\" %06x", new Object[]{Integer.valueOf(var0.id), var0.name, Integer.valueOf(var0.liquidColor)});
 		var0.origColor = var0.liquidColor;
 		potions.add(var0);
 	}
 
 	public static void setupSpawnerEgg(String var0, int var1, int var2, int var3) {
-		MCPatcherUtils.log("setupSpawnerEgg #%d \"%s\" %06x %06x", new Object[]{Integer.valueOf(var1), var0, Integer.valueOf(var2), Integer.valueOf(var3)});
 		entityNamesByID.put(Integer.valueOf(var1), var0);
 	}
 
@@ -448,8 +439,8 @@ public class Colorizer {
 	}
 
 	private static void checkUpdate() {
-		if (lastTexturePack != MCPatcherUtils.getMinecraft().texturePackList.selectedTexturePack) {
-			lastTexturePack = MCPatcherUtils.getMinecraft().texturePackList.selectedTexturePack;
+		if (lastTexturePack != Minecraft.theMinecraft.texturePackList.selectedTexturePack) {
+			lastTexturePack = Minecraft.theMinecraft.texturePackList.selectedTexturePack;
 			reset();
 			reloadColorProperties();
 			if (useFogColors) {
@@ -558,7 +549,6 @@ public class Colorizer {
 		try {
 			var0 = lastTexturePack.getResourceAsStream("/color.properties");
 			if (var0 != null) {
-				MCPatcherUtils.log("reloading %s", new Object[]{"/color.properties"});
 				properties.load(var0);
 			}
 		} catch (IOException var5) {
@@ -636,7 +626,6 @@ public class Colorizer {
 								continue;
 							}
 
-							MCPatcherUtils.log("using %s for block %s, default color %06x", new Object[]{var2, var8, Integer.valueOf(var4.colorize())});
 						}
 					}
 				}

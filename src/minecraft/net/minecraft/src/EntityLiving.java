@@ -74,7 +74,7 @@ public abstract class EntityLiving extends Entity {
 	public float jumpMovementFactor = 0.02F;
 	public float prevSwingProgress;
 	public float swingProgress;
-	protected int health = this.getMaxHealth();
+	public int health = this.getMaxHealth(); //Spout private -> public
 	public int prevHealth;
 	protected int carryoverDamage;
 	private int livingSoundTime;
@@ -617,15 +617,15 @@ public abstract class EntityLiving extends Entity {
 				this.field_704_R = 1.5F;
 				boolean var3 = true;
 				if ((float)this.heartsLife > (float)this.heartsHalvesLife / 2.0F) {
-					if (par2 <= this.naturalArmorRating) {
+					if (par2 <= this.lastDamage) {
 						return false;
 					}
 
-					this.damageEntity(par1DamageSource, par2 - this.naturalArmorRating);
-					this.naturalArmorRating = par2;
+					this.damageEntity(par1DamageSource, par2 - this.lastDamage);
+					this.lastDamage = par2;
 					var3 = false;
 				} else {
-					this.naturalArmorRating = par2;
+					this.lastDamage = par2;
 					this.prevHealth = this.health;
 					this.heartsLife = this.heartsHalvesLife;
 					this.damageEntity(par1DamageSource, par2);
@@ -723,7 +723,7 @@ public abstract class EntityLiving extends Entity {
 		return par2;
 	}
 
-	protected void damageEntity(DamageSource par1DamageSource, int par2) {
+	public void damageEntity(DamageSource par1DamageSource, int par2) { //Spout protected -> public
 		par2 = this.applyArmorCalculations(par1DamageSource, par2);
 		par2 = this.applyPotionDamageCalculations(par1DamageSource, par2);
 		this.health -= par2;
@@ -1552,8 +1552,6 @@ public abstract class EntityLiving extends Entity {
 		}
 
 	}
-}
-
 //Spout Start
 	
 	public final EntityData getData() {
@@ -1599,3 +1597,4 @@ public abstract class EntityLiving extends Entity {
 		return getData().getTextureToRender();
 	}
 	//Spout End
+}

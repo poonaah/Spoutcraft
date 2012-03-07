@@ -267,7 +267,7 @@ public class RenderLiving extends Render {
 		renderLivingLabel(var1, var2, var3, var5, var7, var9, 0xFFFFFF, -1);
 	}
 
-	protected void renderLivingLabel(EntityLiving par1EntityLiving, String par2Str, double par3, double par5, double par7, int par9) {
+	protected void renderLivingLabel(EntityLiving par1EntityLiving, String par2Str, double par3, double par5, double par7, int par9, int color, int color2) {
 	//Spout end
 		float var10 = par1EntityLiving.getDistanceToEntity(this.renderManager.livingPlayer);
 		if (var10 <= (float)par9) {
@@ -301,10 +301,10 @@ public class RenderLiving extends Render {
 			var14.addVertex((double)(var16 + 1), (double)(-1 + var15), 0.0D);
 			var14.draw();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			var11.drawString(var2, -var11.getStringWidth(var2) / 2, var15, color);  //Spout (changed to color var)
+			var11.drawString(par2Str, -var11.getStringWidth(par2Str) / 2, var15, color);  //Spout (changed to color var)
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glDepthMask(true);
-			var11.drawString(var2, -var11.getStringWidth(var2) / 2, var15, color2);  //Spout (changed to color2 var)
+			var11.drawString(par2Str, -var11.getStringWidth(par2Str) / 2, var15, color2);  //Spout (changed to color2 var)
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

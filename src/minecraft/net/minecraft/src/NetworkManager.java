@@ -71,7 +71,7 @@ public class NetworkManager {
 
 	public void addToSendQueue(Packet par1Packet) {
 		if (!this.isServerTerminating) {
-			ChunkCache.totalPacketUp.addAndGet(var1.getPacketSize()); // Spout
+			ChunkCache.totalPacketUp.addAndGet(par1Packet.getPacketSize()); // Spout
 			Object var2 = this.sendQueueLock;
 			synchronized(this.sendQueueLock) {
 				this.sendQueueByteLength += par1Packet.getPacketSize() + 1;

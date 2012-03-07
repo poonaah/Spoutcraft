@@ -214,7 +214,7 @@ public class SoundManager {
 		{
 			latestSoundID = (latestSoundID + 1) % 256;
 			String s1;
-			if (soundId == -1) s1 = (new StringBuilder()).append("sound_").append(field_587_e).toString();
+			if (soundId == -1) s1 = (new StringBuilder()).append("sound_").append(latestSoundID).toString();
 			else s1 = (new StringBuilder()).append("sound_").append(soundId).toString();
 			float f5 = 16F;
 			if(f3 > 1.0F)
@@ -248,7 +248,7 @@ public class SoundManager {
 		{
 			latestSoundID = (latestSoundID + 1) % 256;
 			String s1;
-			if (soundId == -1) s1 = (new StringBuilder()).append("sound_").append(field_587_e).toString();
+			if (soundId == -1) s1 = (new StringBuilder()).append("sound_").append(latestSoundID).toString();
 			else s1 = (new StringBuilder()).append("sound_").append(soundId).toString();
 			sndSystem.newSource(false, s1, soundpoolentry.soundUrl, soundpoolentry.soundName, false, 0.0F, 0.0F, 0.0F, 0, 0.0F);
 			if(f > 1.0F)

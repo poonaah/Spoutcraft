@@ -61,7 +61,7 @@ public class ChunkProviderClient implements IChunkProvider {
 
 	public Chunk loadChunk(int par1, int par2) {
 		Chunk var3 = new Chunk(this.worldObj, par1, par2);
-		this.chunkMapping.add(ChunkCoordIntPair.chunkXZ2Int(par1, par2), var3);
+		this.chunkMapping.put(ChunkCoordIntPair.chunkXZ2Int(par1, par2), var3); //Spout
 		var3.isChunkLoaded = true;
 		return var3;
 	}

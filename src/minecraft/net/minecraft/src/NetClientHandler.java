@@ -516,25 +516,25 @@ public class NetClientHandler extends NetHandler {
 			this.disconnected = true;
 			this.mc.changeWorld1((World)null);
 			//Spout start
-			System.out.println(var1);
-			if (var1 != null && var1.toLowerCase().contains("endofstream")) {
+			System.out.println(par1Str);
+			if (par1Str != null && par1Str.toLowerCase().contains("endofstream")) {
 				this.mc.displayGuiScreen(new org.spoutcraft.client.gui.error.GuiConnectionLost());
 			}
-			else if (var2 == null || var2.length == 0 || !(var2[0] instanceof String)) {
-				this.mc.displayGuiScreen(new GuiDisconnected("disconnect.lost", var1, var2));
+			else if (par2ArrayOfObj == null || par2ArrayOfObj.length == 0 || !(par2ArrayOfObj[0] instanceof String)) {
+				this.mc.displayGuiScreen(new GuiDisconnected("disconnect.lost", par1Str, par2ArrayOfObj));
 			}
-			else if (((String)var2[0]).toLowerCase().contains("connection reset")) {
+			else if (((String)par2ArrayOfObj[0]).toLowerCase().contains("connection reset")) {
 				this.mc.displayGuiScreen(new org.spoutcraft.client.gui.error.GuiConnectionLost());
 			}
-			else if (((String)var2[0]).toLowerCase().contains("connection refused")) {
+			else if (((String)par2ArrayOfObj[0]).toLowerCase().contains("connection refused")) {
 				this.mc.displayGuiScreen(new org.spoutcraft.client.gui.error.GuiConnectionLost("The server is not currently online!"));
 			}
-			else if (((String)var2[0]).toLowerCase().contains("overflow")) {
+			else if (((String)par2ArrayOfObj[0]).toLowerCase().contains("overflow")) {
 				this.mc.displayGuiScreen(new org.spoutcraft.client.gui.error.GuiConnectionLost("The server is currently experiencing heavy traffic. Try again later."));
 			}
 			else
 			//Spout end
-			this.mc.displayGuiScreen(new GuiDisconnected("disconnect.lost", var1, var2));
+			this.mc.displayGuiScreen(new GuiDisconnected("disconnect.lost", par1Str, par2ArrayOfObj));
 		}
 	}
 

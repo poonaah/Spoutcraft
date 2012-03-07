@@ -107,7 +107,7 @@ public class TexturePackList {
 					}
 				}
  				else if (var6.isDirectory() && (new File(var6, "pack.txt")).exists()) {
-					var7 = var6.getName() + ":folder:" + var6.lastModified();
+					String var7 = var6.getName() + ":folder:" + var6.lastModified();
 
 					try {
 						if (!this.field_6538_d.containsKey(var7)) {
@@ -117,7 +117,7 @@ public class TexturePackList {
 							var8.func_6485_a(this.mc);
 						}
 
-						var14 = (TexturePackBase)this.field_6538_d.get(var7);
+						TexturePackBase var14 = (TexturePackBase)this.field_6538_d.get(var7);
 						if (var14.texturePackFileName.equals(this.currentTexturePack)) {
 							this.selectedTexturePack = var14;
 						}

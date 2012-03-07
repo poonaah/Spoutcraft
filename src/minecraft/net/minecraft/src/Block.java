@@ -1,7 +1,18 @@
 package net.minecraft.src;
 
+import gnu.trove.map.hash.TIntFloatHashMap;
+
 import java.util.ArrayList;
 import java.util.Random;
+
+import org.spoutcraft.client.block.SpoutcraftChunk;
+import org.spoutcraft.spoutcraftapi.entity.ActivePlayer;
+import org.spoutcraft.spoutcraftapi.material.CustomBlock;
+import org.spoutcraft.spoutcraftapi.material.MaterialData;
+import org.spoutcraft.spoutcraftapi.util.FastLocation;
+import org.spoutcraft.spoutcraftapi.util.FixedLocation;
+
+import net.minecraft.client.Minecraft;
 //Spout start
 import com.pclewis.mcpatcher.mod.Colorizer;
 //Spout end
@@ -149,8 +160,8 @@ public class Block {
 	public static final Block field_48210_bM = (new BlockRedstoneLight(124, true)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("redstoneLight");
 	public int blockIndexInTexture;
 	public final int blockID;
-	protected float blockHardness;
-	protected float blockResistance;
+	public float blockHardness; //Spout protected -> public
+	public float blockResistance; //Spout protected -> public
 	protected boolean blockConstructorCalled;
 	protected boolean enableStats;
 	protected boolean field_48208_bT;
@@ -278,11 +289,11 @@ public class Block {
 		this.maxZ = (double)par6;
 	}
 
-	public float getBlockBrightness(IBlockAccess par1IBlockAccess, int par2, int par3, int par4) {
+	public float getBlockBrightness(IBlockAccess par1IBlockAccess, int x, int y, int z) {
 		// Spout start
 		int light = lightValue[this.blockID];
 		if (customIds != null) {
-			int key = ((x & 0xF) << Minecraft.theMinecraft.theWorld.xShift) | ((z & 0xF) << Minecraft.theMinecraft.theWorld.heightShift) | (y & Minecraft.theMinecraft.theWorld.worldMaxY);
+			int key = ((x & 0xF) << 12) | ((z & 0xF) << 8) | (y & 256);
 			short customId = customIds[key];
 			if (customId > 0) {
 				CustomBlock block = MaterialData.getCustomBlock(customId);
@@ -295,11 +306,11 @@ public class Block {
 		// Spout end
 	}
 
-	public int getMixedBrightnessForBlock(IBlockAccess par1IBlockAccess, int par2, int par3, int par4) {
+	public int getMixedBrightnessForBlock(IBlockAccess par1IBlockAccess, int x, int y, int z) {
 		// Spout start
 		int light = lightValue[this.blockID];
 		if (customIds != null) {
-			int key = ((x & 0xF) << Minecraft.theMinecraft.theWorld.xShift) | ((z & 0xF) << Minecraft.theMinecraft.theWorld.heightShift) | (y & Minecraft.theMinecraft.theWorld.worldMaxY);
+			int key = ((x & 0xF) << 12) | ((z & 0xF) << 8) | (y & 256);
 			short customId = customIds[key];
 			if (customId > 0) {
 				CustomBlock block = MaterialData.getCustomBlock(customId);

@@ -9,6 +9,14 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.spoutcraft.client.SpoutcraftWorld;
+import org.spoutcraft.client.config.ConfigReader;
+import org.spoutcraft.spoutcraftapi.Spoutcraft;
+import org.spoutcraft.spoutcraftapi.material.CustomBlock;
+import org.spoutcraft.spoutcraftapi.material.MaterialData;
+
+import com.pclewis.mcpatcher.mod.Colorizer;
+
 import net.minecraft.client.Minecraft;
 
 //Spout End
@@ -59,6 +67,9 @@ public class World implements IBlockAccess {
 	int[] lightUpdateBlockList;
 	private List entitiesWithinAABBExcludingEntity;
 	public boolean isRemote;
+	//Spout start
+	public SpoutcraftWorld world;
+	//Spout end
 
 	public BiomeGenBase func_48454_a(int par1, int par2) {
 		if (this.blockExists(par1, 0, par2)) {
@@ -221,16 +232,9 @@ public class World implements IBlockAccess {
 		if (this.worldInfo == null) {
 			this.worldInfo = new WorldInfo(par3WorldSettings, par2Str);
 			var5 = true;
-			//Spout start
-			worldInfo.setMapHeight(height);
-			//Spout end
 		} else {
 			this.worldInfo.setWorldName(par2Str);
 		}
-		
-		//Spout start
-		setMapHeight(worldInfo.getMapHeight());
-		//Spout end
 
 		this.worldProvider.registerWorld(this);
 		this.chunkProvider = this.createChunkProvider();
@@ -1006,13 +1010,13 @@ public class World implements IBlockAccess {
 		}
 	}
 
-	protected void obtainEntitySkin(Entity par1Entity) {
+	public void obtainEntitySkin(Entity par1Entity) { //Spout protected -> public
 		for (int var2 = 0; var2 < this.worldAccesses.size(); ++var2) {
 			((IWorldAccess)this.worldAccesses.get(var2)).obtainEntitySkin(par1Entity);
 		}
 	}
 
-	protected void releaseEntitySkin(Entity par1Entity) {
+	public void releaseEntitySkin(Entity par1Entity) { //Spout protected -> public
 		for (int var2 = 0; var2 < this.worldAccesses.size(); ++var2) {
 			((IWorldAccess)this.worldAccesses.get(var2)).releaseEntitySkin(par1Entity);
 		}
@@ -2258,13 +2262,13 @@ public class World implements IBlockAccess {
 
 	private int computeBlockLightValue(int par1, int par2, int par3, int par4, int par5, int par6) {
 		//Spout start
-		int light = Block.lightValue[var5];
+		int light = Block.lightValue[par5];
 		
 		//Fix for generation-time accessing
 		org.spoutcraft.spoutcraftapi.World world = Spoutcraft.getWorld();
 		short customId = 0;
 		if(world != null) {
-			customId = world.getChunkAt(var2, var3, var4).getCustomBlockId(var2, var3, var4);
+			customId = world.getChunkAt(par2, par3, par4).getCustomBlockId(par2, par3, par4);
 		}
 		if (customId > 0) {
 			CustomBlock block = MaterialData.getCustomBlock(customId);
@@ -3082,4 +3086,57 @@ public class World implements IBlockAccess {
 		}
 	}
 	//Spout End
+	
+	//Spout start
+	public void checkEntityTile(TileEntity tileentity)
+	{
+		if(tileentity instanceof TileEntityPiston)
+			return;
+
+		switch(getBlockId(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord))
+		{
+			case 63:
+			case 68:
+				if(!(tileentity instanceof TileEntitySign))
+					tileentity.invalidate();
+				break;
+			case 61:
+			case 62:
+				if(!(tileentity instanceof TileEntityFurnace))
+					tileentity.invalidate();
+				break;
+			case 84:
+				if(!(tileentity instanceof TileEntityRecordPlayer))
+					tileentity.invalidate();
+				break;
+			case 23:
+				if(!(tileentity instanceof TileEntityDispenser))
+					tileentity.invalidate();
+				break;
+			case 54:
+				if(!(tileentity instanceof TileEntityChest))
+					tileentity.invalidate();
+				break;
+			case 52:
+				if(!(tileentity instanceof TileEntityMobSpawner))
+					tileentity.invalidate();
+				break;
+			case 25:
+				if(!(tileentity instanceof TileEntityNote))
+					tileentity.invalidate();
+				break;
+			case 116:
+				if(!(tileentity instanceof TileEntityEnchantmentTable))
+					tileentity.invalidate();
+				break;
+			case 117:
+				if(!(tileentity instanceof TileEntityBrewingStand))
+					tileentity.invalidate();
+				break;
+			default:
+				tileentity.invalidate();
+				break;
+		}
+	}
+	//Spout end
 }

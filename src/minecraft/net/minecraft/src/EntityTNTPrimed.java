@@ -78,7 +78,7 @@ public class EntityTNTPrimed extends Entity {
 
 	private void explode() {
 		//Spout start
-		this.worldObj.createExplosion((Entity)null, this.posX, this.posY, this.posZ, yield, incendiary);
+		this.worldObj.newExplosion((Entity)null, this.posX, this.posY, this.posZ, yield, incendiary);
 		//Spout end
 	}
 

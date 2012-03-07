@@ -109,7 +109,7 @@ public class EntityXPOrb extends Entity {
 			if (var5 > 0) {
 				var14 = Block.blocksList[var5].slipperiness * 0.98F;
 				//Spout start
-				if (!worldObj.multiplayerWorld) {
+				if (!worldObj.isRemote) {
 					int x = MathHelper.floor_double(this.posX);
 					int y = MathHelper.floor_double(this.boundingBox.minY) - 1;
 					int z = MathHelper.floor_double(this.posZ);

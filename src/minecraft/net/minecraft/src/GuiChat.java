@@ -1,6 +1,8 @@
 package net.minecraft.src;
 
 import net.minecraft.client.Minecraft;
+
+import org.bukkit.ChatColor;
 import org.lwjgl.input.Keyboard;
 //Spout Start
 import org.spoutcraft.client.SpoutClient;
@@ -11,7 +13,7 @@ import org.spoutcraft.spoutcraftapi.gui.ChatBar;
 public class GuiChat extends GuiScreen
 {
 	/** The chat message. */
-	protected String message = ""; //Spout
+	public String message = ""; //Spout protected -> public
 
 	/** Counts the number of screen updates. Used to make the caret flash. */
 	private int updateCounter = 0; //Spout

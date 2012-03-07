@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+import org.spoutcraft.spoutcraftapi.material.MaterialData;
 
 public abstract class GuiContainer extends GuiScreen
 {
@@ -157,7 +158,7 @@ public abstract class GuiContainer extends GuiScreen
 					String s = (String)list.get(l4);
 					if(l4 == 0)
 					{
-						s = (new StringBuilder()).append("\247").append(Integer.toHexString(itemstack.func_40707_s().field_40535_e)).append(s).toString();
+						s = (new StringBuilder()).append("\247").append(Integer.toHexString(itemstack.getRarity().field_40535_e)).append(s).toString();
 					} else
 					{
 						s = (new StringBuilder()).append("\2477").append(s).toString();
@@ -172,7 +173,7 @@ public abstract class GuiContainer extends GuiScreen
 					lines++;
 				}
 				tooltip = tooltip.trim();
-				super.drawTooltip(tooltip, (i - k) + 8, j - l - lines * 6);
+				super.drawTooltip(tooltip, (i - k) + 8, j - guiTop - lines * 6);
 				//Spout end
 				zLevel = 0.0F;
 				itemRenderer.zLevel = 0.0F;

@@ -118,7 +118,7 @@ public class EffectRenderer {
 		}
 		// Spout start
 		for (CustomEntityDiggingFX customFX : specialParticles) {
-			customFX.renderParticle(Tessellator.instance, var2, var3, var7, var4, var5, var6);
+			customFX.renderParticle(Tessellator.instance, par2, var3, var7, var4, var5, var6);
 		}
 		// Spout end
 	}
@@ -161,7 +161,7 @@ public class EffectRenderer {
 			boolean custom = false;
 			GenericBlockDesign design = null;
 			Texture customTexture = null;
-			CustomBlock block = MaterialData.getCustomBlock(Spoutcraft.getWorld().getChunkAt(var1, var2, var3).getCustomBlockId(var1, var2, var3));
+			CustomBlock block = MaterialData.getCustomBlock(Spoutcraft.getWorld().getChunkAt(par1, par2, par3).getCustomBlockId(par1, par2, par3));
 			if (block != null) {
 				design = (GenericBlockDesign) block.getBlockDesign();
 			}
@@ -181,6 +181,12 @@ public class EffectRenderer {
 						double var13 = (double)par2 + ((double)var9 + 0.5D) / (double)var7;
 						double var15 = (double)par3 + ((double)var10 + 0.5D) / (double)var7;
 						int var17 = this.rand.nextInt(6);
+						//Spout start
+						if (custom) {
+							this.addEffect((new CustomEntityDiggingFX(this.worldObj, var11, var13, var15, var11 - (double)par1 - 0.5D, var13 - (double)par2 - 0.5D, var15 - (double)par3 - 0.5D, var6, var17, par5, customTexture, design)).func_4041_a(par1, par2, par3));
+						}
+						else
+						//Spout end
 						this.addEffect((new EntityDiggingFX(this.worldObj, var11, var13, var15, var11 - (double)par1 - 0.5D, var13 - (double)par2 - 0.5D, var15 - (double)par3 - 0.5D, var6, var17, par5)).func_4041_a(par1, par2, par3));
 					}
 				}
@@ -224,8 +230,8 @@ public class EffectRenderer {
 			// Spout start
 			boolean custom = false;
 			GenericBlockDesign design = null;
-			int data = this.worldObj.getBlockMetadata(var1, var2, var3);
-			CustomBlock block = MaterialData.getCustomBlock(Spoutcraft.getWorld().getChunkAt(var1, var2, var3).getCustomBlockId(var1, var2, var3));
+			int data = this.worldObj.getBlockMetadata(par1, par2, par3);
+			CustomBlock block = MaterialData.getCustomBlock(Spoutcraft.getWorld().getChunkAt(par1, par2, par3).getCustomBlockId(par1, par2, par3));
 			if (block != null) {
 				design = (GenericBlockDesign) block.getBlockDesign();
 			}
@@ -234,11 +240,11 @@ public class EffectRenderer {
 				Texture customTexture = CustomTextureManager.getTextureFromUrl(design.getTextureAddon(), design.getTexureURL());
 				if (customTexture != null) {
 					custom = true;
-					this.addEffect((new CustomEntityDiggingFX(this.worldObj, var8, var10, var12, 0.0D, 0.0D, 0.0D, var6, var4, data, customTexture, design)).func_4041_a(var1, var2, var3).multiplyVelocity(0.2F).func_405_d(0.6F));
+					this.addEffect((new CustomEntityDiggingFX(this.worldObj, var8, var10, var12, 0.0D, 0.0D, 0.0D, var6, par4, data, customTexture, design)).func_4041_a(par1, par2, par3).multiplyVelocity(0.2F).func_405_d(0.6F));
 				}
 			}
 			if (!custom) {
-				this.addEffect((new EntityDiggingFX(this.worldObj, var8, var10, var12, 0.0D, 0.0D, 0.0D, var6, var4, data)).func_4041_a(var1, var2, var3).multiplyVelocity(0.2F).func_405_d(0.6F));
+				this.addEffect((new EntityDiggingFX(this.worldObj, var8, var10, var12, 0.0D, 0.0D, 0.0D, var6, par4, data)).func_4041_a(par1, par2, par3).multiplyVelocity(0.2F).func_405_d(0.6F));
 			}
 			// Spout end
 		}

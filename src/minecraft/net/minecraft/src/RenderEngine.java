@@ -17,6 +17,8 @@ import javax.imageio.ImageIO;
 import org.lwjgl.opengl.GL11;
 //Spout HD Start
 import net.minecraft.client.Minecraft;
+
+import com.pclewis.mcpatcher.mod.CustomAnimation;
 import com.pclewis.mcpatcher.mod.TextureUtils;
 import com.pclewis.mcpatcher.mod.TileSize;
 import java.awt.Graphics2D;
@@ -388,10 +390,10 @@ public class RenderEngine {
 				if (Minecraft.theMinecraft.theWorld != null) {
 					List<EntityPlayer> players = Minecraft.theMinecraft.theWorld.playerEntities;
 					for (EntityPlayer player : players) {
-						if (player.skinUrl != null && player.skinUrl.equals(var1)) {
+						if (player.skinUrl != null && player.skinUrl.equals(par1Str)) {
 							var2.referenceCount++;
 						}
-						if (player.playerCloakUrl != null && player.playerCloakUrl.equals(var1)) {
+						if (player.playerCloakUrl != null && player.playerCloakUrl.equals(par1Str)) {
 							var2.referenceCount++;
 						}
 					}

@@ -47,9 +47,9 @@ public abstract class PlayerController {
 
 	public abstract float getBlockReachDistance();
 
-	public boolean sendUseItem(EntityPlayer var1, World var2, ItemStack var3) {
-        //Spout Start
-		if (var3 == null) return true;
+	public boolean sendUseItem(EntityPlayer par1EntityPlayer, World par2World, ItemStack par3ItemStack) {
+		//Spout Start
+		if (par1EntityPlayer == null) return true;
 		//Spout End
 		int var4 = par3ItemStack.stackSize;
 		ItemStack var5 = par3ItemStack.useItemRightClick(par2World, par1EntityPlayer);

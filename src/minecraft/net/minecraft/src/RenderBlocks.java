@@ -1141,22 +1141,20 @@ public class RenderBlocks {
 		float var11;
 		float var12;
 		if (Colorizer.computeRedstoneWireColor(var6)) {
-			var10 = Colorizer.redstoneWireRed;
-			var11 = Colorizer.redstoneWireGreen;
-			var12 = Colorizer.redstoneWireBlue;
-		}
-		else {
-//Spout HD End
-		float var9 = (float)var6 / 15.0F;
-		var10 = var9 * 0.6F + 0.4F;
-		if (var6 == 0) {
-			var10 = 0.3F;
-		}
+			var10 = Colorizer.setColor[0];
+			var11 = Colorizer.setColor[1];
+			var12 = Colorizer.setColor[2];
+		} else {
+			float var9 = (float)var6 / 15.0F;
+			var10 = var9 * 0.6F + 0.4F;
+			if (var6 == 0) {
+				var10 = 0.3F;
+			}
 
-		var11 = var9 * var9 * 0.7F - 0.5F;
-		var12 = var9 * var9 * 0.6F - 0.7F;
+			var11 = var9 * var9 * 0.7F - 0.5F;
+			var12 = var9 * var9 * 0.6F - 0.7F;
 		}
-
+//Spout HD end
 		if (var11 < 0.0F) {
 			var11 = 0.0F;
 		}
@@ -2044,8 +2042,8 @@ public class RenderBlocks {
 	}
 
 	// Spout start
-	public void renderCrossedSquares(Block var1, int var2, double var3, double var5, double var7) {
-		renderCrossedSquares(var1, var2, var3, var5, var7, false);
+	public void drawCrossedSquares(Block var1, int var2, double var3, double var5, double var7) {
+		drawCrossedSquares(var1, var2, var3, var5, var7, false);
 	}
 
 	public void drawCrossedSquares(Block par1Block, int par2, double par3, double par5, double par7, boolean customUV) {
@@ -2465,7 +2463,7 @@ public class RenderBlocks {
 			var12 = var11;
 		}
 //Spout HD Start
-		Colorizer.setColorF(Colorizer.colorizeBlock(var1, var2.getWorldChunkManager(), var3, var4, var5));
+		Colorizer.setColorF(Colorizer.colorizeBlock(par1Block, par3, par4, par5, 0));
 		var10.setColorOpaque_F(Colorizer.setColor[0] * var12, Colorizer.setColor[1] * var12, Colorizer.setColor[2] * var12);
 		this.renderBottomFace(par1Block, -0.5D, -0.5D, -0.5D, par1Block.getBlockTextureFromSide(0));
 		var12 = 1.0F;
@@ -2554,7 +2552,7 @@ public class RenderBlocks {
 		this.aoLightValueZPos = var1.getAmbientOcclusionLightValue(this.blockAccess, var2, var3, var4 + 1);
 		*/
 		//Spout end
-		int var19 = var1.getMixedBrightnessForBlock(this.blockAccess, var2, var3, var4);
+		int var19 = par1Block.getMixedBrightnessForBlock(this.blockAccess, par2, par3, par4);
 		//Spout start
 		
 		int var20 = var19;
@@ -2607,26 +2605,26 @@ public class RenderBlocks {
 
 		Tessellator var26 = Tessellator.instance;
 		var26.setBrightness(983055);
-		if (var1.blockIndexInTexture == 3) {
+		if (par1Block.blockIndexInTexture == 3) {
 			var18 = false;
 			var17 = false;
 			var16 = false;
 			var15 = false;
 			var13 = false;
 			// Spout HD start
-			if (var1.getBlockTexture(this.blockAccess, var2, var3, var4, 2) == 0) {
+			if (par1Block.getBlockTexture(this.blockAccess, par2, par3, par4, 2) == 0) {
 				var15 = true;
 			}
 
-			if (var1.getBlockTexture(this.blockAccess, var2, var3, var4, 3) == 0) {
+			if (par1Block.getBlockTexture(this.blockAccess, par2, par3, par4, 3) == 0) {
 				var16 = true;
 			}
 
-			if (var1.getBlockTexture(this.blockAccess, var2, var3, var4, 4) == 0) {
+			if (par1Block.getBlockTexture(this.blockAccess, par2, par3, par4, 4) == 0) {
 				var17 = true;
 			}
 
-			if (var1.getBlockTexture(this.blockAccess, var2, var3, var4, 5) == 0) {
+			if (par1Block.getBlockTexture(this.blockAccess, par2, par3, par4, 5) == 0) {
 				var18 = true;
 			}
 			// Spout HD end
@@ -2639,36 +2637,36 @@ public class RenderBlocks {
 			var15 = false;
 			var13 = false;
 			// Spout HD start
-			if (var1.getBlockTexture(this.blockAccess, var2, var3, var4, 2) == 0) {
+			if (par1Block.getBlockTexture(this.blockAccess, par2, par3, par4, 2) == 0) {
 				var15 = true;
 			}
 
-			if (var1.getBlockTexture(this.blockAccess, var2, var3, var4, 3) == 0) {
+			if (par1Block.getBlockTexture(this.blockAccess, par2, par3, par4, 3) == 0) {
 				var16 = true;
 			}
 
-			if (var1.getBlockTexture(this.blockAccess, var2, var3, var4, 4) == 0) {
+			if (par1Block.getBlockTexture(this.blockAccess, par2, par3, par4, 4) == 0) {
 				var17 = true;
 			}
 
-			if (var1.getBlockTexture(this.blockAccess, var2, var3, var4, 5) == 0) {
+			if (par1Block.getBlockTexture(this.blockAccess, par2, par3, par4, 5) == 0) {
 				var18 = true;
 			}
 			// Spout HD end
 		}
 
-		if (this.renderAllFaces || par1Block.shouldSideBeRendered(this.blockAccess, var2, var3 - 1, var4, 0)) {
+		if (this.renderAllFaces || par1Block.shouldSideBeRendered(this.blockAccess, par2, par3 - 1, par4, 0)) {
 			//Spout start
 			if(this.dirtyAmbientOcclusionCache) {
-				this.calculateAmbientOcclusionLightValues(var1, var2, var3, var4);
+				this.calculateAmbientOcclusionLightValues(par1Block, par2, par3, par4);
 			}
-			if (var1.minY <= 0.0D) {
-				var21 = var1.getMixedBrightnessForBlock(this.blockAccess, var2, var3 - 1, var4);
+			if (par1Block.minY <= 0.0D) {
+				var21 = par1Block.getMixedBrightnessForBlock(this.blockAccess, par2, par3 - 1, par4);
 			}
 			//Spout end
 			if (this.aoType > 0) {
-				if (var1.minY <= 0.0D) {
-					--var3;
+				if (par1Block.minY <= 0.0D) {
+					--par3;
 				}
 
 				this.aoBrightnessXYNN = par1Block.getMixedBrightnessForBlock(this.blockAccess, par2 - 1, par3, par4);
@@ -2765,10 +2763,10 @@ public class RenderBlocks {
 		if (this.renderAllFaces || par1Block.shouldSideBeRendered(this.blockAccess, par2, par3 + 1, par4, 1)) {
 			//Spout start
 			if(this.dirtyAmbientOcclusionCache) {
-				this.calculateAmbientOcclusionLightValues(var1, var2, var3, var4);
+				this.calculateAmbientOcclusionLightValues(par1Block, par2, par3, par4);
 			}
-			if (var1.maxY >= 1.0D) {
-				var24 = var1.getMixedBrightnessForBlock(this.blockAccess, var2, var3 + 1, var4);
+			if (par1Block.maxY >= 1.0D) {
+				var24 = par1Block.getMixedBrightnessForBlock(this.blockAccess, par2, par3 + 1, par4);
 			}
 			//Spout end
 			if (this.aoType > 0) {
@@ -2871,10 +2869,10 @@ public class RenderBlocks {
 		if (this.renderAllFaces || par1Block.shouldSideBeRendered(this.blockAccess, par2, par3, par4 - 1, 2)) {
 			//Spout start
 			if(this.dirtyAmbientOcclusionCache) {
-				this.calculateAmbientOcclusionLightValues(var1, var2, var3, var4);
+				this.calculateAmbientOcclusionLightValues(par1Block, par2, par3, par4);
 			}
-			if (var1.minZ <= 0.0D) {
-				var22 = var1.getMixedBrightnessForBlock(this.blockAccess, var2, var3, var4 - 1);
+			if (par1Block.minZ <= 0.0D) {
+				var22 = par1Block.getMixedBrightnessForBlock(this.blockAccess, par2, par3, par4 - 1);
 			}
 			//Spout end
 			if (this.aoType > 0) {
@@ -2973,25 +2971,25 @@ public class RenderBlocks {
 			//Spout start
 			if (ConfigReader.betterGrass != 0) {
 				if(var27 == 3) {
-					var27 = getSideGrassTexture(this.blockAccess, var2, var3, var4, 2);
+					var27 = getSideGrassTexture(this.blockAccess, par2, par3, par4, 2);
 					if(var27 == 0) {
-						this.colorRedTopLeft *= var5;
-						this.colorRedBottomLeft *= var5;
-						this.colorRedBottomRight *= var5;
-						this.colorRedTopRight *= var5;
-						this.colorGreenTopLeft *= var6;
-						this.colorGreenBottomLeft *= var6;
-						this.colorGreenBottomRight *= var6;
-						this.colorGreenTopRight *= var6;
-						this.colorBlueTopLeft *= var7;
-						this.colorBlueBottomLeft *= var7;
-						this.colorBlueBottomRight *= var7;
-						this.colorBlueTopRight *= var7;
+						this.colorRedTopLeft *= par5;
+						this.colorRedBottomLeft *= par5;
+						this.colorRedBottomRight *= par5;
+						this.colorRedTopRight *= par5;
+						this.colorGreenTopLeft *= par6;
+						this.colorGreenBottomLeft *= par6;
+						this.colorGreenBottomRight *= par6;
+						this.colorGreenTopRight *= par6;
+						this.colorBlueTopLeft *= par7;
+						this.colorBlueBottomLeft *= par7;
+						this.colorBlueBottomRight *= par7;
+						this.colorBlueTopRight *= par7;
 					}
 				}
 
 				if(var27 == 68) {
-					var27 = getSideSnowGrassTexture(this.blockAccess, var2, var3, var4, 2);
+					var27 = getSideSnowGrassTexture(this.blockAccess, par2, par3, par4, 2);
 				}
 			}
 			//Spout end
@@ -3018,10 +3016,10 @@ public class RenderBlocks {
 		if (this.renderAllFaces || par1Block.shouldSideBeRendered(this.blockAccess, par2, par3, par4 + 1, 3)) {
 			//Spout start
 			if(this.dirtyAmbientOcclusionCache) {
-				this.calculateAmbientOcclusionLightValues(var1, var2, var3, var4);
+				this.calculateAmbientOcclusionLightValues(par1Block, par2, par3, par4);
 			}
-			if (var1.maxZ >= 1.0D) {
-				var25 = var1.getMixedBrightnessForBlock(this.blockAccess, var2, var3, var4 + 1);
+			if (par1Block.maxZ >= 1.0D) {
+				var25 = par1Block.getMixedBrightnessForBlock(this.blockAccess, par2, par3, par4 + 1);
 			}
 			//Spout end
 			if (this.aoType > 0) {
@@ -3121,25 +3119,25 @@ public class RenderBlocks {
 			//Spout start
 			if (ConfigReader.betterGrass != 0) {
 				if(var27 == 3) {
-					var27 = getSideGrassTexture(this.blockAccess, var2, var3, var4, 3);
+					var27 = getSideGrassTexture(this.blockAccess, par2, par3, par4, 3);
 					if(var27 == 0) {
-						this.colorRedTopLeft *= var5;
-						this.colorRedBottomLeft *= var5;
-						this.colorRedBottomRight *= var5;
-						this.colorRedTopRight *= var5;
-						this.colorGreenTopLeft *= var6;
-						this.colorGreenBottomLeft *= var6;
-						this.colorGreenBottomRight *= var6;
-						this.colorGreenTopRight *= var6;
-						this.colorBlueTopLeft *= var7;
-						this.colorBlueBottomLeft *= var7;
-						this.colorBlueBottomRight *= var7;
-						this.colorBlueTopRight *= var7;
+						this.colorRedTopLeft *= par5;
+						this.colorRedBottomLeft *= par5;
+						this.colorRedBottomRight *= par5;
+						this.colorRedTopRight *= par5;
+						this.colorGreenTopLeft *= par6;
+						this.colorGreenBottomLeft *= par6;
+						this.colorGreenBottomRight *= par6;
+						this.colorGreenTopRight *= par6;
+						this.colorBlueTopLeft *= par7;
+						this.colorBlueBottomLeft *= par7;
+						this.colorBlueBottomRight *= par7;
+						this.colorBlueTopRight *= par7;
 					}
 				}
 
 				if(var27 == 68) {
-					var27 = getSideSnowGrassTexture(this.blockAccess, var2, var3, var4, 3);
+					var27 = getSideSnowGrassTexture(this.blockAccess, par2, par3, par4, 3);
 				}
 			}
 			//Spout end
@@ -3166,10 +3164,10 @@ public class RenderBlocks {
 		if (this.renderAllFaces || par1Block.shouldSideBeRendered(this.blockAccess, par2 - 1, par3, par4, 4)) {
 			//Spout start
 			if(this.dirtyAmbientOcclusionCache) {
-				this.calculateAmbientOcclusionLightValues(var1, var2, var3, var4);
+				this.calculateAmbientOcclusionLightValues(par1Block, par2, par3, par4);
 			}
-			if (var1.minX <= 0.0D) {
-				var20 = var1.getMixedBrightnessForBlock(this.blockAccess, var2 - 1, var3, var4);
+			if (par1Block.minX <= 0.0D) {
+				var20 = par1Block.getMixedBrightnessForBlock(this.blockAccess, par2 - 1, par3, par4);
 			}
 			//Spout end
 			if (this.aoType > 0) {
@@ -3269,25 +3267,25 @@ public class RenderBlocks {
 			//Spout start
 			if (ConfigReader.betterGrass != 0) {
 				if(var27 == 3) {
-					var27 = getSideGrassTexture(this.blockAccess, var2, var3, var4, 4);
+					var27 = getSideGrassTexture(this.blockAccess, par2, par3, par4, 4);
 					if(var27 == 0) {
-						this.colorRedTopLeft *= var5;
-						this.colorRedBottomLeft *= var5;
-						this.colorRedBottomRight *= var5;
-						this.colorRedTopRight *= var5;
-						this.colorGreenTopLeft *= var6;
-						this.colorGreenBottomLeft *= var6;
-						this.colorGreenBottomRight *= var6;
-						this.colorGreenTopRight *= var6;
-						this.colorBlueTopLeft *= var7;
-						this.colorBlueBottomLeft *= var7;
-						this.colorBlueBottomRight *= var7;
-						this.colorBlueTopRight *= var7;
+						this.colorRedTopLeft *= par5;
+						this.colorRedBottomLeft *= par5;
+						this.colorRedBottomRight *= par5;
+						this.colorRedTopRight *= par5;
+						this.colorGreenTopLeft *= par6;
+						this.colorGreenBottomLeft *= par6;
+						this.colorGreenBottomRight *= par6;
+						this.colorGreenTopRight *= par6;
+						this.colorBlueTopLeft *= par7;
+						this.colorBlueBottomLeft *= par7;
+						this.colorBlueBottomRight *= par7;
+						this.colorBlueTopRight *= par7;
 					}
 				}
 
 				if(var27 == 68) {
-					var27 = getSideSnowGrassTexture(this.blockAccess, var2, var3, var4, 4);
+					var27 = getSideSnowGrassTexture(this.blockAccess, par2, par3, par4, 4);
 				}
 			}
 			//Spout end
@@ -3314,10 +3312,10 @@ public class RenderBlocks {
 		if (this.renderAllFaces || par1Block.shouldSideBeRendered(this.blockAccess, par2 + 1, par3, par4, 5)) {
 			//Spout start
 			if(this.dirtyAmbientOcclusionCache) {
-				this.calculateAmbientOcclusionLightValues(var1, var2, var3, var4);
+				this.calculateAmbientOcclusionLightValues(par1Block, par2, par3, par4);
 			}
-			if (var1.maxX >= 1.0D) {
-				var23 = var1.getMixedBrightnessForBlock(this.blockAccess, var2 + 1, var3, var4);
+			if (par1Block.maxX >= 1.0D) {
+				var23 = par1Block.getMixedBrightnessForBlock(this.blockAccess, par2 + 1, par3, par4);
 			}
 			//Spout end
 			if (this.aoType > 0) {
@@ -3417,25 +3415,25 @@ public class RenderBlocks {
 			//Spout start
 			if (ConfigReader.betterGrass != 0) {
 				if(var27 == 3) {
-					var27 = getSideGrassTexture(this.blockAccess, var2, var3, var4, 5);
+					var27 = getSideGrassTexture(this.blockAccess, par2, par3, par4, 5);
 					if(var27 == 0) {
-						this.colorRedTopLeft *= var5;
-						this.colorRedBottomLeft *= var5;
-						this.colorRedBottomRight *= var5;
-						this.colorRedTopRight *= var5;
-						this.colorGreenTopLeft *= var6;
-						this.colorGreenBottomLeft *= var6;
-						this.colorGreenBottomRight *= var6;
-						this.colorGreenTopRight *= var6;
-						this.colorBlueTopLeft *= var7;
-						this.colorBlueBottomLeft *= var7;
-						this.colorBlueBottomRight *= var7;
-						this.colorBlueTopRight *= var7;
+						this.colorRedTopLeft *= par5;
+						this.colorRedBottomLeft *= par5;
+						this.colorRedBottomRight *= par5;
+						this.colorRedTopRight *= par5;
+						this.colorGreenTopLeft *= par6;
+						this.colorGreenBottomLeft *= par6;
+						this.colorGreenBottomRight *= par6;
+						this.colorGreenTopRight *= par6;
+						this.colorBlueTopLeft *= par7;
+						this.colorBlueBottomLeft *= par7;
+						this.colorBlueBottomRight *= par7;
+						this.colorBlueTopRight *= par7;
 					}
 				}
 
 				if(var27 == 68) {
-					var27 = getSideSnowGrassTexture(this.blockAccess, var2, var3, var4, 5);
+					var27 = getSideSnowGrassTexture(this.blockAccess, par2, par3, par4, 5);
 				}
 			}
 			//Spout end
@@ -3533,7 +3531,7 @@ public class RenderBlocks {
 			var28 = par1Block.getBlockTexture(this.blockAccess, par2, par3, par4, 2);
 			//Spout start
 			if(var28 == 0) {
-				var8.setColorOpaque_F(var5 * var5, var6 * var6, var7 * var7);
+				var8.setColorOpaque_F(par5 * par5, par6 * par6, par7 * par7);
 			}
 			//Spout end
 			this.renderEastFace(par1Block, (double)par2, (double)par3, (double)par4, var28);
@@ -3551,7 +3549,7 @@ public class RenderBlocks {
 			var28 = par1Block.getBlockTexture(this.blockAccess, par2, par3, par4, 3);
 			//Spout start
 			if(var28 == 0) {
-				var8.setColorOpaque_F(var5 * var5, var6 * var6, var7 * var7);
+				var8.setColorOpaque_F(par5 * par5, par6 * par6, par7 * par7);
 			}
 			//Spout end
 			this.renderWestFace(par1Block, (double)par2, (double)par3, (double)par4, var28);
@@ -3569,7 +3567,7 @@ public class RenderBlocks {
 			var28 = par1Block.getBlockTexture(this.blockAccess, par2, par3, par4, 4);
 			//Spout start
 			if(var28 == 0) {
-				var8.setColorOpaque_F(var5 * var5, var6 * var6, var7 * var7);
+				var8.setColorOpaque_F(par5 * par5, par6 * par6, par7 * par7);
 			}
 			//Spout end
 			this.renderNorthFace(par1Block, (double)par2, (double)par3, (double)par4, var28);
@@ -3587,7 +3585,7 @@ public class RenderBlocks {
 			var28 = par1Block.getBlockTexture(this.blockAccess, par2, par3, par4, 5);
 			//Spout start
 			if(var28 == 0) {
-				var8.setColorOpaque_F(var5 * var5, var6 * var6, var7 * var7);
+				var8.setColorOpaque_F(par5 * par5, par6 * par6, par7 * par7);
 			}
 			//Spout end
 			this.renderSouthFace(par1Block, (double)par2, (double)par3, (double)par4, var28);

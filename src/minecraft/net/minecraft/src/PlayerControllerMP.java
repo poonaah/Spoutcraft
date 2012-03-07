@@ -211,9 +211,8 @@ public class PlayerControllerMP extends PlayerController {
 		this.syncCurrentPlayItem();
 		this.netClientHandler.addToSendQueue(new Packet15Place(-1, -1, -1, 255, par1EntityPlayer.inventory.getCurrentItem()));
 		// Spout Start
-		if (var3 != null) {
-			boolean var4 = super.sendUseItem(var1, var2, var3);
-			return var4;
+		if (par3ItemStack != null) {
+			return super.sendUseItem(par1EntityPlayer, par2World, par3ItemStack);
 		}
 		return true; // Success on using empty item
 		// Spout End

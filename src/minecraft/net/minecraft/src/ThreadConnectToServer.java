@@ -9,8 +9,6 @@ import net.minecraft.src.NetClientHandler;
 import net.minecraft.src.Packet2Handshake;
 
 class ThreadConnectToServer extends Thread {
-
-	
 	final Minecraft mc;
 	
 	final String field_48479_b;
@@ -40,20 +38,20 @@ class ThreadConnectToServer extends Thread {
 				return;
 			}
 
-			mc.displayGuiScreen(new GuiConnectFailed("connect.failed", "disconnect.genericReason", new Object[] { (new StringBuilder()).append("Unknown host '").append(field_48479_b).append("'").toString() }));
+			mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[] { (new StringBuilder()).append("Unknown host '").append(field_48479_b).append("'").toString() }));
 		} catch (ConnectException var3) {
 			if (GuiConnecting.isCancelled(this.connectingGui)) {
 				return;
 			}
 
-			mc.displayGuiScreen(new GuiConnectFailed("connect.failed", "disconnect.genericReason", new Object[] { var3.getMessage() }));
+			mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[] { var3.getMessage() }));
 		} catch (Exception var4) {
 			if (GuiConnecting.isCancelled(this.connectingGui)) {
 				return;
 			}
 
 			var4.printStackTrace();
-			mc.displayGuiScreen(new GuiConnectFailed("connect.failed", "disconnect.genericReason", new Object[] { var4.toString() }));
+			mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[] { var4.toString() }));
 		}
 	}
 	// Spout end

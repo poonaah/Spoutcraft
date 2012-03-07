@@ -26,7 +26,7 @@ public class GuiDisconnected extends GuiScreen
 		}
 
 		//Spout Start
-		org.spoutcraft.client.ReconnectManager.detectKick(var1, var2, var3);
+		org.spoutcraft.client.ReconnectManager.detectKick(par1Str, par2Str, par3ArrayOfObj);
 		//Spout End
 	}
 

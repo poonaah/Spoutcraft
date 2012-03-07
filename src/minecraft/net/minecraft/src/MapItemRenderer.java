@@ -123,7 +123,7 @@ public class MapItemRenderer {
 			this.fontRenderer.drawString(customName, var15, var16, -16777216);
 		}
 		else {
-			this.fontRenderer.drawString(var3.mapName, var15, var16, -16777216);
+			this.fontRenderer.drawString(par3MapData.mapName, var15, var16, -16777216);
 		}
 		//Spout End
 		GL11.glPopMatrix();

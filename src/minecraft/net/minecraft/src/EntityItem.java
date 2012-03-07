@@ -78,7 +78,7 @@ public class EntityItem extends Entity {
 			if (var2 > 0) {
 				var1 = Block.blocksList[var2].slipperiness * 0.98F;
 				//Spout start
-				if (!worldObj.multiplayerWorld) {
+				if (!worldObj.isRemote) {
 					int x = MathHelper.floor_double(this.posX);
 					int y = MathHelper.floor_double(this.boundingBox.minY) - 1;
 					int z = MathHelper.floor_double(this.posZ);

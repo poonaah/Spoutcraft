@@ -32,17 +32,17 @@ public class ItemRenderer {
 		this.mapItemRenderer = new MapItemRenderer(par1Minecraft.fontRenderer, par1Minecraft.gameSettings, par1Minecraft.renderEngine);
 	}
 
-	public void renderItem(EntityLiving var1, ItemStack var2, int var3) {
+	public void renderItem(EntityLiving par1EntityLiving, ItemStack par2ItemStack, int par3) {
 		GL11.glPushMatrix();
 		// Spout Start
 		boolean custom = false;
 		BlockDesign design = null;
 		if (par2ItemStack.itemID == 318) {
-			org.spoutcraft.spoutcraftapi.material.CustomItem item = MaterialData.getCustomItem(var2.getItemDamage());
+			org.spoutcraft.spoutcraftapi.material.CustomItem item = MaterialData.getCustomItem(par2ItemStack.getItemDamage());
 			if (item != null) {
 				String textureURI = item.getTexture();
 				if (textureURI == null) {
-					org.spoutcraft.spoutcraftapi.material.CustomBlock block = MaterialData.getCustomBlock(var2.getItemDamage());
+					org.spoutcraft.spoutcraftapi.material.CustomBlock block = MaterialData.getCustomBlock(par2ItemStack.getItemDamage());
 					design = block != null ? block.getBlockDesign() : null;
 					textureURI = design != null ? design.getTexureURL() : null;
 				}
@@ -68,8 +68,8 @@ public class ItemRenderer {
 		if (design != null) {
 			design.renderItemstack(null, -0.5F, -0.5F, -0.5F, 0, 1F, rand);
 		}
-		else if(var2.itemID < 256 && RenderBlocks.renderItemIn3d(Block.blocksList[var2.itemID].getRenderType())) {
-			this.renderBlocksInstance.renderBlockAsItem(Block.blocksList[var2.itemID], var2.getItemDamage(), 1.0F);
+		else if(par2ItemStack.itemID < 256 && RenderBlocks.renderItemIn3d(Block.blocksList[par2ItemStack.itemID].getRenderType())) {
+			this.renderBlocksInstance.renderBlockAsItem(Block.blocksList[par2ItemStack.itemID], par2ItemStack.getItemDamage(), 1.0F);
 		} else {
 
 			Tessellator var4 = Tessellator.instance;
@@ -160,7 +160,7 @@ public class ItemRenderer {
 		//Spout HD Start
 		for(var8 = 0; var8 < TileSize.int_size; ++var8) {
 				var9 = (float)var8 / TileSize.float_size;
-				var10 = var2 + (var4 - var2) * var9 - TileSize.float_texNudge;
+				var10 = par2 + (par4 - par2) * var9 - TileSize.float_texNudge;
 			//Spout HD End
 			var11 = var6 * var9;
 			par1Tessellator.addVertexWithUV((double)var11, 0.0D, (double)(0.0F - var7), (double)var10, (double)par5);
@@ -176,7 +176,7 @@ public class ItemRenderer {
 		//Spout HD Start
 		for(var8 = 0; var8 < TileSize.int_size; ++var8) {
 				var9 = (float)var8 / TileSize.float_size;
-				var10 = var2 + (var4 - var2) * var9 - TileSize.float_texNudge;
+				var10 = par2 + (par4 - par2) * var9 - TileSize.float_texNudge;
 				var11 = var6 * var9 + TileSize.float_reciprocal;
 			//Spout HD End
 			par1Tessellator.addVertexWithUV((double)var11, 1.0D, (double)(0.0F - var7), (double)var10, (double)par3);
@@ -192,7 +192,7 @@ public class ItemRenderer {
 		//Spout HD Start
 		for(var8 = 0; var8 < TileSize.int_size; ++var8) {
 				var9 = (float)var8 / TileSize.float_size;
-				var10 = var5 + (var3 - var5) * var9 - TileSize.float_texNudge;
+				var10 = par5 + (par3 - par5) * var9 - TileSize.float_texNudge;
 				var11 = var6 * var9 + TileSize.float_reciprocal;
 			//Spout HD End
 			par1Tessellator.addVertexWithUV(0.0D, (double)var11, 0.0D, (double)par2, (double)var10);
@@ -208,7 +208,7 @@ public class ItemRenderer {
 		//Spout HD Start
 		for(var8 = 0; var8 < TileSize.int_size; ++var8) {
 				var9 = (float)var8 / TileSize.float_size;
-				var10 = var5 + (var3 - var5) * var9 - TileSize.float_texNudge;
+				var10 = par5 + (par3 - par5) * var9 - TileSize.float_texNudge;
 			//Spout HD End
 			var11 = var6 * var9;
 			par1Tessellator.addVertexWithUV((double)var6, (double)var11, 0.0D, (double)par4, (double)var10);
