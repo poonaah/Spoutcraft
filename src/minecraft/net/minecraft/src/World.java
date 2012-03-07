@@ -3126,22 +3126,6 @@ public class World implements IBlockAccess {
 			}
 		}
 	}
-	
-	//Heights must be a power of 2!
-	public void setMapHeight(int height) {
-		int shifts = 0;
-		int value = height;
-		while (value != 1) {
-			value = value >> 1;
-			shifts++;
-		}
-		heightShift = shifts;
-		this.xShift = this.heightShift + 4;
-		this.worldHeight = 1 << this.heightShift;
-		this.worldMaxY = this.worldHeight - 1;
-		this.seaLevel = this.worldHeight / 2 - 1;
-		this.worldInfo.setMapHeight(height);
-	}
 
 	public int getGrassColorCache(int x, int y, int z) {
 		Chunk chunk = getChunkFromBlockCoords(x, z);
