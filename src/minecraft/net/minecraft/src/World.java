@@ -8,58 +8,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
-import net.minecraft.src.AxisAlignedBB;
-import net.minecraft.src.BiomeGenBase;
-import net.minecraft.src.Block;
-import net.minecraft.src.BlockFluid;
-import net.minecraft.src.Chunk;
-import net.minecraft.src.ChunkCoordIntPair;
-import net.minecraft.src.ChunkCoordinates;
-import net.minecraft.src.ChunkPosition;
-import net.minecraft.src.ChunkProvider;
-import net.minecraft.src.ChunkProviderLoadOrGenerate;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLightningBolt;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.EnumCreatureType;
-import net.minecraft.src.EnumSkyBlock;
-import net.minecraft.src.EnumWorldType;
-import net.minecraft.src.Explosion;
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.IChunkLoader;
-import net.minecraft.src.IChunkProvider;
-import net.minecraft.src.IProgressUpdate;
-import net.minecraft.src.ISaveHandler;
-import net.minecraft.src.IWorldAccess;
-import net.minecraft.src.MapStorage;
-import net.minecraft.src.Material;
-import net.minecraft.src.MathHelper;
-import net.minecraft.src.MovingObjectPosition;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.NextTickListEntry;
-import net.minecraft.src.PathEntity;
-import net.minecraft.src.PathFinder;
-import net.minecraft.src.Profiler;
-import net.minecraft.src.SpawnListEntry;
-import net.minecraft.src.SpawnerAnimals;
-import net.minecraft.src.ThreadedFileIOBase;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.Vec3D;
-import net.minecraft.src.VillageCollection;
-import net.minecraft.src.VillageSiege;
-import net.minecraft.src.WeightedRandom;
-import net.minecraft.src.WorldChunkManager;
-import net.minecraft.src.WorldInfo;
-import net.minecraft.src.WorldProvider;
-import net.minecraft.src.WorldSavedData;
-import net.minecraft.src.WorldSettings;
-import net.minecraft.src.WorldType;
-//Spout Start
-import org.spoutcraft.client.SpoutcraftWorld;
-import org.spoutcraft.client.config.ConfigReader;
-import org.spoutcraft.spoutcraftapi.Spoutcraft;
-import org.spoutcraft.spoutcraftapi.material.CustomBlock;
-import org.spoutcraft.spoutcraftapi.material.MaterialData;
 
 import net.minecraft.client.Minecraft;
 
@@ -157,7 +105,7 @@ public class World implements IBlockAccess {
 		this.spawnPeacefulMobs = true;
 		this.activeChunkSet = new HashSet();
 		this.ambientTickCountdown = this.rand.nextInt(12000);
-		this.lightUpdateBlockList = new int['\u8000'];
+		this.lightUpdateBlockList = new int[32768];
 		this.entitiesWithinAABBExcludingEntity = new ArrayList();
 		this.isRemote = false;
 		this.saveHandler = par1ISaveHandler;
@@ -203,7 +151,7 @@ public class World implements IBlockAccess {
 		this.spawnPeacefulMobs = true;
 		this.activeChunkSet = new HashSet();
 		this.ambientTickCountdown = this.rand.nextInt(12000);
-		this.lightUpdateBlockList = new int['\u8000'];
+		this.lightUpdateBlockList = new int[32768];
 		this.entitiesWithinAABBExcludingEntity = new ArrayList();
 		this.isRemote = false;
 		this.lockTimestamp = par1World.lockTimestamp;
@@ -254,7 +202,7 @@ public class World implements IBlockAccess {
 		this.spawnPeacefulMobs = true;
 		this.activeChunkSet = new HashSet();
 		this.ambientTickCountdown = this.rand.nextInt(12000);
-		this.lightUpdateBlockList = new int['\u8000'];
+		this.lightUpdateBlockList = new int[32768];
 		this.entitiesWithinAABBExcludingEntity = new ArrayList();
 		this.isRemote = false;
 		this.saveHandler = par1ISaveHandler;
@@ -393,7 +341,6 @@ public class World implements IBlockAccess {
 		} catch (Exception var6) {
 			var6.printStackTrace();
 		}
-
 	}
 
 	public void saveWorld(boolean par1, IProgressUpdate par2IProgressUpdate) {
@@ -551,7 +498,6 @@ public class World implements IBlockAccess {
 				this.notifyBlocksOfNeighborChange(par1, par2, par3, var5);
 			}
 		}
-
 	}
 
 	public boolean setBlockMetadata(int par1, int par2, int par3, int par4) {
@@ -593,7 +539,6 @@ public class World implements IBlockAccess {
 		for (int var4 = 0; var4 < this.worldAccesses.size(); ++var4) {
 			((IWorldAccess)this.worldAccesses.get(var4)).markBlockNeedsUpdate(par1, par2, par3);
 		}
-
 	}
 
 	public void notifyBlockChange(int par1, int par2, int par3, int par4) {
@@ -622,14 +567,12 @@ public class World implements IBlockAccess {
 		for (int var4 = 0; var4 < this.worldAccesses.size(); ++var4) {
 			((IWorldAccess)this.worldAccesses.get(var4)).markBlockRangeNeedsUpdate(par1, par2, par3, par1, par2, par3);
 		}
-
 	}
 
 	public void markBlocksDirty(int par1, int par2, int par3, int par4, int par5, int par6) {
 		for (int var7 = 0; var7 < this.worldAccesses.size(); ++var7) {
 			((IWorldAccess)this.worldAccesses.get(var7)).markBlockRangeNeedsUpdate(par1, par2, par3, par4, par5, par6);
 		}
-
 	}
 
 	public void notifyBlocksOfNeighborChange(int par1, int par2, int par3, int par4) {
@@ -647,7 +590,6 @@ public class World implements IBlockAccess {
 			if (var5 != null) {
 				var5.onNeighborBlockChange(this, par1, par2, par3, par4);
 			}
-
 		}
 	}
 
@@ -813,7 +755,6 @@ public class World implements IBlockAccess {
 						for (int var7 = 0; var7 < this.worldAccesses.size(); ++var7) {
 							((IWorldAccess)this.worldAccesses.get(var7)).func_48180_b(par2, par3, par4);
 						}
-
 					}
 				}
 			}
@@ -824,7 +765,6 @@ public class World implements IBlockAccess {
 		for (int var4 = 0; var4 < this.worldAccesses.size(); ++var4) {
 			((IWorldAccess)this.worldAccesses.get(var4)).func_48180_b(par1, par2, par3);
 		}
-
 	}
 
 	public int getLightBrightnessForSkyBlocks(int par1, int par2, int par3, int par4) {
@@ -1017,28 +957,24 @@ public class World implements IBlockAccess {
 		for (int var5 = 0; var5 < this.worldAccesses.size(); ++var5) {
 			((IWorldAccess)this.worldAccesses.get(var5)).playSound(par2Str, par1Entity.posX, par1Entity.posY - (double)par1Entity.yOffset, par1Entity.posZ, par3, par4);
 		}
-
 	}
 
 	public void playSoundEffect(double par1, double par3, double par5, String par7Str, float par8, float par9) {
 		for (int var10 = 0; var10 < this.worldAccesses.size(); ++var10) {
 			((IWorldAccess)this.worldAccesses.get(var10)).playSound(par7Str, par1, par3, par5, par8, par9);
 		}
-
 	}
 
 	public void playRecord(String par1Str, int par2, int par3, int par4) {
 		for (int var5 = 0; var5 < this.worldAccesses.size(); ++var5) {
 			((IWorldAccess)this.worldAccesses.get(var5)).playRecord(par1Str, par2, par3, par4);
 		}
-
 	}
 
 	public void spawnParticle(String par1Str, double par2, double par4, double par6, double par8, double par10, double par12) {
 		for (int var14 = 0; var14 < this.worldAccesses.size(); ++var14) {
 			((IWorldAccess)this.worldAccesses.get(var14)).spawnParticle(par1Str, par2, par4, par6, par8, par10, par12);
 		}
-
 	}
 
 	public boolean addWeatherEffect(Entity par1Entity) {
@@ -1074,14 +1010,12 @@ public class World implements IBlockAccess {
 		for (int var2 = 0; var2 < this.worldAccesses.size(); ++var2) {
 			((IWorldAccess)this.worldAccesses.get(var2)).obtainEntitySkin(par1Entity);
 		}
-
 	}
 
 	protected void releaseEntitySkin(Entity par1Entity) {
 		for (int var2 = 0; var2 < this.worldAccesses.size(); ++var2) {
 			((IWorldAccess)this.worldAccesses.get(var2)).releaseEntitySkin(par1Entity);
 		}
-
 	}
 
 	public void setEntityDead(Entity par1Entity) {
@@ -1098,7 +1032,6 @@ public class World implements IBlockAccess {
 			this.playerEntities.remove((EntityPlayer)par1Entity);
 			this.updateAllPlayersSleepingFlag();
 		}
-
 	}
 
 	public void addWorldAccess(IWorldAccess par1IWorldAccess) {
@@ -1151,7 +1084,7 @@ public class World implements IBlockAccess {
 
 	public int calculateSkylightSubtracted(float par1) {
 		float var2 = this.getCelestialAngle(par1);
-		float var3 = 1.0F - (MathHelper.cos(var2 * 3.1415927F * 2.0F) * 2.0F + 0.5F);
+		float var3 = 1.0F - (MathHelper.cos(var2 * (float)Math.PI * 2.0F) * 2.0F + 0.5F);
 		if (var3 < 0.0F) {
 			var3 = 0.0F;
 		}
@@ -1169,7 +1102,7 @@ public class World implements IBlockAccess {
 
 	public float func_35464_b(float par1) {
 		float var2 = this.getCelestialAngle(par1);
-		float var3 = 1.0F - (MathHelper.cos(var2 * 3.1415927F * 2.0F) * 2.0F + 0.2F);
+		float var3 = 1.0F - (MathHelper.cos(var2 * (float)Math.PI * 2.0F) * 2.0F + 0.2F);
 		if (var3 < 0.0F) {
 			var3 = 0.0F;
 		}
@@ -1186,7 +1119,7 @@ public class World implements IBlockAccess {
 
 	public Vec3D getSkyColor(Entity par1Entity, float par2) {
 		float var3 = this.getCelestialAngle(par2);
-		float var4 = MathHelper.cos(var3 * 3.1415927F * 2.0F) * 2.0F + 0.5F;
+		float var4 = MathHelper.cos(var3 * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
 		if (var4 < 0.0F) {
 			var4 = 0.0F;
 		}
@@ -1200,9 +1133,22 @@ public class World implements IBlockAccess {
 		BiomeGenBase var7 = this.func_48454_a(var5, var6);
 		float var8 = var7.func_48411_i();
 		int var9 = var7.getSkyColorByTemp(var8);
-		float var10 = (float)(var9 >> 16 & 255) / 255.0F;
-		float var11 = (float)(var9 >> 8 & 255) / 255.0F;
-		float var12 = (float)(var9 & 255) / 255.0F;
+		//Spout HD start
+		Colorizer.setupForFog(par1Entity);
+		float var10;
+		float var11;
+		float var12;
+		if (Colorizer.computeSkyColor(this, par2)) {
+			var10 = Colorizer.setColor[0];
+			var11 = Colorizer.setColor[1];
+			var12 = Colorizer.setColor[2];
+		} else {
+			var10 = (float)(var9 >> 16 & 255) / 255.0F;
+			var11 = (float)(var9 >> 8 & 255) / 255.0F;
+			var12 = (float)(var9 & 255) / 255.0F;
+		}
+		//Spout HD end
+
 		var10 *= var4;
 		var11 *= var4;
 		var12 *= var4;
@@ -1251,12 +1197,12 @@ public class World implements IBlockAccess {
 
 	public float getCelestialAngleRadians(float par1) {
 		float var2 = this.getCelestialAngle(par1);
-		return var2 * 3.1415927F * 2.0F;
+		return var2 * (float)Math.PI * 2.0F;
 	}
 
 	public Vec3D drawClouds(float par1) {
 		float var2 = this.getCelestialAngle(par1);
-		float var3 = MathHelper.cos(var2 * 3.1415927F * 2.0F) * 2.0F + 0.5F;
+		float var3 = MathHelper.cos(var2 * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
 		if (var3 < 0.0F) {
 			var3 = 0.0F;
 		}
@@ -1320,7 +1266,7 @@ public class World implements IBlockAccess {
 
 	public float getStarBrightness(float par1) {
 		float var2 = this.getCelestialAngle(par1);
-		float var3 = 1.0F - (MathHelper.cos(var2 * 3.1415927F * 2.0F) * 2.0F + 0.75F);
+		float var3 = 1.0F - (MathHelper.cos(var2 * (float)Math.PI * 2.0F) * 2.0F + 0.75F);
 		if (var3 < 0.0F) {
 			var3 = 0.0F;
 		}
@@ -1342,7 +1288,6 @@ public class World implements IBlockAccess {
 					Block.blocksList[var8].updateTick(this, var6.xCoord, var6.yCoord, var6.zCoord, this.rand);
 				}
 			}
-
 		} else {
 			if (this.checkChunksExist(par1 - var7, par2 - var7, par3 - var7, par1 + var7, par2 + var7, par3 + var7)) {
 				if (par4 > 0) {
@@ -1354,7 +1299,6 @@ public class World implements IBlockAccess {
 					this.scheduledTickTreeSet.add(var6);
 				}
 			}
-
 		}
 	}
 
@@ -1368,7 +1312,6 @@ public class World implements IBlockAccess {
 			this.scheduledTickSet.add(var6);
 			this.scheduledTickTreeSet.add(var6);
 		}
-
 	}
 
 	public void updateEntities() {
@@ -1498,7 +1441,6 @@ public class World implements IBlockAccess {
 		} else {
 			this.loadedTileEntityList.addAll(par1Collection);
 		}
-
 	}
 
 	public void updateEntity(Entity par1Entity) {
@@ -1569,7 +1511,6 @@ public class World implements IBlockAccess {
 					par1Entity.riddenByEntity = null;
 				}
 			}
-
 		}
 	}
 
@@ -1858,7 +1799,6 @@ public class World implements IBlockAccess {
 				}
 			}
 		}
-
 	}
 
 	public void removeBlockTileEntity(int par1, int par2, int par3) {
@@ -1877,7 +1817,6 @@ public class World implements IBlockAccess {
 				var5.removeChunkBlockTileEntity(par1 & 15, par2, par3 & 15);
 			}
 		}
-
 	}
 
 	public void markTileEntityForDespawn(TileEntity par1TileEntity) {
@@ -1915,7 +1854,6 @@ public class World implements IBlockAccess {
 		} catch (InterruptedException var3) {
 			var3.printStackTrace();
 		}
-
 	}
 
 	public void calculateInitialSkylight() {
@@ -1923,7 +1861,6 @@ public class World implements IBlockAccess {
 		if (var1 != this.skylightSubtracted) {
 			this.skylightSubtracted = var1;
 		}
-
 	}
 
 	public void setAllowedSpawnTypes(boolean par1, boolean par2) {
@@ -1986,7 +1923,6 @@ public class World implements IBlockAccess {
 				this.thunderingStrength = 1.0F;
 			}
 		}
-
 	}
 
 	protected void updateWeather() {
@@ -2054,7 +1990,6 @@ public class World implements IBlockAccess {
 			if (this.thunderingStrength > 1.0F) {
 				this.thunderingStrength = 1.0F;
 			}
-
 		}
 	}
 
@@ -2202,7 +2137,6 @@ public class World implements IBlockAccess {
 
 			Profiler.endSection();
 		}
-
 	}
 
 	public boolean isBlockHydratedDirectly(int par1, int par2, int par3) {
@@ -2604,7 +2538,6 @@ public class World implements IBlockAccess {
 				Block.blocksList[var10].randomDisplayTick(this, var7, var8, var9, var5);
 			}
 		}
-
 	}
 
 	public List getEntitiesWithinAABBExcludingEntity(Entity par1Entity, AxisAlignedBB par2AxisAlignedBB) {
@@ -2675,7 +2608,6 @@ public class World implements IBlockAccess {
 		for (int var5 = 0; var5 < this.worldAccesses.size(); ++var5) {
 			((IWorldAccess)this.worldAccesses.get(var5)).doNothingWithTileEntity(par1, par2, par3, par4TileEntity);
 		}
-
 	}
 
 	public int countEntities(Class par1Class) {
@@ -2697,7 +2629,6 @@ public class World implements IBlockAccess {
 		for (int var2 = 0; var2 < par1List.size(); ++var2) {
 			this.obtainEntitySkin((Entity)par1List.get(var2));
 		}
-
 	}
 
 	public void unloadEntities(List par1List) {
@@ -2708,7 +2639,6 @@ public class World implements IBlockAccess {
 		while (this.chunkProvider.unload100OldestChunks()) {
 			;
 		}
-
 	}
 
 	public boolean canBlockBePlacedAt(int par1, int par2, int par3, int par4, boolean par5, int par6) {
@@ -2902,7 +2832,6 @@ public class World implements IBlockAccess {
 		if (!this.loadedEntityList.contains(par1Entity)) {
 			this.loadedEntityList.add(par1Entity);
 		}
-
 	}
 
 	public boolean canMineBlock(EntityPlayer par1EntityPlayer, int par2, int par3, int par4) {
@@ -2955,7 +2884,6 @@ public class World implements IBlockAccess {
 				this.releaseEntitySkin(var2);
 			}
 		}
-
 	}
 
 	public IChunkProvider getChunkProvider() {
@@ -2967,7 +2895,6 @@ public class World implements IBlockAccess {
 		if (var6 > 0) {
 			Block.blocksList[var6].powerBlock(this, par1, par2, par3, par4, par5);
 		}
-
 	}
 
 	public ISaveHandler getSaveHandler() {
@@ -2989,7 +2916,6 @@ public class World implements IBlockAccess {
 				break;
 			}
 		}
-
 	}
 
 	protected void wakeUpAllPlayers() {
@@ -3084,7 +3010,6 @@ public class World implements IBlockAccess {
 		for (int var7 = 0; var7 < this.worldAccesses.size(); ++var7) {
 			((IWorldAccess)this.worldAccesses.get(var7)).playAuxSFX(par1EntityPlayer, par2, par3, par4, par5, par6);
 		}
-
 	}
 
 	public int func_48453_b() {

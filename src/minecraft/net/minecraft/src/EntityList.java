@@ -3,56 +3,8 @@ package net.minecraft.src;
 import com.pclewis.mcpatcher.mod.Colorizer;  //Spout HD
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityArrow;
-import net.minecraft.src.EntityBlaze;
-import net.minecraft.src.EntityBoat;
-import net.minecraft.src.EntityCaveSpider;
-import net.minecraft.src.EntityChicken;
-import net.minecraft.src.EntityCow;
-import net.minecraft.src.EntityCreeper;
-import net.minecraft.src.EntityDragon;
-import net.minecraft.src.EntityEggInfo;
-import net.minecraft.src.EntityEnderCrystal;
-import net.minecraft.src.EntityEnderEye;
-import net.minecraft.src.EntityEnderPearl;
-import net.minecraft.src.EntityEnderman;
-import net.minecraft.src.EntityExpBottle;
-import net.minecraft.src.EntityFallingSand;
-import net.minecraft.src.EntityFireball;
-import net.minecraft.src.EntityGhast;
-import net.minecraft.src.EntityGiantZombie;
-import net.minecraft.src.EntityIronGolem;
-import net.minecraft.src.EntityItem;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityMagmaCube;
-import net.minecraft.src.EntityMinecart;
-import net.minecraft.src.EntityMob;
-import net.minecraft.src.EntityMooshroom;
-import net.minecraft.src.EntityOcelot;
-import net.minecraft.src.EntityPainting;
-import net.minecraft.src.EntityPig;
-import net.minecraft.src.EntityPigZombie;
-import net.minecraft.src.EntityPotion;
-import net.minecraft.src.EntitySheep;
-import net.minecraft.src.EntitySilverfish;
-import net.minecraft.src.EntitySkeleton;
-import net.minecraft.src.EntitySlime;
-import net.minecraft.src.EntitySmallFireball;
-import net.minecraft.src.EntitySnowball;
-import net.minecraft.src.EntitySnowman;
-import net.minecraft.src.EntitySpider;
-import net.minecraft.src.EntitySquid;
-import net.minecraft.src.EntityTNTPrimed;
-import net.minecraft.src.EntityVillager;
-import net.minecraft.src.EntityWolf;
-import net.minecraft.src.EntityXPOrb;
-import net.minecraft.src.EntityZombie;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.World;
 
 public class EntityList {
-
 	private static Map stringToClassMapping = new HashMap();
 	private static Map classToStringMapping = new HashMap();
 	private static Map IDtoClassMapping = new HashMap();
@@ -69,7 +21,7 @@ public class EntityList {
 	}
 
 	private static void addMapping(Class par0Class, String par1Str, int par2, int par3, int par4) {
-		Colorizer.setupSpawnerEgg(var1, var2, var3, var4);  //Spout HD
+		Colorizer.setupSpawnerEgg(par1Str, par2, par3, par4);  //Spout HD
 		addMapping(par0Class, par1Str, par2);
 		entityEggs.put(Integer.valueOf(par2), new EntityEggInfo(par2, par3, par4));
 	}
@@ -164,7 +116,7 @@ public class EntityList {
 		addMapping(EntitySkeleton.class, "Skeleton", 51, 12698049, 4802889);
 		addMapping(EntitySpider.class, "Spider", 52, 3419431, 11013646);
 		addMapping(EntityGiantZombie.class, "Giant", 53);
-		addMapping(EntityZombie.class, "Zombie", 54, '\uafaf', 7969893);
+		addMapping(EntityZombie.class, "Zombie", 54, 44975, 7969893);
 		addMapping(EntitySlime.class, "Slime", 55, 5349438, 8306542);
 		addMapping(EntityGhast.class, "Ghast", 56, 16382457, 12369084);
 		addMapping(EntityPigZombie.class, "PigZombie", 57, 15373203, 5009705);

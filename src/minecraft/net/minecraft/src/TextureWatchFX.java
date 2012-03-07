@@ -6,11 +6,8 @@ import com.pclewis.mcpatcher.mod.TileSize;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.Item;
-import net.minecraft.src.TextureFX;
 
 public class TextureWatchFX extends TextureFX {
-
 	private Minecraft mc;
 	//Spout HD Start
 	private int[] watchIconImageData = new int[TileSize.int_numPixels];
@@ -25,37 +22,34 @@ public class TextureWatchFX extends TextureFX {
 		this.tileImage = 1;
 
 		try {
-			//Spout HD Start
 			BufferedImage var2 = TextureUtils.getResourceAsBufferedImage("/gui/items.png");
 			int var3 = this.iconIndex % 16 * TileSize.int_size;
 			int var4 = this.iconIndex / 16 * TileSize.int_size;
 			var2.getRGB(var3, var4, TileSize.int_size, TileSize.int_size, this.watchIconImageData, 0, TileSize.int_size);
 			var2 = TextureUtils.getResourceAsBufferedImage("/misc/dial.png");
 			var2.getRGB(0, 0, TileSize.int_size, TileSize.int_size, this.dialImageData, 0, TileSize.int_size);
-			//Spout HD End
 		} catch (IOException var5) {
 			var5.printStackTrace();
 		}
-
 	}
 
 	public void onTick() {
 		double var1 = 0.0D;
 		if (this.mc.theWorld != null && this.mc.thePlayer != null) {
 			float var3 = this.mc.theWorld.getCelestialAngle(1.0F);
-			var1 = (double)(-var3 * 3.1415927F * 2.0F);
+			var1 = (double)(-var3 * (float)Math.PI * 2.0F);
 			if (!this.mc.theWorld.worldProvider.func_48217_e()) {
-				var1 = Math.random() * 3.1415927410125732D * 2.0D;
+				var1 = Math.random() * Math.PI * 2.0D;
 			}
 		}
 
 		double var22;
-		for (var22 = var1 - this.field_4222_j; var22 < -3.141592653589793D; var22 += 6.283185307179586D) {
+		for (var22 = var1 - this.field_4222_j; var22 < -Math.PI; var22 += (Math.PI * 2D)) {
 			;
 		}
 
-		while (var22 >= 3.141592653589793D) {
-			var22 -= 6.283185307179586D;
+		while (var22 >= Math.PI) {
+			var22 -= (Math.PI * 2D);
 		}
 
 		if (var22 < -1.0D) {
@@ -72,7 +66,7 @@ public class TextureWatchFX extends TextureFX {
 		double var5 = Math.sin(this.field_4222_j);
 		double var7 = Math.cos(this.field_4222_j);
 		//Spout HD Start
-		for(int var9 = 0; var9 < TileSize.int_numPixels; ++var9) {
+		for (int var9 = 0; var9 < TileSize.int_numPixels; ++var9) {
 			//Spout HD End
 			int var10 = this.watchIconImageData[var9] >> 24 & 255;
 			int var11 = this.watchIconImageData[var9] >> 16 & 255;
@@ -107,6 +101,5 @@ public class TextureWatchFX extends TextureFX {
 			this.imageData[var9 * 4 + 2] = (byte)var13;
 			this.imageData[var9 * 4 + 3] = (byte)var10;
 		}
-
 	}
 }

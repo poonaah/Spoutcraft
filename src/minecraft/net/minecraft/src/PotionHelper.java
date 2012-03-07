@@ -6,11 +6,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import net.minecraft.src.Potion;
-import net.minecraft.src.PotionEffect;
 
 public class PotionHelper {
-
 	public static final String field_40367_a = null;
 	public static final String sugarEffect;
 	public static final String ghastTearEffect = "+0-1-2-3&4-4+13";

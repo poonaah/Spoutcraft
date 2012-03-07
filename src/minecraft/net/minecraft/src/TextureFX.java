@@ -24,10 +24,9 @@ public class TextureFX {
 
 	public void bindImage(RenderEngine par1RenderEngine) {
 		if (this.tileImage == 0) {
-			GL11.glBindTexture(3553, par1RenderEngine.getTexture("/terrain.png"));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, par1RenderEngine.getTexture("/terrain.png"));
 		} else if (this.tileImage == 1) {
-			GL11.glBindTexture(3553, par1RenderEngine.getTexture("/gui/items.png"));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, par1RenderEngine.getTexture("/gui/items.png"));
 		}
-
 	}
 }

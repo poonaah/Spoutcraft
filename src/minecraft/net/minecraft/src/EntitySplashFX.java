@@ -1,11 +1,8 @@
 package net.minecraft.src;
 
 import com.pclewis.mcpatcher.mod.Colorizer; //Spout HD
-import net.minecraft.src.EntityRainFX;
-import net.minecraft.src.World;
 
 public class EntitySplashFX extends EntityRainFX {
-
 	public EntitySplashFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12) {
 		super(par1World, par2, par4, par6);
 		this.particleGravity = 0.04F;
@@ -16,7 +13,7 @@ public class EntitySplashFX extends EntityRainFX {
 			this.motionZ = par12;
 		}
 		//Spout HD start
-		if (Colorizer.computeWaterColor(this.worldObj.getWorldChunkManager(), this.posX, this.posY, this.posZ)) {
+		if (Colorizer.computeWaterColor(this.posX, this.posY, this.posZ)) {
 			this.particleRed = Colorizer.waterColor[0];
 			this.particleGreen = Colorizer.waterColor[1];
 			this.particleBlue = Colorizer.waterColor[2];

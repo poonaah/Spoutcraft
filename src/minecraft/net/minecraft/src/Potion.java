@@ -1,16 +1,10 @@
 package net.minecraft.src;
 
-import net.minecraft.src.DamageSource;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.PotionEffect;
-import net.minecraft.src.PotionHealth;
 //Spout HD start
 import com.pclewis.mcpatcher.mod.Colorizer;
 //Spout HD end
 
 public class Potion {
-
 	public static final Potion[] potionTypes = new Potion[32];
 	public static final Potion field_35676_b = null;
 	public static final Potion moveSpeed = (new Potion(1, false, 8171462)).setPotionName("potion.moveSpeed").setIconIndex(0, 0);
@@ -45,12 +39,13 @@ public class Potion {
 	public static final Potion field_35665_F = null;
 	public static final Potion field_35666_G = null;
 	public final int id;
-	private String name = "";
+	public String name = ""; //Spout private->public
 	private int statusIconIndex = -1;
 	private final boolean isBadEffect;
 	private double effectiveness;
 	private boolean usable;
 	public int liquidColor; //Spout HD
+	public int origColor; //Spout
 
 	protected Potion(int par1, boolean par2, int par3) {
 		this.id = par1;
@@ -92,7 +87,6 @@ public class Potion {
 		} else {
 			par1EntityLiving.heal(6 << par2);
 		}
-
 	}
 
 	public void affectEntity(EntityLiving par1EntityLiving, EntityLiving par2EntityLiving, int par3, double par4) {
@@ -110,7 +104,6 @@ public class Potion {
 			var6 = (int)(par4 * (double)(6 << par3) + 0.5D);
 			par2EntityLiving.heal(var6);
 		}
-
 	}
 
 	public boolean isInstant() {
@@ -177,5 +170,4 @@ public class Potion {
 	public int getLiquidColor() {
 		return this.liquidColor;
 	}
-
 }

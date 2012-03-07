@@ -23,7 +23,7 @@ public class TextureWaterFlowFX extends TextureFX {
 		this.tileSize = 2;
 	}
 	//Spout HD end
-	
+
 	public void onTick() {
 		++this.tickCounter;
 
@@ -33,11 +33,11 @@ public class TextureWaterFlowFX extends TextureFX {
 		int var5;
 		int var6;
 		//Spout HD start
-		for(var1 = 0; var1 < TileSize.int_size; ++var1) {
-			for(var2 = 0; var2 < TileSize.int_size; ++var2) {
+		for (var1 = 0; var1 < TileSize.int_size; ++var1) {
+			for (var2 = 0; var2 < TileSize.int_size; ++var2) {
 				var3 = 0.0F;
 
-				for(int var4 = var2 - 2; var4 <= var2; ++var4) {
+				for (int var4 = var2 - 2; var4 <= var2; ++var4) {
 					var5 = var1 & TileSize.int_sizeMinus1;
 					var6 = var4 & TileSize.int_sizeMinus1;
 					var3 += this.field_1138_g[var5 + var6 * TileSize.int_size];
@@ -47,15 +47,15 @@ public class TextureWaterFlowFX extends TextureFX {
 			}
 		}
 
-		for(var1 = 0; var1 < TileSize.int_size; ++var1) {
-			for(var2 = 0; var2 < TileSize.int_size; ++var2) {
+		for (var1 = 0; var1 < TileSize.int_size; ++var1) {
+			for (var2 = 0; var2 < TileSize.int_size; ++var2) {
 				this.field_1136_i[var1 + var2 * TileSize.int_size] += this.field_1135_j[var1 + var2 * TileSize.int_size] * 0.05F;
-				if(this.field_1136_i[var1 + var2 * TileSize.int_size] < 0.0F) {
+				if (this.field_1136_i[var1 + var2 * TileSize.int_size] < 0.0F) {
 					this.field_1136_i[var1 + var2 * TileSize.int_size] = 0.0F;
 				}
 
 				this.field_1135_j[var1 + var2 * TileSize.int_size] -= 0.3F;
-				if(Math.random() < 0.2D) {
+				if (Math.random() < 0.2D) {
 					this.field_1135_j[var1 + var2 * TileSize.int_size] = 0.5F;
 					//Spout HD end
 				}
@@ -66,7 +66,7 @@ public class TextureWaterFlowFX extends TextureFX {
 		this.field_1137_h = this.field_1138_g;
 		this.field_1138_g = var12;
 		//Spout HD start
-		for(var2 = 0; var2 < TileSize.int_numPixels; ++var2) {
+		for (var2 = 0; var2 < TileSize.int_numPixels; ++var2) {
 			var3 = this.field_1138_g[var2 - this.tickCounter * TileSize.int_size & TileSize.int_numPixelsMinus1];
 			//Spout HD end
 			if (var3 > 1.0F) {
@@ -96,6 +96,5 @@ public class TextureWaterFlowFX extends TextureFX {
 			this.imageData[var2 * 4 + 2] = (byte)var7;
 			this.imageData[var2 * 4 + 3] = (byte)var8;
 		}
-
 	}
 }

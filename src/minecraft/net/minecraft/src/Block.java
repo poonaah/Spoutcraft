@@ -2,139 +2,11 @@ package net.minecraft.src;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.AxisAlignedBB;
-import net.minecraft.src.BlockBed;
-import net.minecraft.src.BlockBookshelf;
-import net.minecraft.src.BlockBrewingStand;
-import net.minecraft.src.BlockButton;
-import net.minecraft.src.BlockCactus;
-import net.minecraft.src.BlockCake;
-import net.minecraft.src.BlockCauldron;
-import net.minecraft.src.BlockChest;
-import net.minecraft.src.BlockClay;
-import net.minecraft.src.BlockCloth;
-import net.minecraft.src.BlockCrops;
-import net.minecraft.src.BlockDeadBush;
-import net.minecraft.src.BlockDetectorRail;
-import net.minecraft.src.BlockDirt;
-import net.minecraft.src.BlockDispenser;
-import net.minecraft.src.BlockDoor;
-import net.minecraft.src.BlockDragonEgg;
-import net.minecraft.src.BlockEnchantmentTable;
-import net.minecraft.src.BlockEndPortal;
-import net.minecraft.src.BlockEndPortalFrame;
-import net.minecraft.src.BlockFarmland;
-import net.minecraft.src.BlockFence;
-import net.minecraft.src.BlockFenceGate;
-import net.minecraft.src.BlockFire;
-import net.minecraft.src.BlockFlower;
-import net.minecraft.src.BlockFlowing;
-import net.minecraft.src.BlockFurnace;
-import net.minecraft.src.BlockGlass;
-import net.minecraft.src.BlockGlowStone;
-import net.minecraft.src.BlockGrass;
-import net.minecraft.src.BlockGravel;
-import net.minecraft.src.BlockIce;
-import net.minecraft.src.BlockJukeBox;
-import net.minecraft.src.BlockLadder;
-import net.minecraft.src.BlockLeaves;
-import net.minecraft.src.BlockLever;
-import net.minecraft.src.BlockLilyPad;
-import net.minecraft.src.BlockLockedChest;
-import net.minecraft.src.BlockLog;
-import net.minecraft.src.BlockMelon;
-import net.minecraft.src.BlockMobSpawner;
-import net.minecraft.src.BlockMushroom;
-import net.minecraft.src.BlockMushroomCap;
-import net.minecraft.src.BlockMycelium;
-import net.minecraft.src.BlockNetherStalk;
-import net.minecraft.src.BlockNetherrack;
-import net.minecraft.src.BlockNote;
-import net.minecraft.src.BlockObsidian;
-import net.minecraft.src.BlockOre;
-import net.minecraft.src.BlockOreStorage;
-import net.minecraft.src.BlockPane;
-import net.minecraft.src.BlockPistonBase;
-import net.minecraft.src.BlockPistonExtension;
-import net.minecraft.src.BlockPistonMoving;
-import net.minecraft.src.BlockPortal;
-import net.minecraft.src.BlockPressurePlate;
-import net.minecraft.src.BlockPumpkin;
-import net.minecraft.src.BlockRail;
-import net.minecraft.src.BlockRedstoneLight;
-import net.minecraft.src.BlockRedstoneOre;
-import net.minecraft.src.BlockRedstoneRepeater;
-import net.minecraft.src.BlockRedstoneTorch;
-import net.minecraft.src.BlockRedstoneWire;
-import net.minecraft.src.BlockReed;
-import net.minecraft.src.BlockSand;
-import net.minecraft.src.BlockSandStone;
-import net.minecraft.src.BlockSapling;
-import net.minecraft.src.BlockSign;
-import net.minecraft.src.BlockSilverfish;
-import net.minecraft.src.BlockSnow;
-import net.minecraft.src.BlockSnowBlock;
-import net.minecraft.src.BlockSoulSand;
-import net.minecraft.src.BlockSponge;
-import net.minecraft.src.BlockStairs;
-import net.minecraft.src.BlockStationary;
-import net.minecraft.src.BlockStem;
-import net.minecraft.src.BlockStep;
-import net.minecraft.src.BlockStone;
-import net.minecraft.src.BlockStoneBrick;
-import net.minecraft.src.BlockTNT;
-import net.minecraft.src.BlockTallGrass;
-import net.minecraft.src.BlockTorch;
-import net.minecraft.src.BlockTrapDoor;
-import net.minecraft.src.BlockVine;
-import net.minecraft.src.BlockWeb;
-import net.minecraft.src.BlockWorkbench;
-import net.minecraft.src.EnchantmentHelper;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityItem;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.EnumMobType;
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemBlock;
-import net.minecraft.src.ItemCloth;
-import net.minecraft.src.ItemColored;
-import net.minecraft.src.ItemLeaves;
-import net.minecraft.src.ItemLilyPad;
-import net.minecraft.src.ItemMetadata;
-import net.minecraft.src.ItemPiston;
-import net.minecraft.src.ItemSapling;
-import net.minecraft.src.ItemSlab;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.Material;
-import net.minecraft.src.MovingObjectPosition;
-import net.minecraft.src.StatCollector;
-import net.minecraft.src.StatList;
-import net.minecraft.src.StepSound;
-import net.minecraft.src.StepSoundSand;
-import net.minecraft.src.StepSoundStone;
-import net.minecraft.src.TileEntitySign;
-import net.minecraft.src.Vec3D;
-import net.minecraft.src.World;
-
-//Spout Start
-import gnu.trove.map.hash.TIntFloatHashMap;
-import org.spoutcraft.client.block.SpoutcraftChunk;
-import org.spoutcraft.spoutcraftapi.Spoutcraft;
-import org.spoutcraft.spoutcraftapi.entity.ActivePlayer;
-import org.spoutcraft.spoutcraftapi.material.CustomBlock;
-import org.spoutcraft.spoutcraftapi.material.MaterialData;
-import org.spoutcraft.spoutcraftapi.util.FastLocation;
-import org.spoutcraft.spoutcraftapi.util.FixedLocation;
-
+//Spout start
 import com.pclewis.mcpatcher.mod.Colorizer;
-//Spout End
+//Spout end
 
 public class Block {
-
 	public static final StepSound soundPowderFootstep = new StepSound("stone", 1.0F, 1.0F);
 	public static final StepSound soundWoodFootstep = new StepSound("wood", 1.0F, 1.0F);
 	public static final StepSound soundGravelFootstep = new StepSound("gravel", 1.0F, 1.0F);
@@ -469,7 +341,6 @@ public class Block {
 		if (var7 != null && par5AxisAlignedBB.intersectsWith(var7)) {
 			par6ArrayList.add(var7);
 		}
-
 	}
 
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4) {
@@ -555,7 +426,6 @@ public class Block {
 					}
 				}
 			}
-
 		}
 	}
 
@@ -723,11 +593,11 @@ public class Block {
 	}
 
 	public int getRenderColor(int par1) {
-		return 16777215;
+		return Colorizer.colorizeBlock(this); //Spout
 	}
 
 	public int colorMultiplier(IBlockAccess par1IBlockAccess, int par2, int par3, int par4) {
-		return 16777215;
+		return Colorizer.colorizeBlock(this, par2, par3, par4, par1IBlockAccess.getBlockMetadata(par2, par3, par4)); //Spout
 	}
 
 	public boolean isPoweringTo(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5) {
@@ -758,7 +628,6 @@ public class Block {
 			int var7 = EnchantmentHelper.getFortuneModifier(par2EntityPlayer.inventory);
 			this.dropBlockAsItem(par1World, par3, par4, par5, par6, var7);
 		}
-
 	}
 
 	protected ItemStack createStackedBlock(int par1) {

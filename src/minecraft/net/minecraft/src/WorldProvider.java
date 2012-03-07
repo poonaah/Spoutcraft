@@ -1,25 +1,11 @@
 package net.minecraft.src;
 
-import net.minecraft.src.BiomeGenBase;
-import net.minecraft.src.Block;
-import net.minecraft.src.ChunkCoordinates;
-import net.minecraft.src.ChunkProviderFlat;
-import net.minecraft.src.ChunkProviderGenerate;
-import net.minecraft.src.IChunkProvider;
-import net.minecraft.src.MathHelper;
-import net.minecraft.src.Vec3D;
-import net.minecraft.src.World;
-import net.minecraft.src.WorldChunkManager;
-import net.minecraft.src.WorldChunkManagerHell;
-import net.minecraft.src.WorldProviderEnd;
-import net.minecraft.src.WorldProviderHell;
-import net.minecraft.src.WorldProviderSurface;
 //Spout Start
 import org.spoutcraft.client.SpoutClient;
 import org.spoutcraft.spoutcraftapi.gui.Color;
+import com.pclewis.mcpatcher.mod.Colorizer;
 //Spout End
 public abstract class WorldProvider {
-
 	public World worldObj;
 	public WorldType terrainType;
 	public WorldChunkManager worldChunkMgr;
@@ -43,7 +29,6 @@ public abstract class WorldProvider {
 			float var3 = 1.0F - (float)var2 / 15.0F;
 			this.lightBrightnessTable[var2] = (1.0F - var3) / (var3 * 3.0F + 1.0F) * (1.0F - var1) + var1;
 		}
-
 	}
 
 	protected void registerWorldChunkManager() {
@@ -52,7 +37,6 @@ public abstract class WorldProvider {
 		} else {
 			this.worldChunkMgr = new WorldChunkManager(this.worldObj);
 		}
-
 	}
 
 	public IChunkProvider getChunkProvider() {
@@ -76,7 +60,7 @@ public abstract class WorldProvider {
 		}
 
 		float var6 = var5;
-		var5 = 1.0F - (float)((Math.cos((double)var5 * 3.141592653589793D) + 1.0D) / 2.0D);
+		var5 = 1.0F - (float)((Math.cos((double)var5 * Math.PI) + 1.0D) / 2.0D);
 		var5 = var6 + (var5 - var6) / 3.0F;
 		return var5;
 	}
@@ -91,11 +75,11 @@ public abstract class WorldProvider {
 
 	public float[] calcSunriseSunsetColors(float par1, float par2) {
 		float var3 = 0.4F;
-		float var4 = MathHelper.cos(par1 * 3.1415927F * 2.0F) - 0.0F;
+		float var4 = MathHelper.cos(par1 * (float)Math.PI * 2.0F) - 0.0F;
 		float var5 = -0.0F;
 		if (var4 >= var5 - var3 && var4 <= var5 + var3) {
 			float var6 = (var4 - var5) / var3 * 0.5F + 0.5F;
-			float var7 = 1.0F - (1.0F - MathHelper.sin(var6 * 3.1415927F)) * 0.99F;
+			float var7 = 1.0F - (1.0F - MathHelper.sin(var6 * (float)Math.PI)) * 0.99F;
 			var7 *= var7;
 			this.colorsSunriseSunset[0] = var6 * 0.3F + 0.7F;
 			this.colorsSunriseSunset[1] = var6 * var6 * 0.7F + 0.2F;
@@ -108,7 +92,7 @@ public abstract class WorldProvider {
 	}
 
 	public Vec3D getFogColor(float par1, float par2) {
-		float var3 = MathHelper.cos(par1 * 3.1415927F * 2.0F) * 2.0F + 0.5F;
+		float var3 = MathHelper.cos(par1 * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
 		if (var3 < 0.0F) {
 			var3 = 0.0F;
 		}
@@ -118,14 +102,23 @@ public abstract class WorldProvider {
 		}
 		//Spout Start
 
-		float var4 = 0.7529412F;
-		float var5 = 0.84705883F;
-		float var6 = 1.0F;
-		Color fogColor = SpoutClient.getInstance().getSkyManager().getFogColor();
-		if(fogColor != null){
-			var4 = fogColor.getRedF();
-			var5 = fogColor.getGreenF();
-			var6 = fogColor.getBlueF();
+		float var4;
+		float var5;
+		float var6;
+		if (Colorizer.computeFogColor(Colorizer.COLOR_MAP_FOG0)) {
+			var4 = Colorizer.setColor[0];
+			var5 = Colorizer.setColor[1];
+			var6 = Colorizer.setColor[2];
+		} else {
+			var4 = 0.7529412F;
+			var5 = 0.84705883F;
+			var6 = 1.0F;
+			Color fogColor = SpoutClient.getInstance().getSkyManager().getFogColor();
+			if(fogColor != null){
+				var4 = fogColor.getRedF();
+				var5 = fogColor.getGreenF();
+				var6 = fogColor.getBlueF();
+			}
 		}
 		//Spout End
 		var4 *= var3 * 0.94F + 0.06F;

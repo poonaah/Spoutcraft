@@ -1,12 +1,6 @@
 package net.minecraft.src;
 
 import com.pclewis.mcpatcher.mod.Colorizer;  //Spout HD
-import net.minecraft.src.AxisAlignedBB;
-import net.minecraft.src.Block;
-import net.minecraft.src.BlockFlower;
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.Material;
-import net.minecraft.src.World;
 
 public class BlockLilyPad extends BlockFlower {
 

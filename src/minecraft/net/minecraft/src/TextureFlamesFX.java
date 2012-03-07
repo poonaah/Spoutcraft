@@ -22,8 +22,8 @@ public class TextureFlamesFX extends TextureFX {
 		float var4;
 		int var6;
 		//Spout HD Start
-		for(int var1 = 0; var1 < TileSize.int_size; ++var1) {
-			for(var2 = 0; var2 < TileSize.int_flameHeight; ++var2) {
+		for (int var1 = 0; var1 < TileSize.int_size; ++var1) {
+			for (int var2 = 0; var2 < TileSize.int_flameHeight; ++var2) {
 				//Spout HD End
 				var3 = 18;
 				//Spout HD Start
@@ -33,7 +33,7 @@ public class TextureFlamesFX extends TextureFX {
 				for (int var5 = var1 - 1; var5 <= var1 + 1; ++var5) {
 					for (var6 = var2; var6 <= var2 + 1; ++var6) {
 						//Spout HD Start
-						if(var5 >= 0 && var6 >= 0 && var5 < TileSize.int_size && var6 < TileSize.int_flameHeight) {
+						if (var5 >= 0 && var6 >= 0 && var5 < TileSize.int_size && var6 < TileSize.int_flameHeight) {
 							var4 += this.field_1133_g[var5 + var6 * TileSize.int_size];
 						}
 						//Spout HD End
@@ -44,8 +44,8 @@ public class TextureFlamesFX extends TextureFX {
 
 				//Spout HD Start
 				this.field_1132_h[var1 + var2 * TileSize.int_size] = var4 / ((float)var3 * TileSize.float_flameNudge);
-				if(var2 >= TileSize.int_flameHeightMinus1) {
-					this.field_1132_h[var1 + var2 * TileSize.int_size] = (float)(Math.random() * Math.random() * Math.random() * 4.0D + Math.random() * 0.10000000149011612D + 0.20000000298023224D);
+				if (var2 >= TileSize.int_flameHeightMinus1) {
+					this.field_1132_h[var1 + var2 * TileSize.int_size] = (float)(Math.random() * Math.random() * Math.random() * 4.0D + Math.random() * 0.1D + 0.2D);
 					//Spout HD End
 				}
 			}
@@ -56,7 +56,7 @@ public class TextureFlamesFX extends TextureFX {
 		this.field_1133_g = var13;
 
 		//Spout HD Start
-		for(var3 = 0; var3 < TileSize.int_numPixels; ++var3) {
+		for (var3 = 0; var3 < TileSize.int_numPixels; ++var3) {
 			//Spout HD End
 			var4 = this.field_1133_g[var3] * 1.8F;
 			if (var4 > 1.0F) {
@@ -90,6 +90,5 @@ public class TextureFlamesFX extends TextureFX {
 			this.imageData[var3 * 4 + 2] = (byte)var8;
 			this.imageData[var3 * 4 + 3] = (byte)var9;
 		}
-
 	}
 }

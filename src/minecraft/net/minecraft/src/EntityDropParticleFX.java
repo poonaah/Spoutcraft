@@ -1,29 +1,20 @@
 package net.minecraft.src;
 
 import com.pclewis.mcpatcher.mod.Colorizer; //Spout HD
-import net.minecraft.src.BlockFluid;
-import net.minecraft.src.EntityFX;
-import net.minecraft.src.Material;
-import net.minecraft.src.MathHelper;
-import net.minecraft.src.Tessellator;
-import net.minecraft.src.World;
 
 public class EntityDropParticleFX extends EntityFX {
-
-	private Material field_40103_a;
-	private int field_40104_aw;
+	private Material materialType;
+	private int bobTimer;
 
 	public EntityDropParticleFX(World par1World, double par2, double par4, double par6, Material par8Material) {
 		super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
 		this.motionX = this.motionY = this.motionZ = 0.0D;
 		if (par8Material == Material.water) {
 			//Spout HD start
-			if (Colorizer.computeWaterColor(this.worldObj.getWorldChunkManager(), this.posX, this.posY, this.posZ)) {
-				this.particleRed = Colorizer.waterColor[0];
+			if (Colorizer.computeWaterColor(this.posX, this.posY, this.posZ)) {				this.particleRed = Colorizer.waterColor[0];
 				this.particleGreen = Colorizer.waterColor[1];
 				this.particleBlue = Colorizer.waterColor[2];
-			}
-			else {
+			} else {
 				this.particleRed = 0.2F;
 				this.particleGreen = 0.3F;
 				this.particleBlue = 1.0F;
@@ -38,8 +29,8 @@ public class EntityDropParticleFX extends EntityFX {
 		this.setParticleTextureIndex(113);
 		this.setSize(0.01F, 0.01F);
 		this.particleGravity = 0.06F;
-		this.field_40103_a = par8Material;
-		this.field_40104_aw = 40;
+		this.materialType = par8Material;
+		this.bobTimer = 40;
 		this.particleMaxAge = (int)(64.0D / (Math.random() * 0.8D + 0.2D));
 		this.motionX = this.motionY = this.motionZ = 0.0D;
 	}
@@ -49,29 +40,33 @@ public class EntityDropParticleFX extends EntityFX {
 	}
 
 	public int getEntityBrightnessForRender(float par1) {
-		return this.field_40103_a == Material.water?super.getEntityBrightnessForRender(par1):257;
+		return this.materialType == Material.water?super.getEntityBrightnessForRender(par1):257;
 	}
 
 	public float getEntityBrightness(float par1) {
-		return this.field_40103_a == Material.water?super.getEntityBrightness(par1):1.0F;
+		return this.materialType == Material.water?super.getEntityBrightness(par1):1.0F;
 	}
 
 	public void onUpdate() {
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
 		this.prevPosZ = this.posZ;
-		if (this.field_40103_a == Material.water) {
-			this.particleRed = 0.2F;
-			this.particleGreen = 0.3F;
-			this.particleBlue = 1.0F;
-		} else {
-			this.particleRed = 1.0F;
-			this.particleGreen = 16.0F / (float)(40 - this.field_40104_aw + 16);
-			this.particleBlue = 4.0F / (float)(40 - this.field_40104_aw + 8);
+		if (this.materialType != Material.water) {
+			//Spout HD start
+			if (Colorizer.computeLavaDropColor(40 - this.bobTimer)) {
+				this.particleRed = Colorizer.setColor[0];
+				this.particleGreen = Colorizer.setColor[1];
+				this.particleBlue = Colorizer.setColor[2];
+			} else {
+				this.particleRed = 1.0F;
+				this.particleGreen = 16.0F / (float)(40 - this.bobTimer + 16);
+				this.particleBlue = 4.0F / (float)(40 - this.bobTimer + 8);
+			}
+			//Spout HD end
 		}
 
 		this.motionY -= (double)this.particleGravity;
-		if (this.field_40104_aw-- > 0) {
+		if (this.bobTimer-- > 0) {
 			this.motionX *= 0.02D;
 			this.motionY *= 0.02D;
 			this.motionZ *= 0.02D;
@@ -81,23 +76,23 @@ public class EntityDropParticleFX extends EntityFX {
 		}
 
 		this.moveEntity(this.motionX, this.motionY, this.motionZ);
-		this.motionX *= 0.9800000190734863D;
-		this.motionY *= 0.9800000190734863D;
-		this.motionZ *= 0.9800000190734863D;
+		this.motionX *= 0.98D;
+		this.motionY *= 0.98D;
+		this.motionZ *= 0.98D;
 		if (this.particleMaxAge-- <= 0) {
 			this.setEntityDead();
 		}
 
 		if (this.onGround) {
-			if (this.field_40103_a == Material.water) {
+			if (this.materialType == Material.water) {
 				this.setEntityDead();
 				this.worldObj.spawnParticle("splash", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
 			} else {
 				this.setParticleTextureIndex(114);
 			}
 
-			this.motionX *= 0.699999988079071D;
-			this.motionZ *= 0.699999988079071D;
+			this.motionX *= 0.7D;
+			this.motionZ *= 0.7D;
 		}
 
 		Material var1 = this.worldObj.getBlockMaterial(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
@@ -107,6 +102,5 @@ public class EntityDropParticleFX extends EntityFX {
 				this.setEntityDead();
 			}
 		}
-
 	}
 }

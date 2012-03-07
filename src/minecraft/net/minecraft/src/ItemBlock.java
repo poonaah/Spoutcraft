@@ -1,14 +1,8 @@
 package net.minecraft.src;
 
 import com.pclewis.mcpatcher.mod.Colorizer;  //Spout HD
-import net.minecraft.src.Block;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.World;
 
 public class ItemBlock extends Item {
-
 	private int blockID;
 
 	public ItemBlock(int par1) {
@@ -82,7 +76,7 @@ public class ItemBlock extends Item {
 	public String getItemName() {
 		return Block.blocksList[this.blockID].getBlockName();
 	}
-	
+
  //Spout HD start
 	public int getColorFromDamage(int var1, int var2) {
 		return Colorizer.getItemColorFromDamage(super.getColorFromDamage(var1, var2), this.blockID, var1);

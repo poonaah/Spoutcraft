@@ -3,12 +3,8 @@ package net.minecraft.src;
 import com.pclewis.mcpatcher.mod.TileSize;
 //Spout HD End
 import java.util.Random;
-import net.minecraft.src.Block;
-import net.minecraft.src.MathHelper;
-import net.minecraft.src.TextureFX;
 
 public class TexturePortalFX extends TextureFX {
-
 	private int portalTickCounter = 0;
 	//Spout HD Start
 	private byte[][] portalTextureData;
@@ -23,16 +19,16 @@ public class TexturePortalFX extends TextureFX {
 
 		for (int var2 = 0; var2 < 32; ++var2) {
 			//Spout HD Start
-			for(int var3 = 0; var3 < TileSize.int_size; ++var3) {
-				for(int var4 = 0; var4 < TileSize.int_size; ++var4) {
+			for (int var3 = 0; var3 < TileSize.int_size; ++var3) {
+				for (int var4 = 0; var4 < TileSize.int_size; ++var4) {
 					//Spout HD End
 					float var5 = 0.0F;
 
 					int var6;
 					for (var6 = 0; var6 < 2; ++var6) {
 						//Spout HD Start
-						float var7 = (float)(var6 * TileSize.int_sizeHalf);
-						float var8 = (float)(var6 * TileSize.int_sizeHalf);
+						float var7 = (float)(var6 * TileSize.int_size) * 0.5F;
+						float var8 = (float)(var6 * TileSize.int_size) * 0.5F;
 						float var9 = ((float)var3 - var7) / TileSize.float_size * 2.0F;
 						float var10 = ((float)var4 - var8) / TileSize.float_size * 2.0F;
 						//Spout HD End
@@ -53,7 +49,7 @@ public class TexturePortalFX extends TextureFX {
 						}
 
 						float var11 = var9 * var9 + var10 * var10;
-						float var12 = (float)Math.atan2((double)var10, (double)var9) + ((float)var2 / 32.0F * 3.1415927F * 2.0F - var11 * 10.0F + (float)(var6 * 2)) * (float)(var6 * 2 - 1);
+						float var12 = (float)Math.atan2((double)var10, (double)var9) + ((float)var2 / 32.0F * (float)Math.PI * 2.0F - var11 * 10.0F + (float)(var6 * 2)) * (float)(var6 * 2 - 1);
 						var12 = (MathHelper.sin(var12) + 1.0F) / 2.0F;
 						var12 /= var11 + 1.0F;
 						var5 += var12 * 0.5F;
@@ -81,7 +77,7 @@ public class TexturePortalFX extends TextureFX {
 		++this.portalTickCounter;
 		byte[] var1 = this.portalTextureData[this.portalTickCounter & 31];
 		//Spout HD Start
-		for(int var2 = 0; var2 < TileSize.int_numPixels; ++var2) {
+		for (int var2 = 0; var2 < TileSize.int_numPixels; ++var2) {
 			//Spout HD End
 			int var3 = var1[var2 * 4 + 0] & 255;
 			int var4 = var1[var2 * 4 + 1] & 255;
@@ -101,6 +97,5 @@ public class TexturePortalFX extends TextureFX {
 			this.imageData[var2 * 4 + 2] = (byte)var5;
 			this.imageData[var2 * 4 + 3] = (byte)var6;
 		}
-
 	}
 }

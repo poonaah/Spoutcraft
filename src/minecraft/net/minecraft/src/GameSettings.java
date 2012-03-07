@@ -6,17 +6,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EnumOptions;
-import net.minecraft.src.EnumOptionsMappingHelper;
-import net.minecraft.src.KeyBinding;
-import net.minecraft.src.StatCollector;
-import net.minecraft.src.StringTranslate;
 import org.lwjgl.input.Keyboard;
 //Spout start
 import org.spoutcraft.client.SpoutClient;
 //Spout end
 public class GameSettings {
-
 	private static final String[] RENDER_DISTANCES = new String[]{"options.renderDistance.far", "options.renderDistance.normal", "options.renderDistance.short", "options.renderDistance.tiny"};
 	private static final String[] DIFFICULTIES = new String[]{"options.difficulty.peaceful", "options.difficulty.easy", "options.difficulty.normal", "options.difficulty.hard"};
 	private static final String[] GUISCALES = new String[]{"options.guiScale.auto", "options.guiScale.small", "options.guiScale.normal", "options.guiScale.large"};
@@ -257,7 +251,7 @@ public class GameSettings {
 			boolean var4 = this.getOptionOrdinalValue(par1EnumOptions);
 			return var4?var3 + var2.translateKey("options.on"):var3 + var2.translateKey("options.off");
 		} else {
-			return var1 == EnumOptions.RENDER_DISTANCE ? var3 + var2.translateKey(RENDER_DISTANCES[this.renderDistance]) : (var1 == EnumOptions.DIFFICULTY ? var3 + var2.translateKey(DIFFICULTIES[this.difficulty]) : (var1 == EnumOptions.GUI_SCALE ? var3 + var2.translateKey(GUISCALES[this.guiScale]) : (var1 == EnumOptions.PARTICLES ? var3 + var2.translateKey(PARTICLES[this.particles]) : (var1 == EnumOptions.FRAMERATE_LIMIT ? var3 + StatCollector.translateToLocal(LIMIT_FRAMERATES[this.limitFramerate]) : (var1 == EnumOptions.GRAPHICS ? (this.fancyGraphics ? var3 + var2.translateKey("options.graphics.fancy") : var3 + var2.translateKey("options.graphics.fast")) : var3)))));
+			return par1EnumOptions == EnumOptions.RENDER_DISTANCE?var3 + func_48571_a(RENDER_DISTANCES, this.renderDistance):(par1EnumOptions == EnumOptions.DIFFICULTY?var3 + func_48571_a(DIFFICULTIES, this.difficulty):(par1EnumOptions == EnumOptions.GUI_SCALE?var3 + func_48571_a(GUISCALES, this.guiScale):(par1EnumOptions == EnumOptions.PARTICLES?var3 + func_48571_a(PARTICLES, this.particleSetting):(par1EnumOptions == EnumOptions.FRAMERATE_LIMIT?var3 + func_48571_a(LIMIT_FRAMERATES, this.limitFramerate):(par1EnumOptions == EnumOptions.GRAPHICS?(this.fancyGraphics?var3 + var2.translateKey("options.graphics.fancy"):var3 + var2.translateKey("options.graphics.fast")):var3)))));
 		}
 	}
 
@@ -306,7 +300,7 @@ public class GameSettings {
 					}
 
 					if (var3[0].equals("particles")) {
-						this.particles = Integer.parseInt(var3[1]);
+						this.particleSetting = Integer.parseInt(var3[1]);
 					}
 
 					if (var3[0].equals("bobView")) {
@@ -349,8 +343,8 @@ public class GameSettings {
 						this.lastServer = var3[1];
 					}
 
-					if(var3[0].equals("lang") && var3.length >= 2) {
-								this.field_44018_Q = var3[1];
+					if (var3[0].equals("lang") && var3.length >= 2) {
+						this.language = var3[1];
 					}
 
 					for (int var4 = 0; var4 < this.keyBindings.length; ++var4) {
@@ -376,11 +370,10 @@ public class GameSettings {
 			System.out.println("Failed to load options");
 			var6.printStackTrace();
 		}
-
 	}
 
-	private float parseFloat(String var1) {
-		return var1.equals("true") ? 1.0F : (var1.equals("false") ? 0.0F : Float.parseFloat(var1));
+	private float parseFloat(String par1Str) {
+		return par1Str.equals("true")?1.0F:(par1Str.equals("false")?0.0F:Float.parseFloat(par1Str));
 	}
 
 	public void saveOptions() {
@@ -433,5 +426,4 @@ public class GameSettings {
 	public boolean shouldRenderClouds() {
 		return this.renderDistance < 2 && this.clouds;
 	}
-
 }

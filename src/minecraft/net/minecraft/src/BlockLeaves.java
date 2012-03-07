@@ -2,17 +2,6 @@ package net.minecraft.src;
 
 import com.pclewis.mcpatcher.mod.Colorizer; //Spout HD
 import java.util.Random;
-import net.minecraft.src.Block;
-import net.minecraft.src.BlockLeavesBase;
-import net.minecraft.src.ColorizerFoliage;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.Material;
-import net.minecraft.src.StatList;
-import net.minecraft.src.World;
 
 public class BlockLeaves extends BlockLeavesBase {
 
@@ -38,9 +27,9 @@ public class BlockLeaves extends BlockLeavesBase {
 	public int colorMultiplier(IBlockAccess par1IBlockAccess, int par2, int par3, int par4) {
 		int var5 = par1IBlockAccess.getBlockMetadata(par2, par3, par4);
 		if ((var5 & 3) == 1) {
-			return Colorizer.colorizeBiome(ColorizerFoliage.getFoliageColorPine(), Colorizer.COLOR_MAP_PINE, var1.getWorldChunkManager(), var2, var3, var4); //Spout HD
+			return Colorizer.colorizeBiome(ColorizerFoliage.getFoliageColorPine(), Colorizer.COLOR_MAP_PINE, par2, par3, par4); //Spout 
 		} else if ((var5 & 3) == 2) {
-			return Colorizer.colorizeBiome(ColorizerFoliage.getFoliageColorBirch(), Colorizer.COLOR_MAP_BIRCH, var1.getWorldChunkManager(), var2, var3, var4); //Spout HD
+			return Colorizer.colorizeBiome(ColorizerFoliage.getFoliageColorBirch(), Colorizer.COLOR_MAP_BIRCH, par2, par3, par4); //Spout
 		} else {
 			int var6 = 0;
 			int var7 = 0;
@@ -50,7 +39,7 @@ public class BlockLeaves extends BlockLeavesBase {
 				for (int var10 = -1; var10 <= 1; ++var10) {
 					int var11 = par1IBlockAccess.func_48454_a(par2 + var10, par4 + var9).func_48412_k();
 					var6 += (var11 & 16711680) >> 16;
-					var7 += (var11 & '\uff00') >> 8;
+					var7 += (var11 & 65280) >> 8;
 					var8 += var11 & 255;
 				}
 			}
@@ -75,7 +64,6 @@ public class BlockLeaves extends BlockLeavesBase {
 				}
 			}
 		}
-
 	}
 
 	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
@@ -153,7 +141,6 @@ public class BlockLeaves extends BlockLeavesBase {
 					this.removeLeaves(par1World, par2, par3, par4);
 				}
 			}
-
 		}
 	}
 
@@ -186,7 +173,6 @@ public class BlockLeaves extends BlockLeavesBase {
 				this.dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(Item.appleRed, 1, 0));
 			}
 		}
-
 	}
 
 	public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6) {
@@ -196,7 +182,6 @@ public class BlockLeaves extends BlockLeavesBase {
 		} else {
 			super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
 		}
-
 	}
 
 	protected int damageDropped(int par1) {

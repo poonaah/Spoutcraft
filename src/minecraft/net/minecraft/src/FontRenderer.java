@@ -6,18 +6,14 @@ import java.io.InputStream;
 import java.text.Bidi;
 import java.util.Random;
 import javax.imageio.ImageIO;
-import net.minecraft.src.ChatAllowedCharacters;
-import net.minecraft.src.GameSettings;
-import net.minecraft.src.RenderEngine;
 import org.lwjgl.opengl.GL11;
 //Spout HD Start
+import com.pclewis.mcpatcher.mod.Colorizer;
 import com.pclewis.mcpatcher.mod.FontUtils;
 import com.pclewis.mcpatcher.mod.TextureUtils;
-
 //Spout HD End
 
 public class FontRenderer {
-
 	private int[] charWidth = new int[256];
 	public int fontTextureName = 0;
 	public int FONT_HEIGHT = 8;
@@ -29,7 +25,7 @@ public class FontRenderer {
 	private final RenderEngine renderEngine;
 	private float posX;
 	private float posY;
-	private boolean unicodeFlag;
+	public boolean unicodeFlag;
 	private boolean bidiFlag;
 	public float[] charWidthf; // Spout HD
 
@@ -39,27 +35,26 @@ public class FontRenderer {
 // Spout HD start
 		BufferedImage var5;
 		try {
-			var5 = ImageIO.read(RenderEngine.class.getResourceAsStream(par2Str));
+			var5 = TextureUtils.getResourceAsBufferedImage(par2Str);
 			InputStream var6 = RenderEngine.class.getResourceAsStream("/font/glyph_sizes.bin");
 			var6.read(this.glyphWidth);
-		} catch (IOException var18) {
-			throw new RuntimeException(var18);
+		} catch (IOException var17) {
+			throw new RuntimeException(var17);
 		}
 
-		int var19 = var5.getWidth();
+		int var18 = var5.getWidth();
 		int var7 = var5.getHeight();
 		int[] var8 = new int[var18 * var7];
 		var5.getRGB(0, 0, var18, var7, var8, 0, var18);
-		this.charWidthf = FontUtils.computeCharWidths(var2, var5, var8, this.charWidth);
+		this.charWidthf = FontUtils.computeCharWidths(par2Str, var5, var8, this.charWidth);
+		this.fontTextureName = par3RenderEngine.allocateAndSetupTexture(var5);
 // Spout HD end
-		this.fontTextureName = var3.allocateAndSetupTexture(var5);
-// Spout HD start
+
 		for (int var9 = 0; var9 < 32; ++var9) {
 			int var10 = (var9 >> 3 & 1) * 85;
 			int var11 = (var9 >> 2 & 1) * 170 + var10;
 			int var12 = (var9 >> 1 & 1) * 170 + var10;
 			int var13 = (var9 >> 0 & 1) * 170 + var10;
-// Spout HD end
 			if (var9 == 6) {
 				var11 += 85;
 			}
@@ -81,7 +76,7 @@ public class FontRenderer {
 				var13 /= 4;
 			}
 
-			this.field_44035_g[var9] = (var11 & 255) << 16 | (var12 & 255) << 8 | var13 & 255;
+			this.colorCode[var9] = (var11 & 255) << 16 | (var12 & 255) << 8 | var13 & 255;
 		}
 	}
 
@@ -89,12 +84,12 @@ public class FontRenderer {
 		float var2 = (float)(par1 % 16 * 8);
 		float var3 = (float)(par1 / 16 * 8);
 		if (this.boundTextureName != this.fontTextureName) {
-			GL11.glBindTexture(3553, this.fontTextureName);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.fontTextureName);
 			this.boundTextureName = this.fontTextureName;
 		}
 
-		float var4 = this.charWidthf[var1] - 0.01F;// Spout HD
-		GL11.glBegin(5);
+		float var4 = this.charWidthf[par1] - 0.01F; // Spout HD
+		GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
 		GL11.glTexCoord2f(var2 / 128.0F, var3 / 128.0F);
 		GL11.glVertex3f(this.posX, this.posY, 0.0F);
 		GL11.glTexCoord2f(var2 / 128.0F, (var3 + 7.99F) / 128.0F);
@@ -104,7 +99,7 @@ public class FontRenderer {
 		GL11.glTexCoord2f((var2 + var4) / 128.0F, (var3 + 7.99F) / 128.0F);
 		GL11.glVertex3f(this.posX + var4, this.posY + 7.99F, 0.0F);
 		GL11.glEnd();
-		this.field_46126_j += this.charWidthf[var1];// Spout HD
+		this.posX += this.charWidthf[par1]; // Spout HD
 	}
 
 	private void loadGlyphTexture(int par1) {
@@ -129,7 +124,7 @@ public class FontRenderer {
 			}
 
 			if (this.boundTextureName != this.glyphTextureName[var2]) {
-				GL11.glBindTexture(3553, this.glyphTextureName[var2]);
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.glyphTextureName[var2]);
 				this.boundTextureName = this.glyphTextureName[var2];
 			}
 
@@ -140,7 +135,7 @@ public class FontRenderer {
 			float var7 = (float)(par1 % 16 * 16) + var5;
 			float var8 = (float)((par1 & 255) / 16 * 16);
 			float var9 = var6 - var5 - 0.02F;
-			GL11.glBegin(5);
+			GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
 			GL11.glTexCoord2f(var7 / 256.0F, var8 / 256.0F);
 			GL11.glVertex3f(this.posX, this.posY, 0.0F);
 			GL11.glTexCoord2f(var7 / 256.0F, (var8 + 15.98F) / 256.0F);
@@ -253,7 +248,7 @@ public class FontRenderer {
 						var6 += 16;
 					}
 
-					var7 = this.colorCode[var6];
+					var7 = Colorizer.colorizeText(this.colorCode[var6], var6); //Spout HD
 					GL11.glColor3f((float)(var7 >> 16) / 255.0F, (float)(var7 >> 8 & 255) / 255.0F, (float)(var7 & 255) / 255.0F);
 				}
 
@@ -269,7 +264,7 @@ public class FontRenderer {
 				}
 
 				if (var5 == 32) {
-					this.posX += 4.0F;
+					this.posX += this.charWidthf[32];
 				} else if (var6 > 0 && !this.unicodeFlag) {
 					this.renderDefaultChar(var6 + 32);
 				} else {
@@ -277,12 +272,12 @@ public class FontRenderer {
 				}
 			}
 		}
-
 	}
 
 	private void renderString(String par1Str, int par2, int par3, int par4, boolean par5) {
 		if (par1Str != null) {
 			this.boundTextureName = 0;
+			par4 = Colorizer.colorizeText(par4); //Spout HD
 			if ((par4 & -67108864) == 0) {
 				par4 |= -16777216;
 			}
@@ -296,38 +291,34 @@ public class FontRenderer {
 			this.posY = (float)par3;
 			this.renderStringAtPos(par1Str, par5);
 		}
-
 	}
 
-	public int getStringWidth(String var1) {
-		if (var1 == null) {
+	public int getStringWidth(String par1Str) {
+		if (par1Str == null) {
 			return 0;
-		}
-		else {
+		} else {
 			float var2 = 0.0F;// Spout HD
 
-			for (int var3 = 0; var3 < var1.length(); ++var3) {
-				char var4 = var1.charAt(var3);
+			for (int var3 = 0; var3 < par1Str.length(); ++var3) {
+				char var4 = par1Str.charAt(var3);
 				if (var4 == 167) {
 					++var3;
-					}
-				else {
+				} else {
 					int var5 = ChatAllowedCharacters.allowedCharacters.indexOf(var4);
-					if (var5 >= 0 && !this.field_44037_j) {
-						var2 += this.charWidthf[var5 + 32];// Spout HD
-					}
-					else if (this.field_44036_e[var4] != 0) {
-						int var6 = this.field_44036_e[var4] >> 4;
-						int var7 = this.field_44036_e[var4] & 15;
+					if (var5 >= 0 && !this.unicodeFlag) {
+						var2 += this.charWidthf[var5 + 32]; //Spout HD
+					} else if (this.glyphWidth[var4] != 0) {
+						int var6 = this.glyphWidth[var4] >> 4;
+						int var7 = this.glyphWidth[var4] & 15;
 						if (var7 > 7) {
 							var7 = 15;
 							var6 = 0;
-				}
+						}
 
 						++var7;
-						var2 += (float)((var7 - var6) / 2 + 1);// Spout HD
+						var2 += (float)((var7 - var6) / 2 + 1); // Spout HD
 					}
-			}
+				}
 			}
 
 			return Math.round(var2);// Spout HD
@@ -361,7 +352,6 @@ public class FontRenderer {
 				this.renderSplitStringNoShadow(var7[var14], par2, par3, par4, par5);
 				par3 += this.splitStringWidth(var7[var14], par4);
 			}
-
 		} else {
 			String[] var8 = par1Str.split(" ");
 			int var9 = 0;
@@ -399,7 +389,6 @@ public class FontRenderer {
 					par3 += this.FONT_HEIGHT;
 				}
 			}
-
 		}
 	}
 
@@ -462,20 +451,19 @@ public class FontRenderer {
 		this.charWidth = new int[256];
 		this.fontTextureName = 0;
 		this.FONT_HEIGHT = 8;
-		this.field_41064_c = new Random();
-		this.field_44036_e = new byte[65536];
-		this.field_44034_f = new int[256];
-		this.field_44035_g = new int[32];
-		this.field_44039_i = var3;
-		this.field_44037_j = var4;
+		this.fontRandom = new Random();
+		this.glyphWidth = new byte[65536];
+		this.glyphTextureName = new int[256];
+		this.colorCode = new int[32];
+		this.renderEngine = var3;
+		this.unicodeFlag = var4;
 
 		BufferedImage var5;
 		try {
 			var5 = TextureUtils.getResourceAsBufferedImage(var2);
 			InputStream var6 = RenderEngine.class.getResourceAsStream("/font/glyph_sizes.bin");
-			var6.read(this.field_44036_e);
-		}
-		catch (IOException var17) {
+			var6.read(this.glyphWidth);
+		} catch (IOException var17) {
 			throw new RuntimeException(var17);
 		}
 
@@ -510,7 +498,7 @@ public class FontRenderer {
 				var13 /= 4;
 			}
 
-			this.field_44035_g[var9] = (var11 & 255) << 16 | (var12 & 255) << 8 | var13 & 255;
+			this.colorCode[var9] = (var11 & 255) << 16 | (var12 & 255) << 8 | var13 & 255;
 		}
 		// Spout HD End
 	}

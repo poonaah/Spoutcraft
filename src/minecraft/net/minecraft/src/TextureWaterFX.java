@@ -3,8 +3,6 @@ package net.minecraft.src;
 //Spout HD start
 import com.pclewis.mcpatcher.mod.TileSize;
 //Spout HD End
-import net.minecraft.src.Block;
-import net.minecraft.src.TextureFX;
 
 public class TextureWaterFX extends TextureFX {
 	//Spout HD start
@@ -23,7 +21,7 @@ public class TextureWaterFX extends TextureFX {
 		this.tickCounter = 0;
 	}
 	//Spout HD end
-	
+
 	public void onTick() {
 		++this.tickCounter;
 
@@ -33,11 +31,11 @@ public class TextureWaterFX extends TextureFX {
 		int var5;
 		int var6;
 		//Spout HD start
-		for(var1 = 0; var1 < TileSize.int_size; ++var1) {
-			for(var2 = 0; var2 < TileSize.int_size; ++var2) {
+		for (var1 = 0; var1 < TileSize.int_size; ++var1) {
+			for (var2 = 0; var2 < TileSize.int_size; ++var2) {
 				var3 = 0.0F;
 
-				for(int var4 = var1 - 1; var4 <= var1 + 1; ++var4) {
+				for (int var4 = var1 - 1; var4 <= var1 + 1; ++var4) {
 					var5 = var4 & TileSize.int_sizeMinus1;
 					var6 = var2 & TileSize.int_sizeMinus1;
 					var3 += this.field_1158_g[var5 + var6 * TileSize.int_size];
@@ -47,15 +45,15 @@ public class TextureWaterFX extends TextureFX {
 			}
 		}
 
-		for(var1 = 0; var1 < TileSize.int_size; ++var1) {
-			for(var2 = 0; var2 < TileSize.int_size; ++var2) {
+		for (var1 = 0; var1 < TileSize.int_size; ++var1) {
+			for (var2 = 0; var2 < TileSize.int_size; ++var2) {
 				this.field_1156_i[var1 + var2 * TileSize.int_size] += this.field_1155_j[var1 + var2 * TileSize.int_size] * 0.05F;
-				if(this.field_1156_i[var1 + var2 * TileSize.int_size] < 0.0F) {
+				if (this.field_1156_i[var1 + var2 * TileSize.int_size] < 0.0F) {
 					this.field_1156_i[var1 + var2 * TileSize.int_size] = 0.0F;
 				}
 
 				this.field_1155_j[var1 + var2 * TileSize.int_size] -= 0.1F;
-				if(Math.random() < 0.05D) {
+				if (Math.random() < 0.05D) {
 					this.field_1155_j[var1 + var2 * TileSize.int_size] = 0.5F;
 				}
 			}
@@ -65,8 +63,9 @@ public class TextureWaterFX extends TextureFX {
 		float[] var12 = this.field_1157_h;
 		this.field_1157_h = this.field_1158_g;
 		this.field_1158_g = var12;
+
 		//Spout HD start
-		for(var2 = 0; var2 < TileSize.int_numPixels; ++var2) {
+		for (var2 = 0; var2 < TileSize.int_numPixels; ++var2) {
 			//Spout HD end
 			var3 = this.field_1158_g[var2];
 			if (var3 > 1.0F) {
@@ -96,6 +95,5 @@ public class TextureWaterFX extends TextureFX {
 			this.imageData[var2 * 4 + 2] = (byte)var7;
 			this.imageData[var2 * 4 + 3] = (byte)var8;
 		}
-
 	}
 }

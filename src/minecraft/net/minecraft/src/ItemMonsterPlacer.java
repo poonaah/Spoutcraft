@@ -1,20 +1,8 @@
 package net.minecraft.src;
 
 import com.pclewis.mcpatcher.mod.Colorizer;  //Spout HD
-import net.minecraft.src.Block;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityEggInfo;
-import net.minecraft.src.EntityList;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Facing;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.StatCollector;
-import net.minecraft.src.World;
 
 public class ItemMonsterPlacer extends Item {
-
 	public ItemMonsterPlacer(int par1) {
 		super(par1);
 		this.setHasSubtypes(true);

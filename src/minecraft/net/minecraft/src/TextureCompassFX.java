@@ -6,11 +6,7 @@ import com.pclewis.mcpatcher.mod.TileSize;
 //Spout HD End
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.ChunkCoordinates;
-import net.minecraft.src.Item;
-import net.minecraft.src.TextureFX;
 
 public class TextureCompassFX extends TextureFX {
 
@@ -41,7 +37,7 @@ public class TextureCompassFX extends TextureFX {
 
 	public void onTick() {
 		//Spout HD Start
-		for(int var1 = 0; var1 < TileSize.int_numPixels; ++var1) {
+		for (int var1 = 0; var1 < TileSize.int_numPixels; ++var1) {
 			//Spout HD End
 			int var2 = this.compassIconImageData[var1] >> 24 & 255;
 			int var3 = this.compassIconImageData[var1] >> 16 & 255;
@@ -67,19 +63,19 @@ public class TextureCompassFX extends TextureFX {
 			ChunkCoordinates var21 = this.mc.theWorld.getSpawnPoint();
 			double var23 = (double)var21.posX - this.mc.thePlayer.posX;
 			double var25 = (double)var21.posZ - this.mc.thePlayer.posZ;
-			var20 = (double)(this.mc.thePlayer.rotationYaw - 90.0F) * 3.141592653589793D / 180.0D - Math.atan2(var25, var23);
+			var20 = (double)(this.mc.thePlayer.rotationYaw - 90.0F) * Math.PI / 180.0D - Math.atan2(var25, var23);
 			if (!this.mc.theWorld.worldProvider.func_48217_e()) {
-				var20 = Math.random() * 3.1415927410125732D * 2.0D;
+				var20 = Math.random() * Math.PI * 2.0D;
 			}
 		}
 
 		double var22;
-		for (var22 = var20 - this.field_4229_i; var22 < -3.141592653589793D; var22 += 6.283185307179586D) {
+		for (var22 = var20 - this.field_4229_i; var22 < -Math.PI; var22 += (Math.PI * 2D)) {
 			;
 		}
 
-		while (var22 >= 3.141592653589793D) {
-			var22 -= 6.283185307179586D;
+		while (var22 >= Math.PI) {
+			var22 -= (Math.PI * 2D);
 		}
 
 		if (var22 < -1.0D) {
@@ -108,7 +104,7 @@ public class TextureCompassFX extends TextureFX {
 		int var19;
 		int var18;
 		//Spout HD start
-		for(var9 = TileSize.int_compassCrossMin; var9 <= TileSize.int_compassCrossMax; ++var9) {
+		for (var9 = TileSize.int_compassCrossMin; var9 <= TileSize.int_compassCrossMax; ++var9) {
 			var10 = (int)(TileSize.double_compassCenterMax + var26 * (double)var9 * 0.3D);
 			var11 = (int)(TileSize.double_compassCenterMin - var24 * (double)var9 * 0.3D * 0.5D);
 			var12 = var11 * TileSize.int_size + var10;
@@ -133,7 +129,7 @@ public class TextureCompassFX extends TextureFX {
 		}
 
 		//Spout HD Start
-		for(var9 = TileSize.int_compassNeedleMin; var9 <= TileSize.int_compassNeedleMax; ++var9) {
+		for (var9 = TileSize.int_compassNeedleMin; var9 <= TileSize.int_compassNeedleMax; ++var9) {
 			var10 = (int)(TileSize.double_compassCenterMax + var24 * (double)var9 * 0.3D);
 			var11 = (int)(TileSize.double_compassCenterMin + var26 * (double)var9 * 0.3D * 0.5D);
 			var12 = var11 * TileSize.int_size + var10;
@@ -156,6 +152,5 @@ public class TextureCompassFX extends TextureFX {
 			this.imageData[var12 * 4 + 2] = (byte)var15;
 			this.imageData[var12 * 4 + 3] = (byte)var16;
 		}
-
 	}
 }

@@ -1,16 +1,6 @@
 package net.minecraft.src;
 
-import net.minecraft.src.AxisAlignedBB;
-import net.minecraft.src.Block;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.Material;
-import net.minecraft.src.MovingObjectPosition;
-import net.minecraft.src.Vec3D;
-import net.minecraft.src.World;
-
 public class BlockTrapDoor extends Block {
-
 	protected BlockTrapDoor(int par1, Material par2Material) {
 		super(par1, par2Material);
 		this.blockIndexInTexture = 84;
@@ -78,7 +68,6 @@ public class BlockTrapDoor extends Block {
 				this.setBlockBounds(0.0F, 0.0F, 0.0F, var2, 1.0F, 1.0F);
 			}
 		}
-
 	}
 
 	public void onBlockClicked(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer) {
@@ -135,7 +124,6 @@ public class BlockTrapDoor extends Block {
 			if (var9 || par5 > 0 && Block.blocksList[par5].canProvidePower() || par5 == 0) {
 				this.onPoweredBlockChange(par1World, par2, par3, par4, var9);
 			}
-
 		}
 	}
 

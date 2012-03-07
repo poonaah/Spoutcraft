@@ -6,16 +6,8 @@ import org.spoutcraft.client.config.ConfigReader;
 
 import com.pclewis.mcpatcher.mod.Colorizer;
 //Spout end
-import net.minecraft.src.AxisAlignedBB;
-import net.minecraft.src.Block;
-import net.minecraft.src.Entity;
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.Material;
-import net.minecraft.src.Vec3D;
-import net.minecraft.src.World;
 
 public abstract class BlockFluid extends Block {
-
 	protected BlockFluid(int par1, Material par2Material) {
 		super(par1, (par2Material == Material.lava?14:12) * 16 + 13, par2Material);
 		float var3 = 0.0F;
@@ -48,13 +40,13 @@ public abstract class BlockFluid extends Block {
 				for (int var9 = -1; var9 <= 1; ++var9) {
 					int var10;
 					if(!ConfigReader.waterBiomeColors) {
-						var10 = var1.getWorldChunkManager().getBiomeGenAt(var2 + var9, var4 + var8).waterColorMultiplier;
+						var10 = var1.getWorldChunkManager().getBiomeGenAt(par2 + var9, par4 + var8).waterColorMultiplier;
 					}
 					else {
-						 var10 = Colorizer.colorizeWater(var1.getWorldChunkManager(), var2 + var9, var4 + var8);
+						 var10 = Colorizer.colorizeWater(var1.getWorldChunkManager(), par2 + var9, par4 + var8);
 					}
 					var5 += (var10 & 16711680) >> 16;
-					var6 += (var10 & '\uff00') >> 8;
+					var6 += (var10 & 65280) >> 8;
 					var7 += var10 & 255;
 				}
 			}
@@ -359,7 +351,6 @@ public abstract class BlockFluid extends Block {
 				par1World.spawnParticle("dripLava", var21, var22, var23, 0.0D, 0.0D, 0.0D);
 			}
 		}
-
 	}
 
 	public static double func_293_a(IBlockAccess par0IBlockAccess, int par1, int par2, int par3, Material par4Material) {
@@ -372,7 +363,7 @@ public abstract class BlockFluid extends Block {
 			var5 = ((BlockFluid)Block.lavaMoving).getFlowVector(par0IBlockAccess, par1, par2, par3);
 		}
 
-		return var5.xCoord == 0.0D && var5.zCoord == 0.0D?-1000.0D:Math.atan2(var5.zCoord, var5.xCoord) - 1.5707963267948966D;
+		return var5.xCoord == 0.0D && var5.zCoord == 0.0D?-1000.0D:Math.atan2(var5.zCoord, var5.xCoord) - (Math.PI / 2D);
 	}
 
 	public void onBlockAdded(World par1World, int par2, int par3, int par4) {
@@ -418,7 +409,6 @@ public abstract class BlockFluid extends Block {
 					this.triggerLavaMixEffects(par1World, par2, par3, par4);
 				}
 			}
-
 		}
 	}
 
@@ -428,6 +418,5 @@ public abstract class BlockFluid extends Block {
 		for (int var5 = 0; var5 < 8; ++var5) {
 			par1World.spawnParticle("largesmoke", (double)par2 + Math.random(), (double)par3 + 1.2D, (double)par4 + Math.random(), 0.0D, 0.0D, 0.0D);
 		}
-
 	}
 }

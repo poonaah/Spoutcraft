@@ -5,11 +5,9 @@ import com.pclewis.mcpatcher.mod.TextureUtils;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.TexturePackBase;
 import org.lwjgl.opengl.GL11;
 
 public class TexturePackDefault extends TexturePackBase {
-
 	private int texturePackName = -1;
 	private BufferedImage texturePackThumbnail;
 
@@ -24,14 +22,12 @@ public class TexturePackDefault extends TexturePackBase {
 		} catch (IOException var2) {
 			var2.printStackTrace();
 		}
-
 	}
 
 	public void unbindThumbnailTexture(Minecraft par1Minecraft) {
 		if (this.texturePackThumbnail != null) {
 			par1Minecraft.renderEngine.deleteTexture(this.texturePackName);
 		}
-
 	}
 
 	public void bindThumbnailTexture(Minecraft par1Minecraft) {
@@ -44,6 +40,5 @@ public class TexturePackDefault extends TexturePackBase {
 		} else {
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, par1Minecraft.renderEngine.getTexture("/gui/unknown_pack.png"));
 		}
-
 	}
 }

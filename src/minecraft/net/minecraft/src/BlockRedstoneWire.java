@@ -5,17 +5,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-import net.minecraft.src.AxisAlignedBB;
-import net.minecraft.src.Block;
-import net.minecraft.src.ChunkPosition;
-import net.minecraft.src.Direction;
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.Item;
-import net.minecraft.src.Material;
-import net.minecraft.src.World;
 
 public class BlockRedstoneWire extends Block {
-
 	private boolean wiresProvidePower = true;
 	private Set blocksNeedingUpdate = new HashSet();
 
@@ -61,7 +52,6 @@ public class BlockRedstoneWire extends Block {
 			ChunkPosition var7 = (ChunkPosition)var5.get(var6);
 			par1World.notifyBlocksOfNeighborChange(var7.x, var7.y, var7.z, this.blockID);
 		}
-
 	}
 
 	private void calculateCurrentChanges(World par1World, int par2, int par3, int par4, int par5, int par6, int par7) {
@@ -177,7 +167,6 @@ public class BlockRedstoneWire extends Block {
 				this.blocksNeedingUpdate.add(new ChunkPosition(par2, par3, par4 + 1));
 			}
 		}
-
 	}
 
 	private void notifyWireNeighborsOfNeighborChange(World par1World, int par2, int par3, int par4) {
@@ -225,7 +214,6 @@ public class BlockRedstoneWire extends Block {
 			} else {
 				this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3 - 1, par4 + 1);
 			}
-
 		}
 	}
 
@@ -266,11 +254,10 @@ public class BlockRedstoneWire extends Block {
 			} else {
 				this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3 - 1, par4 + 1);
 			}
-
 		}
 	}
 
-	public int getMaxCurrentStrength(World par1World, int par2, int par3, int par4, int par5) { //Spout protected->public
+	private int getMaxCurrentStrength(World par1World, int par2, int par3, int par4, int par5) {
 		if (par1World.getBlockId(par2, par3, par4) != this.blockID) {
 			return par5;
 		} else {
@@ -351,16 +338,15 @@ public class BlockRedstoneWire extends Block {
 			float var15;
 			float var16;
 			if (Colorizer.computeRedstoneWireColor(var6)) {
-				var14 = Colorizer.redstoneWireRed;
-				var15 = Colorizer.redstoneWireGreen;
-				var16 = Colorizer.redstoneWireBlue;
-			}
-			else {
-			float var13 = (float)var6 / 15.0F;
+				var14 = Colorizer.setColor[0];
+				var15 = Colorizer.setColor[1];
+				var16 = Colorizer.setColor[2];
+			} else {
+				float var13 = (float)var6 / 15.0F;
 				var14 = var13 * 0.6F + 0.4F;
-			if (var6 == 0) {
-				var14 = 0.0F;
-			}
+				if (var6 == 0) {
+					var14 = 0.0F;
+				}
 
 				var15 = var13 * var13 * 0.7F - 0.5F;
 				var16 = var13 * var13 * 0.6F - 0.7F;
@@ -376,7 +362,6 @@ public class BlockRedstoneWire extends Block {
 
 			par1World.spawnParticle("reddust", var7, var9, var11, (double)var14, (double)var15, (double)var16);
 		}
-
 	}
 
 	public static boolean isPowerProviderOrWire(IBlockAccess par0IBlockAccess, int par1, int par2, int par3, int par4) {

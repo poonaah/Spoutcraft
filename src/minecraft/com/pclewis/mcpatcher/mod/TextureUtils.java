@@ -17,17 +17,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
 import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageInputStream;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.ColorizerFoliage;
 import net.minecraft.src.ColorizerGrass;
 import net.minecraft.src.ColorizerWater;
+import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GLAllocation;
 import net.minecraft.src.TextureCompassFX;
 import net.minecraft.src.TextureFX;
@@ -37,6 +36,7 @@ import net.minecraft.src.TextureLavaFlowFX;
 import net.minecraft.src.TexturePackBase;
 import net.minecraft.src.TexturePackCustom;
 import net.minecraft.src.TexturePackDefault;
+import net.minecraft.src.TexturePackList;
 import net.minecraft.src.TexturePortalFX;
 import net.minecraft.src.TextureWatchFX;
 import net.minecraft.src.TextureWaterFX;
@@ -66,6 +66,7 @@ public class TextureUtils {
 	private static boolean reclaimGLMemory = false;
 	private static TexturePackBase lastTexturePack = null;
 	private static Map<String, BufferedImage> cache = new HashMap<String, BufferedImage>();
+	private static int textureRefreshCount;
 
 	public static boolean setTileSize() {
 		int size = getTileSize();
@@ -80,6 +81,12 @@ public class TextureUtils {
 			TileSize.setTileSize(size);
 			return true;
 		}
+	}
+
+	private static void setFontRenderer(Minecraft var0, FontRenderer var1, String var2) {
+		boolean var3 = var1.unicodeFlag;
+		var1.initialize(var0.gameSettings, var2, var0.renderEngine);
+		var1.unicodeFlag = var3;
 	}
 
 	public static void setFontRenderer() {
@@ -155,6 +162,7 @@ public class TextureUtils {
 		}
 
 		textureFXs.clear();
+		CustomAnimation.clear();
 		Minecraft game = SpoutClient.getHandle();
 		textureFXs.add(new TextureCompassFX(game));
 		textureFXs.add(new TextureWatchFX(game));
@@ -191,16 +199,31 @@ public class TextureUtils {
 		}
 
 		if (customOther) {
-			for (int var5 = 0; var5 < 2; ++var5) {
-				String var6 = var5 == 0?"terrain":"item";
+			addOtherTextureFX("/terrain.png", "terrain");
+			addOtherTextureFX("/gui/items.png", "item");
+			if (var17 instanceof TexturePackCustom) {
+				TexturePackCustom var5 = (TexturePackCustom)var17;
+				Iterator var6 = Collections.list(var5.texturePackZipFile.entries()).iterator();
 
-				for (int var7 = 0; var7 < 256; ++var7) {
-					String var8 = "/anim/custom_" + var6 + "_" + var7 + ".png";
-					if (hasResource(var8)) {
-						textureFXs.add(new CustomAnimation(var7, var5, 1, var6 + "_" + var7, 2, 4));
+				while (var6.hasNext()) {
+					ZipEntry var7 = (ZipEntry)var6.next();
+					String var8 = "/" + var7.getName();
+					if (var8.startsWith("/anim/") && var8.endsWith(".properties") && !isCustomTerrainItemResource(var8)) {
+						InputStream var9 = null;
+
+						try {
+							var9 = var5.texturePackZipFile.getInputStream(var7);
+							Properties var10 = new Properties();
+							var10.load(var9);
+							CustomAnimation.addStrip(var10);
+						} catch (IOException var14) {
+							var14.printStackTrace();
+						} finally {
+							MCPatcherUtils.close((Closeable)var9);
+						}
 					}
 				}
-		}
+			}
 		}
 
 		Iterator var12 = var1.iterator();
@@ -218,6 +241,7 @@ public class TextureUtils {
 			var13.onTick();
 		}
 
+		CustomAnimation.updateAll();
 		if (ColorizerWater.waterBuffer != ColorizerFoliage.foliageBuffer) {
 			refreshColorizer(ColorizerWater.waterBuffer, "/misc/watercolor.png");
 		}
@@ -225,6 +249,15 @@ public class TextureUtils {
 		refreshColorizer(ColorizerGrass.grassBuffer, "/misc/grasscolor.png");
 		refreshColorizer(ColorizerFoliage.foliageBuffer, "/misc/foliagecolor.png");
 		System.gc();
+	}
+
+	private static void addOtherTextureFX(String var0, String var1) {
+		for (int var2 = 0; var2 < 256; ++var2) {
+			String var3 = "/anim/custom_" + var1 + "_" + var2 + ".png";
+			if (hasResource(var3)) {
+				CustomAnimation.addStrip(var0, var1 + "_" + var2, var2, 1);
+			}
+		}
 	}
 
 	public static TexturePackBase getSelectedTexturePack() {

@@ -1,51 +1,12 @@
 package net.minecraft.src;
 
+import com.pclewis.mcpatcher.mod.Colorizer;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import net.minecraft.src.BiomeDecorator;
-import net.minecraft.src.BiomeGenBeach;
-import net.minecraft.src.BiomeGenDesert;
-import net.minecraft.src.BiomeGenEnd;
-import net.minecraft.src.BiomeGenForest;
-import net.minecraft.src.BiomeGenHell;
-import net.minecraft.src.BiomeGenHills;
-import net.minecraft.src.BiomeGenJungle;
-import net.minecraft.src.BiomeGenMushroomIsland;
-import net.minecraft.src.BiomeGenOcean;
-import net.minecraft.src.BiomeGenPlains;
-import net.minecraft.src.BiomeGenRiver;
-import net.minecraft.src.BiomeGenSnow;
-import net.minecraft.src.BiomeGenSwamp;
-import net.minecraft.src.BiomeGenTaiga;
-import net.minecraft.src.Block;
-import net.minecraft.src.ColorizerFoliage;
-import net.minecraft.src.ColorizerGrass;
-import net.minecraft.src.EntityChicken;
-import net.minecraft.src.EntityCow;
-import net.minecraft.src.EntityCreeper;
-import net.minecraft.src.EntityEnderman;
-import net.minecraft.src.EntityPig;
-import net.minecraft.src.EntitySheep;
-import net.minecraft.src.EntitySkeleton;
-import net.minecraft.src.EntitySlime;
-import net.minecraft.src.EntitySpider;
-import net.minecraft.src.EntitySquid;
-import net.minecraft.src.EntityZombie;
-import net.minecraft.src.EnumCreatureType;
-import net.minecraft.src.MathHelper;
-import net.minecraft.src.SpawnListEntry;
-import net.minecraft.src.World;
-import net.minecraft.src.WorldGenBigTree;
-import net.minecraft.src.WorldGenForest;
-import net.minecraft.src.WorldGenSwamp;
-import net.minecraft.src.WorldGenTallGrass;
-import net.minecraft.src.WorldGenTrees;
-import net.minecraft.src.WorldGenerator;
 
 public abstract class BiomeGenBase {
-
 	public static final BiomeGenBase[] biomeList = new BiomeGenBase[256];
 	public static final BiomeGenBase ocean = (new BiomeGenOcean(0)).setColor(112).setBiomeName("Ocean").setMinMaxHeight(-1.0F, 0.4F);
 	public static final BiomeGenBase plains = (new BiomeGenPlains(1)).setColor(9286496).setBiomeName("Plains").setTemperatureRainfall(0.8F, 0.4F);
@@ -176,6 +137,7 @@ public abstract class BiomeGenBase {
 
 	protected BiomeGenBase setBiomeName(String par1Str) {
 		this.biomeName = par1Str;
+		Colorizer.setupBiome(this); //Spout HD
 		return this;
 	}
 
@@ -253,5 +215,4 @@ public abstract class BiomeGenBase {
 		double var3 = (double)MathHelper.func_48442_a(this.func_48414_h(), 0.0F, 1.0F);
 		return ColorizerFoliage.getFoliageColor(var1, var3);
 	}
-
 }

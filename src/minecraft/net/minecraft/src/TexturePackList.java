@@ -10,40 +10,35 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.TexturePackBase;
-import net.minecraft.src.TexturePackCustom;
-import net.minecraft.src.TexturePackDefault;
 
 public class TexturePackList {
-
 	private List availableTexturePacks = new ArrayList();
-	private TexturePackBase defaultTexturePack = new TexturePackDefault();
+	public TexturePackBase defaultTexturePack = new TexturePackDefault(); //Spout private -> public
 	public TexturePackBase selectedTexturePack;
 	private Map field_6538_d = new HashMap();
 	private Minecraft mc;
 	private File texturePackDir;
 	private String currentTexturePack;
 
-	public TexturePackList(Minecraft var1, File var2) {
-		this.mc = var1;
-		this.texturePackDir = new File(var2, "texturepacks");
-		if(!this.texturePackDir.exists()) {
+	public TexturePackList(Minecraft par1Minecraft, File par2File) {
+		this.mc = par1Minecraft;
+		this.texturePackDir = new File(par2File, "texturepacks");
+		if (!this.texturePackDir.exists()) {
 			this.texturePackDir.mkdirs();
 		}
 
-		this.currentTexturePack = var1.gameSettings.skin;
+		this.currentTexturePack = par1Minecraft.gameSettings.skin;
 		this.updateAvaliableTexturePacks();
 		this.selectedTexturePack.func_6482_a();
 	}
 
-	public boolean setTexturePack(TexturePackBase var1) {
-		if(var1 == this.selectedTexturePack) {
+	public boolean setTexturePack(TexturePackBase par1TexturePackBase) {
+		if (par1TexturePackBase == this.selectedTexturePack) {
 			return false;
-		}
-		else {
+		} else {
 			this.selectedTexturePack.closeTexturePackFile();
-			this.currentTexturePack = var1.texturePackFileName;
-			this.selectedTexturePack = var1;
+			this.currentTexturePack = par1TexturePackBase.texturePackFileName;
+			this.selectedTexturePack = par1TexturePackBase;
 			this.mc.gameSettings.skin = this.currentTexturePack;
 			this.mc.gameSettings.saveOptions();
 			this.selectedTexturePack.func_6482_a();

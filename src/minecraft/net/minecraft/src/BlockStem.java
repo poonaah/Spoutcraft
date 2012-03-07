@@ -2,16 +2,8 @@ package net.minecraft.src;
 
 import com.pclewis.mcpatcher.mod.Colorizer; //Spout HD
 import java.util.Random;
-import net.minecraft.src.Block;
-import net.minecraft.src.BlockFlower;
-import net.minecraft.src.EntityItem;
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.World;
 
 public class BlockStem extends BlockFlower {
-
 	private Block fruitType;
 
 	protected BlockStem(int par1, Block par2Block) {
@@ -78,7 +70,6 @@ public class BlockStem extends BlockFlower {
 				}
 			}
 		}
-
 	}
 
 	public void fertilizeStem(World par1World, int par2, int par3, int par4) {
@@ -183,7 +174,6 @@ public class BlockStem extends BlockFlower {
 					par1World.spawnEntityInWorld(var14);
 				}
 			}
-
 		}
 	}
 
