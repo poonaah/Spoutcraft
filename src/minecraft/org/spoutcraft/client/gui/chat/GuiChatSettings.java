@@ -113,7 +113,6 @@ public class GuiChatSettings extends GuiSpoutScreen {
 		}
 		Runnable save = new Runnable() {
 			
-			@Override
 			public void run() {
 				SpoutClient.getInstance().getChatManager().save();
 				if(chat != null) {
