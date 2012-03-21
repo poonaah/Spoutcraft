@@ -46,7 +46,7 @@ public class WorldRenderer {
 	public int posYClip;
 	public int posZClip;
 	public boolean isInFrustum = false;
-	public boolean[] skipRenderPass = new boolean[2];
+	public boolean[] skipRenderPass = new boolean[3]; //Spout
 	public int posXPlus;
 	public int posYPlus;
 	public int posZPlus;
@@ -134,7 +134,7 @@ public class WorldRenderer {
 
 			blockRenderer.customIds = customBlockIds;
 
-			for (int renderPass = 0; renderPass < 2; ++renderPass) {
+			for (int renderPass = 0; renderPass < 3; ++renderPass) {
 				
 				boolean skipRenderPass = false;
 				boolean rendered = false;
@@ -247,6 +247,7 @@ public class WorldRenderer {
 										skipRenderPass = true;
 									}
 									else {
+										Tessellator.instance.setEntity(block.blockID); //shaders
 										if (design != null) {
 											oldBounds[0] = (float) block.minX;
 											oldBounds[1] = (float) block.minY;
@@ -293,6 +294,7 @@ public class WorldRenderer {
 			var24.removeAll(tileRenderers);
 			this.tileEntities.addAll(var24);
 			tileRenderers.removeAll(this.tileEntityRenderers);
+			Tessellator.instance.setEntity(-1); //shaders
 			//Spout End
 			this.tileEntities.removeAll(tileRenderers);
 			this.isChunkLit = Chunk.isLit;
@@ -310,7 +312,7 @@ public class WorldRenderer {
 	}
 
 	public void setDontDraw() {
-		for(int var1 = 0; var1 < 2; ++var1) {
+		for(int var1 = 0; var1 < 3; ++var1) { //Spout
 			this.skipRenderPass[var1] = true;
 		}
 
@@ -322,13 +324,13 @@ public class WorldRenderer {
 		this.setDontDraw();
 		this.worldObj = null;
 	}
-
-	public int getGLCallListForPass(int var1) {
-		return !this.isInFrustum?-1:(!this.skipRenderPass[var1]?this.glRenderList + var1:-1);
+//Spout start
+	public int getGLCallListForPass(int par1) {
+		return !this.isInFrustum?-1:(!this.skipRenderPass[par1]?this.glRenderList + par1:-1);
 	}
 
-	public void updateInFrustrum(ICamera var1) {
-		this.isInFrustum = var1.isBoundingBoxInFrustum(this.rendererBoundingBox);
+	public void updateInFrustrum(ICamera par1ICamera) {
+		this.isInFrustum = par1ICamera.isBoundingBoxInFrustum(this.rendererBoundingBox);
 	}
 
 	public void callOcclusionQueryList() {
@@ -336,11 +338,10 @@ public class WorldRenderer {
 	}
 
 	public boolean skipAllRenderPasses() {
-		return !this.isInitialized?false:this.skipRenderPass[0] && this.skipRenderPass[1];
+		return !this.isInitialized?false:this.skipRenderPass[0] && this.skipRenderPass[1] && this.skipRenderPass[2];
 	}
-
+//Spout end
 	public void markDirty() {
 		this.needsUpdate = true;
 	}
-
 }

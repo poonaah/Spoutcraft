@@ -10,6 +10,9 @@ import net.minecraft.src.OpenGlHelper;
 import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
+//Spout Start
+import com.pclewis.mcpatcher.mod.Shaders;
+//Spout end
 
 public class Tessellator {
 
@@ -46,6 +49,10 @@ public class Tessellator {
 	private int bufferSize;
 	//Spout Start
 	public int textureOverride = 0;
+	//shaders
+	public ByteBuffer shadersBuffer;
+	public ShortBuffer shadersShortBuffer;
+	public short[] shadersData;
 	//Spout End
 
 
@@ -61,7 +68,11 @@ public class Tessellator {
 			this.vertexBuffers = GLAllocation.createDirectIntBuffer(this.vboCount);
 			ARBVertexBufferObject.glGenBuffersARB(this.vertexBuffers);
 		}
-
+		//Spout shaders start
+		this.shadersData = new short[]{(short)-1, (short)0};
+		this.shadersBuffer = GLAllocation.createDirectByteBuffer(par1 / 8 * 4);
+		this.shadersShortBuffer = this.shadersBuffer.asShortBuffer();
+		//Spout end
 	}
 
 	public int draw() {
@@ -139,11 +150,13 @@ public class Tessellator {
 				}
 
 				GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+				//Spout start
 				if (this.drawMode == 7 && convertQuadsToTriangles) {
-					GL11.glDrawArrays(4, 0, this.vertexCount);
+					Shaders.glDrawArraysWrapper(4, 0, this.vertexCount, this.shadersShortBuffer);
 				} else {
-					GL11.glDrawArrays(this.drawMode, 0, this.vertexCount);
+					Shaders.glDrawArraysWrapper(this.drawMode, 0, this.vertexCount, this.shadersShortBuffer);
 				}
+				//Spout end
 
 				GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
 				if (this.hasTexture) {
@@ -172,6 +185,7 @@ public class Tessellator {
 	}
 
 	private void reset() {
+		this.shadersBuffer.clear(); //Spout
 		this.vertexCount = 0;
 		this.byteBuffer.clear();
 		this.rawBufferIndex = 0;
@@ -270,6 +284,16 @@ public class Tessellator {
 	}
 
 	public void addVertex(double par1, double par3, double par5) {
+		//Spout start
+		if (this.drawMode == 7 && convertQuadsToTriangles && (this.addedVertices + 1) % 4 == 0 && this.hasNormals) {
+			this.rawBuffer[this.rawBufferIndex + 6] = this.rawBuffer[this.rawBufferIndex + -18];
+			this.shadersBuffer.putShort(this.shadersData[0]).putShort(this.shadersData[1]);
+			this.rawBuffer[this.rawBufferIndex + 14] = this.rawBuffer[this.rawBufferIndex + -2];
+			this.shadersBuffer.putShort(this.shadersData[0]).putShort(this.shadersData[1]);
+		}
+
+		this.shadersBuffer.putShort(this.shadersData[0]).putShort(this.shadersData[1]);
+		//Spout end
 		++this.addedVertices;
 		if (this.drawMode == 7 && convertQuadsToTriangles && this.addedVertices % 4 == 0) {
 			for (int var7 = 0; var7 < 2; ++var7) {
@@ -362,4 +386,11 @@ public class Tessellator {
 		this.zOffset += (double)par3;
 	}
 
+	//Spout start
+	public void setEntity(int var1) {
+		if (Shaders.entityAttrib >= 0) {
+			this.shadersData[0] = (short)var1;
+		}
+	}
+	//Spout end
 }
