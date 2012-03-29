@@ -18,6 +18,8 @@ import org.spoutcraft.spoutcraftapi.gui.ServerPlayerList;
 //Spout End
 import org.spoutcraft.spoutcraftapi.player.ChatMessage;
 
+import reifnsk.minimap.ReiMinimap;
+
 public class GuiIngame extends Gui
 {
 	private static RenderItem itemRenderer = new RenderItem();
@@ -148,7 +150,11 @@ public class GuiIngame extends Gui
 		}
 		RenderHelper.disableStandardItemLighting();
 		GL11.glDisable('\u803a');
-
+		
+		//Rei's minimap
+		ReiMinimap.instance.onTickInGame(mc);
+		//Rei's minimap
+		
 		if (this.mc.thePlayer.getSleepTimer() > 0) {
 			GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
 			GL11.glDisable(3008 /*GL_ALPHA_TEST*/);
