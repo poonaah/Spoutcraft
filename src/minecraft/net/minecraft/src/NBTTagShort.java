@@ -1,0 +1,49 @@
+package net.minecraft.src;
+
+import java.io.*;
+
+public class NBTTagShort extends NBTBase {
+	public short data;
+
+	public NBTTagShort(String par1Str) {
+		super(par1Str);
+	}
+
+	public NBTTagShort(String par1Str, short par2) {
+		super(par1Str);
+		data = par2;
+	}
+
+	void write(DataOutput par1DataOutput) throws IOException {
+		par1DataOutput.writeShort(data);
+	}
+
+	void load(DataInput par1DataInput) throws IOException {
+		data = par1DataInput.readShort();
+	}
+
+	public byte getId() {
+		return 2;
+	}
+
+	public String toString() {
+		return (new StringBuilder()).append("").append(data).toString();
+	}
+
+	public NBTBase copy() {
+		return new NBTTagShort(getName(), data);
+	}
+
+	public boolean equals(Object par1Obj) {
+		if (super.equals(par1Obj)) {
+			NBTTagShort nbttagshort = (NBTTagShort)par1Obj;
+			return data == nbttagshort.data;
+		} else {
+			return false;
+		}
+	}
+
+	public int hashCode() {
+		return super.hashCode() ^ data;
+	}
+}
