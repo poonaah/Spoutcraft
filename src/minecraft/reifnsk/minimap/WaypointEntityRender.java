@@ -62,7 +62,7 @@ public class WaypointEntityRender extends Render
             return;
         }
 
-        Collections.sort(arraylist);
+        //Collections.sort(arraylist);
         mc.entityRenderer.disableLightmap(0.0D);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_FOG);
