@@ -217,8 +217,10 @@ public abstract class Minecraft implements Runnable {
 		this.renderEngine.setTileSize(this);
 		// Spout End
 		this.loadScreen();
-		this.fontRenderer = new FontRenderer(this.gameSettings, "/font/default.png", this.renderEngine, false);
-		this.standardGalacticFontRenderer = new FontRenderer(this.gameSettings, "/font/alternate.png", this.renderEngine, false);
+		//this.fontRenderer = new FontRenderer(this.gameSettings, "/font/default.png", this.renderEngine, false);
+		//this.standardGalacticFontRenderer = new FontRenderer(this.gameSettings, "/font/alternate.png", this.renderEngine, false);
+		this.fontRenderer = new FontRenderer(this, "Verdana Bold", 14);
+		this.standardGalacticFontRenderer = new FontRenderer(this, "Verdana Bold", 14);
 		if (this.gameSettings.language != null) {
 			StringTranslate.getInstance().setLanguage(this.gameSettings.language);
 			this.fontRenderer.setUnicodeFlag(StringTranslate.getInstance().isUnicode());
