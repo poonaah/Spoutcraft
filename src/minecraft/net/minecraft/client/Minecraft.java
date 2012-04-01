@@ -279,7 +279,7 @@ public abstract class Minecraft implements Runnable {
 			this.displayGuiScreen(new GuiMainMenu());
 		}
 
-		this.loadingScreen = null;//new LoadingScreenRenderer(this); //Spout loading screen is too slow
+		this.loadingScreen = new LoadingScreenRenderer(this); 
 
 		// Spout Start
 		SpoutClient.getInstance().loadAddons();
@@ -1084,7 +1084,6 @@ public abstract class Minecraft implements Runnable {
 				int var5 = this.objectMouseOver.blockY;
 				int var6 = this.objectMouseOver.blockZ;
 				int var7 = this.objectMouseOver.sideHit;
-				System.out.println(var7);
 				if (par1 == 0) {
 					this.playerController.clickBlock(var4, var5, var6, this.objectMouseOver.sideHit);
 				} else {
@@ -1692,6 +1691,7 @@ public abstract class Minecraft implements Runnable {
 			renderEngine.refreshTextures();
 			SpoutClient.getInstance().onWorldExit();
 			SpoutClient.getInstance().disableAddons();
+			SpoutClient.getInstance().clearPermissions();
 			// Spout End
 		}
 
@@ -1833,10 +1833,12 @@ public abstract class Minecraft implements Runnable {
 		//Spout start
 		if (var9 != null) {
 			this.thePlayer.setData(var9.getData()); //even in MP still need to copy Spout data across
-			String name = "Death " + new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-			Waypoint death = new Waypoint(name, (int)var9.posX, (int)var9.posY, (int)var9.posZ, true);
-			death.deathpoint = true;
-			MinimapConfig.getInstance().addWaypoint(death);
+			if (var9.health <= 0) {
+				String name = "Death " + new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+				Waypoint death = new Waypoint(name, (int)var9.posX, (int)var9.posY, (int)var9.posZ, true);
+				death.deathpoint = true;
+				MinimapConfig.getInstance().addWaypoint(death);
+			}
 		}
 		//Spout end
 

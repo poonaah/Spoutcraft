@@ -1,110 +1,104 @@
 package net.minecraft.src;
 
-import java.util.List;
-
 public class ContainerWorkbench extends Container {
-	public InventoryCrafting craftMatrix;
-	public IInventory craftResult;
+	public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
+	public IInventory craftResult = new InventoryCraftResult();
 	private World worldObj;
 	private int posX;
 	private int posY;
 	private int posZ;
 
 	public ContainerWorkbench(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5) {
-		craftMatrix = new InventoryCrafting(this, 3, 3);
-		craftResult = new InventoryCraftResult();
-		worldObj = par2World;
-		posX = par3;
-		posY = par4;
-		posZ = par5;
-		addSlot(new SlotCrafting(par1InventoryPlayer.player, craftMatrix, craftResult, 0, 124, 35));
+		this.worldObj = par2World;
+		this.posX = par3;
+		this.posY = par4;
+		this.posZ = par5;
+		this.addSlot(new SlotCrafting(par1InventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 124, 35));
 
-		for (int i = 0; i < 3; i++) {
-			for (int l = 0; l < 3; l++) {
-				addSlot(new Slot(craftMatrix, l + i * 3, 30 + l * 18, 17 + i * 18));
+		int var6;
+		int var7;
+		for (var6 = 0; var6 < 3; ++var6) {
+			for (var7 = 0; var7 < 3; ++var7) {
+				this.addSlot(new Slot(this.craftMatrix, var7 + var6 * 3, 30 + var7 * 18, 17 + var6 * 18));
 			}
 		}
 
-		for (int j = 0; j < 3; j++) {
-			for (int i1 = 0; i1 < 9; i1++) {
-				addSlot(new Slot(par1InventoryPlayer, i1 + j * 9 + 9, 8 + i1 * 18, 84 + j * 18));
+		for (var6 = 0; var6 < 3; ++var6) {
+			for (var7 = 0; var7 < 9; ++var7) {
+				this.addSlot(new Slot(par1InventoryPlayer, var7 + var6 * 9 + 9, 8 + var7 * 18, 84 + var6 * 18));
 			}
 		}
 
-		for (int k = 0; k < 9; k++) {
-			addSlot(new Slot(par1InventoryPlayer, k, 8 + k * 18, 142));
+		for (var6 = 0; var6 < 9; ++var6) {
+			this.addSlot(new Slot(par1InventoryPlayer, var6, 8 + var6 * 18, 142));
 		}
 
-		onCraftMatrixChanged(craftMatrix);
+		this.onCraftMatrixChanged(this.craftMatrix);
 	}
+	
+	//Spout start
+	public IInventory getInventory() {
+		return null;
+	}
+	//Spout end
 
 	public void onCraftMatrixChanged(IInventory par1IInventory) {
-		craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(craftMatrix));
+		this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix));
 	}
 
 	public void onCraftGuiClosed(EntityPlayer par1EntityPlayer) {
 		super.onCraftGuiClosed(par1EntityPlayer);
-
-		if (worldObj.isRemote) {
-			return;
-		}
-
-		for (int i = 0; i < 9; i++) {
-			ItemStack itemstack = craftMatrix.getStackInSlotOnClosing(i);
-
-			if (itemstack != null) {
-				par1EntityPlayer.dropPlayerItem(itemstack);
+		if (!this.worldObj.isRemote) {
+			for (int var2 = 0; var2 < 9; ++var2) {
+				ItemStack var3 = this.craftMatrix.getStackInSlotOnClosing(var2);
+				if (var3 != null) {
+					par1EntityPlayer.dropPlayerItem(var3);
+				}
 			}
 		}
 	}
 
 	public boolean canInteractWith(EntityPlayer par1EntityPlayer) {
-		if (worldObj.getBlockId(posX, posY, posZ) != Block.workbench.blockID) {
-			return false;
-		}
-
-		return par1EntityPlayer.getDistanceSq((double)posX + 0.5D, (double)posY + 0.5D, (double)posZ + 0.5D) <= 64D;
+		return this.worldObj.getBlockId(this.posX, this.posY, this.posZ) != Block.workbench.blockID?false:par1EntityPlayer.getDistanceSq((double)this.posX + 0.5D, (double)this.posY + 0.5D, (double)this.posZ + 0.5D) <= 64.0D;
 	}
 
 	public ItemStack transferStackInSlot(int par1) {
-		ItemStack itemstack = null;
-		Slot slot = (Slot)inventorySlots.get(par1);
-
-		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
-
+		ItemStack var2 = null;
+		Slot var3 = (Slot)this.inventorySlots.get(par1);
+		if (var3 != null && var3.getHasStack()) {
+			ItemStack var4 = var3.getStack();
+			var2 = var4.copy();
 			if (par1 == 0) {
-				if (!mergeItemStack(itemstack1, 10, 46, true)) {
+				if (!this.mergeItemStack(var4, 10, 46, true)) {
 					return null;
 				}
 
-				slot.func_48433_a(itemstack1, itemstack);
+				var3.func_48433_a(var4, var2);
 			} else if (par1 >= 10 && par1 < 37) {
-				if (!mergeItemStack(itemstack1, 37, 46, false)) {
+				if (!this.mergeItemStack(var4, 37, 46, false)) {
 					return null;
 				}
 			} else if (par1 >= 37 && par1 < 46) {
-				if (!mergeItemStack(itemstack1, 10, 37, false)) {
+				if (!this.mergeItemStack(var4, 10, 37, false)) {
 					return null;
 				}
-			} else if (!mergeItemStack(itemstack1, 10, 46, false)) {
+			} else if (!this.mergeItemStack(var4, 10, 46, false)) {
 				return null;
 			}
 
-			if (itemstack1.stackSize == 0) {
-				slot.putStack(null);
+			if (var4.stackSize == 0) {
+				var3.putStack((ItemStack)null);
 			} else {
-				slot.onSlotChanged();
+				var3.onSlotChanged();
 			}
 
-			if (itemstack1.stackSize != itemstack.stackSize) {
-				slot.onPickupFromSlot(itemstack1);
-			} else {
+			if (var4.stackSize == var2.stackSize) {
 				return null;
 			}
+
+			var3.onPickupFromSlot(var4);
 		}
 
-		return itemstack;
+		return var2;
 	}
 }

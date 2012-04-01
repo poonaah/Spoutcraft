@@ -49,7 +49,7 @@ public class GuiIngame extends Gui
 
 	/** Previous frame vignette brightness (slowly changes by 1% each frame) */
 	float prevVignetteBrightness;
-	
+
 	private boolean keyStates[];
 	MovingObjectPosition bottomblock;
 	int x;
@@ -95,7 +95,6 @@ public class GuiIngame extends Gui
 			return false;
 		}
 	}
-
 	/**
 	 * Render the ingame overlay with quick icon bar, ...
 	 */
@@ -103,7 +102,6 @@ public class GuiIngame extends Gui
 	//Most of function rewritten
 	public void renderGameOverlay(float f, boolean flag, int i, int j)
 	{
-		
 		if(checkKey(Keyboard.KEY_NUMPAD1))
 		{			
 			if(mc.thePlayer.stepHeight == 1.0F)
@@ -117,6 +115,7 @@ public class GuiIngame extends Gui
 				mc.thePlayer.stepHeight = 1.0F;
 			}
 		}
+		
 		
 		if(checkKey(Keyboard.KEY_NUMPAD0))
 		{
@@ -292,8 +291,6 @@ public class GuiIngame extends Gui
 		}
 		
 		
-		
-		
 		SpoutClient.getInstance().onTick();
 		InGameHUD mainScreen = SpoutClient.getInstance().getActivePlayer().getMainScreen();
 
@@ -383,7 +380,7 @@ public class GuiIngame extends Gui
 		//Rei's minimap
 		ReiMinimap.instance.onTickInGame(mc);
 		//Rei's minimap
-		
+
 		if (this.mc.thePlayer.getSleepTimer() > 0) {
 			GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
 			GL11.glDisable(3008 /*GL_ALPHA_TEST*/);
