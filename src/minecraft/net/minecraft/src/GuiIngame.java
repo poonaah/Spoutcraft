@@ -3,6 +3,8 @@ package net.minecraft.src;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import me.spowney.spowtcraft.spowtcraft;
 import net.minecraft.client.Minecraft;
 
 import org.lwjgl.input.Keyboard;
@@ -53,7 +55,6 @@ public class GuiIngame extends Gui
 	int x;
 	int y;
 	int z;
-	boolean started = false;
 	
 	int c1;
 	int c2;
@@ -103,11 +104,25 @@ public class GuiIngame extends Gui
 	public void renderGameOverlay(float f, boolean flag, int i, int j)
 	{
 		
+		if(checkKey(Keyboard.KEY_NUMPAD1))
+		{			
+			if(mc.thePlayer.stepHeight == 1.0F)
+			{
+				spowtcraft.step = true;
+				mc.thePlayer.stepHeight = 0.5F;
+			}
+			else
+			{
+				spowtcraft.step = true;
+				mc.thePlayer.stepHeight = 1.0F;
+			}
+		}
+		
 		if(checkKey(Keyboard.KEY_NUMPAD0))
 		{
-			if(started)
+			if(spowtcraft.obbybot)
 			{
-				started = false;
+				spowtcraft.obbybot = false;
 			}
 			else
 			{
@@ -124,12 +139,12 @@ public class GuiIngame extends Gui
 					c3=0;
 					c4 = 0;
 					
-					started = true;
+					spowtcraft.obbybot = true;
 				}
 			}
 		}
 		
-		if(started)
+		if(spowtcraft.obbybot)
 		{
 			pick = mc.thePlayer.inventory.mainInventory[0];
 			
@@ -174,7 +189,7 @@ public class GuiIngame extends Gui
 			
 			if(redstone == null || pick == null || redstone.itemID != 331 || pick.itemID != 278)
 			{
-				started = false;
+				spowtcraft.obbybot = false;
 				//System.out.println("obsidian bot cancelled");
 				return;
 			}
