@@ -1396,6 +1396,7 @@ public class RenderGlobal implements IWorldAccess {
 
 	private void drawOutlinedBoundingBox(AxisAlignedBB par1AxisAlignedBB) {
 		Tessellator var2 = Tessellator.instance;
+		GL11.glColor3f(1.0F, 0F, 0F);
 		var2.startDrawing(3);
 		var2.addVertex(par1AxisAlignedBB.minX, par1AxisAlignedBB.minY, par1AxisAlignedBB.minZ);
 		var2.addVertex(par1AxisAlignedBB.maxX, par1AxisAlignedBB.minY, par1AxisAlignedBB.minZ);
