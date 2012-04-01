@@ -219,8 +219,8 @@ public abstract class Minecraft implements Runnable {
 		this.loadScreen();
 		//this.fontRenderer = new FontRenderer(this.gameSettings, "/font/default.png", this.renderEngine, false);
 		//this.standardGalacticFontRenderer = new FontRenderer(this.gameSettings, "/font/alternate.png", this.renderEngine, false);
-		this.fontRenderer = new FontRenderer(this, "Verdana Bold", 14);
-		this.standardGalacticFontRenderer = new FontRenderer(this, "Verdana Bold", 14);
+		this.fontRenderer = new FontRenderer(this, "Verdana Bold", 16);
+		this.standardGalacticFontRenderer = new FontRenderer(this, "Verdana Bold", 16);
 		if (this.gameSettings.language != null) {
 			StringTranslate.getInstance().setLanguage(this.gameSettings.language);
 			this.fontRenderer.setUnicodeFlag(StringTranslate.getInstance().isUnicode());
@@ -1084,6 +1084,7 @@ public abstract class Minecraft implements Runnable {
 				int var5 = this.objectMouseOver.blockY;
 				int var6 = this.objectMouseOver.blockZ;
 				int var7 = this.objectMouseOver.sideHit;
+				System.out.println(var7);
 				if (par1 == 0) {
 					this.playerController.clickBlock(var4, var5, var6, this.objectMouseOver.sideHit);
 				} else {

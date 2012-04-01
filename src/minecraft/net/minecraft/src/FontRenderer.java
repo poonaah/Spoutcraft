@@ -109,7 +109,7 @@ public class FontRenderer {
 		return Arrays.asList(this.func_50113_d(par1Str, par2).split("\n"));
 	}
 	
-	String func_50113_d(String par1Str, int par2) {
+	public String func_50113_d(String par1Str, int par2) {
 		int var3 = this.func_50102_e(par1Str, par2);
 		if (par1Str.length() <= var3) {
 			return par1Str;
@@ -261,8 +261,8 @@ public class FontRenderer {
 		//drawString(fontRenderer, line, chatWidget.getCursorX(), chatWidget.getCursorY() - 12 * size--, color);
 
 		GL11.glScalef(0.5F, 0.5F, 0.5F);
-		renderString(par1Str, (int)(par2*2), (par3*2)-2, true, par4);
-		renderString(par1Str, (int)(par2*2), (par3*2)-2, false, par4);
+		renderString(par1Str, (int)(par2*2), (par3*2)-5, true, par4);
+		renderString(par1Str, (int)(par2*2), (par3*2)-5, false, par4);
 		GL11.glScalef(2F, 2F, 2F);
 
 
@@ -271,7 +271,7 @@ public class FontRenderer {
 	public void drawString(String par1Str, int par2, int par3, int par4) {
 
 		GL11.glScalef(0.5F, 0.5F, 0.5F);
-		renderString(par1Str, (int)(par2*2), (par3*2)-3, false, par4);
+		renderString(par1Str, (int)(par2*2), (par3*2)-5, false, par4);
 		GL11.glScalef(2F, 2F, 2F);
 
 	}
@@ -286,8 +286,8 @@ public class FontRenderer {
         if(shade)
         {
         	GL11.glColor4f(0.20F, 0.20F, 0.20F, 255);
-        	x +=3;
-        	y +=3;
+        	x +=2;
+        	y +=1;
         }
         else
         {
