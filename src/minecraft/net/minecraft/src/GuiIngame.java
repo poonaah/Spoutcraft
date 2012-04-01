@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import net.minecraft.client.Minecraft;
+
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 //Spout Start
@@ -45,6 +47,23 @@ public class GuiIngame extends Gui
 
 	/** Previous frame vignette brightness (slowly changes by 1% each frame) */
 	float prevVignetteBrightness;
+	
+	private boolean keyStates[];
+	MovingObjectPosition bottomblock;
+	int x;
+	int y;
+	int z;
+	boolean started = false;
+	
+	int c1;
+	int c2;
+	int c3;
+	int c4;
+	
+	int s;
+	
+	ItemStack pick;
+	ItemStack redstone;
 
 	public GuiIngame(Minecraft par1Minecraft)
 	{
@@ -56,6 +75,24 @@ public class GuiIngame extends Gui
 		recordIsPlaying = false;
 		prevVignetteBrightness = 1.0F;
 		mc = par1Minecraft;
+		
+		keyStates = new boolean[256];
+	}
+	
+	public boolean checkKey(int i)
+	{
+		if(mc.currentScreen != null)
+		{
+			return false;
+		}
+		if(Keyboard.isKeyDown(i) != keyStates[i])
+		{
+			return keyStates[i] = !keyStates[i];
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -65,6 +102,183 @@ public class GuiIngame extends Gui
 	//Most of function rewritten
 	public void renderGameOverlay(float f, boolean flag, int i, int j)
 	{
+		
+		if(checkKey(Keyboard.KEY_NUMPAD0))
+		{
+			if(started)
+			{
+				started = false;
+			}
+			else
+			{
+				if(mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == EnumMovingObjectType.TILE)
+				{
+					bottomblock = mc.objectMouseOver;
+					
+					x = bottomblock.blockX;
+					y = bottomblock.blockY;
+					z = bottomblock.blockZ;
+					
+					c1 = 0;
+					c2=0;
+					c3=0;
+					c4 = 0;
+					
+					started = true;
+				}
+			}
+		}
+		
+		if(started)
+		{
+			pick = mc.thePlayer.inventory.mainInventory[0];
+			
+			if(pick == null || (pick != null && pick.itemID != 278))
+			{
+				for(int k = 2; k < 36; k++)
+                {
+					ItemStack itemstack1 = mc.thePlayer.inventory.mainInventory[k];
+                    if(itemstack1 != null && itemstack1.itemID == 278)
+                    {
+                        mc.playerController.windowClick(0, 36, 0, false, mc.thePlayer);
+                        if(k<9)s=k+36;
+                        else s=k;
+                        mc.playerController.windowClick(0, s, 0, false, mc.thePlayer);
+                        mc.playerController.windowClick(0, 36, 0, false, mc.thePlayer);
+                        break;
+                    }
+                }
+			}
+			
+			redstone = mc.thePlayer.inventory.mainInventory[1];
+			
+			if(redstone == null || (redstone != null && redstone.itemID != 331))
+			{
+				for(int k = 2; k < 36; k++)
+                {
+					ItemStack itemstack1 = mc.thePlayer.inventory.mainInventory[k];
+                    if(itemstack1 != null && itemstack1.itemID == 331)
+                    {
+                        mc.playerController.windowClick(0, 37, 0, false, mc.thePlayer);
+                        if(k<9)s=k+36;
+                        else s=k;
+                        mc.playerController.windowClick(0, s, 0, false, mc.thePlayer);
+                        mc.playerController.windowClick(0, 37, 0, false, mc.thePlayer);
+                        break;
+                    }
+                }
+			}
+			
+			redstone = mc.thePlayer.inventory.mainInventory[1];
+			pick = mc.thePlayer.inventory.mainInventory[0];
+			
+			if(redstone == null || pick == null || redstone.itemID != 331 || pick.itemID != 278)
+			{
+				started = false;
+				//System.out.println("obsidian bot cancelled");
+				return;
+			}
+			
+			int id1 = mc.theWorld.getBlockId(x, y+1, z);
+			boolean pistonpowered;
+			
+			if(mc.theWorld.getBlockId(x+1, y+1, z) == 34)
+			{
+				pistonpowered = true;
+			}
+			else
+			{
+				pistonpowered = false;
+			}
+
+			if(id1 == 0)
+			{
+				c4=0;
+				//mc.thePlayer.sendChatMessage("place redstone");
+				
+				if(c1 ==0)
+					{
+					mc.thePlayer.inventory.currentItem = 1;
+					mc.getSendQueue().addToSendQueue(new Packet15Place(x, y, z, 1, mc.thePlayer.inventory.getCurrentItem()));
+					mc.thePlayer.swingItem();
+					}
+				else if(c1 == 300) c1 = -1;
+				c1++;
+			}
+			
+			else if(id1 == 55 && pistonpowered)
+			{
+				c1=0;
+				c3=0;
+				c4=0;
+				//mc.thePlayer.sendChatMessage("flick switch");
+				
+				if(c2 == 0)
+				{
+					mc.getSendQueue().addToSendQueue(new Packet15Place(x, y+2, z-1, 3, mc.thePlayer.inventory.getCurrentItem()));
+					mc.thePlayer.swingItem();
+				}
+				else if(c2==2000)
+				{
+					c2= -1;
+				}
+				
+				c2++;
+			}
+			
+			else if(id1 == 49 && !pistonpowered)
+			{
+				c1=0;
+				c2=0;
+				c4=0;
+				//mc.thePlayer.sendChatMessage("flick switch again");
+				
+				if(c3 == 0)
+				{
+					mc.getSendQueue().addToSendQueue(new Packet15Place(x, y+2, z-1, 3, mc.thePlayer.inventory.getCurrentItem()));
+					mc.thePlayer.swingItem();
+					System.out.println("flicking switch");
+				}
+				else if(c3==2000)
+				{
+					c3= -1;
+				}
+				
+				
+				c3++;
+			}
+			
+			else if(id1 == 49 && pistonpowered)
+			{
+				c1=0;
+				c2=0;
+				c3=0;
+				//mc.thePlayer.sendChatMessage("mine obsidian");
+				
+				mc.thePlayer.swingItem();
+				if(c4 == 0)
+				{
+						//System.out.println("sent dig packet");
+						mc.thePlayer.inventory.currentItem = 0;
+						mc.getSendQueue().addToSendQueue(new Packet14BlockDig(0, x, y+1, z, 1));
+						mc.getSendQueue().addToSendQueue(new Packet14BlockDig(2, x, y+1, z, 1));
+						//mc.clickMouse(0);
+
+				}
+				else if(c4==5000)
+				{
+					c4=-1;
+					System.out.println("resetting timer");
+				}
+				
+				c4++;
+			}
+			
+		}
+		
+		
+		
+		
 		SpoutClient.getInstance().onTick();
 		InGameHUD mainScreen = SpoutClient.getInstance().getActivePlayer().getMainScreen();
 
