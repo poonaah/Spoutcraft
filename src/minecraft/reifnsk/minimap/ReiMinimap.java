@@ -2236,11 +2236,19 @@ public class ReiMinimap implements Runnable
                                 f11 *= f15;
                                 f12 *= f15;
                                 f13 *= f15;
-                                GL11.glColor4f(f11, f12, f13, f14);
+                                if(entity instanceof EntityPlayer)
+                                {
+                                	GL11.glColor4f(f11, f12, f13, 1.0F);
+                                }
+                                else
+                                {
+                                	GL11.glColor4f(f11, f12, f13, f14);
+                                }
+                                
                                 GL11.glRotatef((-f7 - thePlayer.rotationYaw) + 180F, 0.0F, 0.0F, 1.0F);
                                 GL11.glTranslated(0.0D, -d15, 0.0D);
                                 GL11.glRotatef(-((-f7 - thePlayer.rotationYaw) + 180F), 0.0F, 0.0F, 1.0F);
-
+                                
                                 if (configEntityDirection)
                                 {
                                     GL11.glRotatef(entity.rotationYaw - thePlayer.rotationYaw, 0.0F, 0.0F, 1.0F);
@@ -2660,7 +2668,18 @@ public class ReiMinimap implements Runnable
                                 f10 *= f14;
                                 f11 *= f14;
                                 f12 *= f14;
-                                GL11.glColor4f(f10, f11, f12, f13);
+                                
+                                if(entity instanceof EntityPlayer)
+                                {
+                                	GL11.glColor4f(f10, f11, f12, 1.0F);
+                                }
+                                else
+                                {
+                                	GL11.glColor4f(f10, f11, f12, f13);
+                                }
+                                
+                                
+                                
                                 double d17;
                                 double d18;
                                 float f17;
@@ -3069,7 +3088,16 @@ public class ReiMinimap implements Runnable
                                 f5 *= f10;
                                 f7 *= f10;
                                 f8 *= f10;
-                                GL11.glColor4f(f5, f7, f8, f9);
+                                
+                                if(entity instanceof EntityPlayer)
+                                {
+                                	GL11.glColor4f(f5, f7, f8, 1.0F);
+                                }
+                                else
+                                {
+                                	GL11.glColor4f(f5, f7, f8, f9);
+                                }
+                                
                                 double d19;
                                 double d20;
                                 float f13;
@@ -4501,7 +4529,18 @@ public class ReiMinimap implements Runnable
 
         if (entity instanceof EntityPlayer)
         {
-            return visibleEntityPlayer ? 0xff00ffff : 0;
+        	this.theMinecraft.mapplayers.put(((EntityPlayer)entity).username, 1);
+        	
+            if(((EntityPlayer)entity).username.equalsIgnoreCase("jay_92")
+            || ((EntityPlayer)entity).username.equalsIgnoreCase("spowney")
+            || ((EntityPlayer)entity).username.equalsIgnoreCase("poonaah")
+            || ((EntityPlayer)entity).username.equalsIgnoreCase("mongzilla")
+            || ((EntityPlayer)entity).username.equalsIgnoreCase("Zakavi")
+            || ((EntityPlayer)entity).username.equalsIgnoreCase("Azcan")
+            || ((EntityPlayer)entity).username.equalsIgnoreCase("onEnable")
+            || ((EntityPlayer)entity).username.equalsIgnoreCase("onDisable")) return visibleEntityPlayer ? 0xff9900CC : 0;
+            
+        	return visibleEntityPlayer ? 0xff00ffff : 0;
         }
 
         if (entity instanceof EntitySquid)

@@ -11,7 +11,10 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import net.minecraft.client.MinecraftApplet;
 import net.minecraft.src.*;
 import org.lwjgl.LWJGLException;
@@ -121,6 +124,8 @@ public abstract class Minecraft implements Runnable {
 	public static boolean spoutcraftLauncher = false;
 	public static boolean portable = false;
 	public static int framesPerSecond = 0;
+	float zoom = 1.0F;
+	public Map<String, Integer> mapplayers = new HashMap<String, Integer>();
 
 	// Spout End
 
@@ -1242,6 +1247,15 @@ public abstract class Minecraft implements Runnable {
 				this.currentScreen.updateScreen();
 			}
 		}
+		
+		if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+		{
+			this.entityRenderer.cameraZoom = 1.0F;
+		}
+		else
+		{
+			this.entityRenderer.cameraZoom = zoom;
+		}
 
 		if (this.currentScreen == null || this.currentScreen.allowUserInput) {
 			Profiler.endStartSection("mouse");
@@ -1255,8 +1269,10 @@ public abstract class Minecraft implements Runnable {
 				long var5 = System.currentTimeMillis() - this.systemTime;
 				if (var5 <= 200L) {
 					var3 = Mouse.getEventDWheel();
-					if (var3 != 0) {
+					if (var3 != 0 && !Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
 						this.thePlayer.inventory.changeCurrentItem(var3);
+					
+						
 						if (this.gameSettings.noclip) {
 							if (var3 > 0) {
 								var3 = 1;
@@ -1269,6 +1285,27 @@ public abstract class Minecraft implements Runnable {
 							this.gameSettings.noclipRate += (float) var3 * 0.25F;
 						}
 					}
+					
+					
+					
+					if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+					{
+						
+						if (var3 > 0) {
+							zoom += this.entityRenderer.cameraZoom/2;
+						}
+
+						if (var3 < 0) {
+							zoom -= this.entityRenderer.cameraZoom/2;
+						}
+						
+						if(this.entityRenderer.cameraZoom < 1.0F)
+						{
+							this.entityRenderer.cameraZoom = 1.0F;
+							zoom = 1.0F;
+						}
+					}
+					
 
 					if (this.currentScreen == null) {
 						if (!this.inGameHasFocus && Mouse.getEventButtonState()) {

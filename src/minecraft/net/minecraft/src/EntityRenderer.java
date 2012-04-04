@@ -56,7 +56,7 @@ public class EntityRenderer {
 	private float fovModifierHandPrev;
 	private float fovMultiplierTemp;
 	private boolean cloudFog = false;
-	private double cameraZoom = 1.0D;
+	public double cameraZoom = 1.0D;
 	private double cameraYaw = 0.0D;
 	private double cameraPitch = 0.0D;
 	private long prevFrameTime = System.currentTimeMillis();
@@ -699,7 +699,7 @@ public class EntityRenderer {
 		Profiler.startSection("mouse");
 		if (this.mc.inGameHasFocus) {
 			this.mc.mouseHelper.mouseXYChange();
-			float var2 = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
+			float var2 = (float) ((this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F) / Math.cbrt(this.cameraZoom));
 			float var3 = var2 * var2 * var2 * 8.0F;
 			float var4 = (float)this.mc.mouseHelper.deltaX * var3;
 			float var5 = (float)this.mc.mouseHelper.deltaY * var3;

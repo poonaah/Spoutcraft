@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL12;
 import org.spoutcraft.client.SpoutClient;
 import org.spoutcraft.client.config.ConfigReader;
 import org.spoutcraft.client.gui.minimap.ZanMinimap;
+import org.spoutcraft.spoutcraftapi.ChatColor;
 import org.spoutcraft.spoutcraftapi.Spoutcraft;
 import org.spoutcraft.spoutcraftapi.gui.ChatTextBox;
 import org.spoutcraft.spoutcraftapi.gui.Color;
@@ -63,6 +64,8 @@ public class GuiIngame extends Gui
 	
 	int s;
 	
+	boolean slimefinder = false;
+	
 	ItemStack pick;
 	ItemStack redstone;
 
@@ -78,6 +81,7 @@ public class GuiIngame extends Gui
 		mc = par1Minecraft;
 		
 		keyStates = new boolean[256];
+
 	}
 	
 	public boolean checkKey(int i)
@@ -102,6 +106,24 @@ public class GuiIngame extends Gui
 	//Most of function rewritten
 	public void renderGameOverlay(float f, boolean flag, int i, int j)
 	{
+		if(slimefinder)
+		{
+		for(Object e : mc.theWorld.loadedEntityList)
+		{
+			if(e instanceof EntitySlime)
+			{
+				mc.thePlayer.addChatMessage("Slime @ " + ((EntitySlime)e).posX + "   " + ((EntitySlime)e).posY + "   "+ ((EntitySlime)e).posZ);
+			}
+		}
+		
+		mc.thePlayer.addChatMessage(" " + mc.theWorld.getSeed());
+		}
+		
+		if(checkKey(Keyboard.KEY_NUMPAD2))
+		{
+			slimefinder = !slimefinder;
+		}
+		
 		if(checkKey(Keyboard.KEY_NUMPAD1))
 		{			
 			if(mc.thePlayer.stepHeight == 1.0F)
@@ -544,7 +566,7 @@ public class GuiIngame extends Gui
 		ServerPlayerList playerList = mainScreen.getServerPlayerList();
 		if(this.mc.thePlayer instanceof EntityClientPlayerMP && this.mc.gameSettings.keyBindPlayerList.pressed && playerList.isVisible()) {
 			NetClientHandler var41 = ((EntityClientPlayerMP)this.mc.thePlayer).sendQueue;
-			List var44 = var41.playerNames;
+			List var44 = var41.playerNames;	
 			int var40 = var41.currentServerMaxPlayers;
 			int var38 = var40;
 			int var16;
@@ -569,7 +591,19 @@ public class GuiIngame extends Gui
 				GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
 				if(var20 < var44.size()) {
 					GuiPlayerInfo var50 = (GuiPlayerInfo)var44.get(var20);
-					font.drawStringWithShadow(var50.name, var47, var22, 16777215);
+
+					String name = "";
+					
+					if(this.mc.mapplayers.containsKey(var50.name))
+					{
+						name = name + ChatColor.RED + var50.name;
+					}
+					else
+					{
+						name = var50.name;
+					}
+					
+					font.drawStringWithShadow(name, var47, var22, 16777215);
 					this.mc.renderEngine.bindTexture(this.mc.renderEngine.getTexture("/gui/icons.png"));
 					boolean var48 = false;
 					boolean var53 = false;
