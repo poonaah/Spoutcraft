@@ -2201,7 +2201,7 @@ public class ReiMinimap implements Runnable
             ArrayList arraylist = new ArrayList();
             arraylist.addAll(theWorld.loadedEntityList);
             Iterator iterator1 = arraylist.iterator();
-
+            this.theMinecraft.mapplayers.clear();
             do
             {
                 if (!iterator1.hasNext())
@@ -2236,7 +2236,7 @@ public class ReiMinimap implements Runnable
                                 f11 *= f15;
                                 f12 *= f15;
                                 f13 *= f15;
-                                if(entity instanceof EntityPlayer)
+                                if(entity instanceof EntityPlayer || entity instanceof EntitySlime)
                                 {
                                 	GL11.glColor4f(f11, f12, f13, 1.0F);
                                 }
@@ -2244,6 +2244,7 @@ public class ReiMinimap implements Runnable
                                 {
                                 	GL11.glColor4f(f11, f12, f13, f14);
                                 }
+                                
                                 
                                 GL11.glRotatef((-f7 - thePlayer.rotationYaw) + 180F, 0.0F, 0.0F, 1.0F);
                                 GL11.glTranslated(0.0D, -d15, 0.0D);
@@ -4538,6 +4539,7 @@ public class ReiMinimap implements Runnable
             || ((EntityPlayer)entity).username.equalsIgnoreCase("Zakavi")
             || ((EntityPlayer)entity).username.equalsIgnoreCase("Azcan")
             || ((EntityPlayer)entity).username.equalsIgnoreCase("onEnable")
+            || ((EntityPlayer)entity).username.equalsIgnoreCase("onPigZapEvent")
             || ((EntityPlayer)entity).username.equalsIgnoreCase("onDisable")) return visibleEntityPlayer ? 0xff9900CC : 0;
             
         	return visibleEntityPlayer ? 0xff00ffff : 0;

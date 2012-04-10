@@ -115,9 +115,68 @@ public class GuiIngame extends Gui
 				mc.thePlayer.addChatMessage("Slime @ " + ((EntitySlime)e).posX + "   " + ((EntitySlime)e).posY + "   "+ ((EntitySlime)e).posZ);
 			}
 		}
-		
-		mc.thePlayer.addChatMessage(" " + mc.theWorld.getSeed());
 		}
+		
+		
+		if(checkKey(Keyboard.KEY_DOWN))
+		{
+			double x = mc.thePlayer.posX;
+			double y = mc.thePlayer.posY;
+			double z = mc.thePlayer.posZ;
+			
+		    double d = y - (double)2.0F;
+		    for(int l2 = 0; l2 < 2; l2++)
+		    {
+		    mc.thePlayer.setLocationAndAngles(x, d, z, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
+		    mc.getSendQueue().addToSendQueue(new Packet11PlayerPosition(x, d - 1.0D, d, z, true));
+		    }
+		    
+		    d = d - (double)1.0F;
+		    for(int l2 = 0; l2 < 2; l2++)
+		    {
+		    mc.thePlayer.setLocationAndAngles(x, d, z, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
+		    mc.getSendQueue().addToSendQueue(new Packet11PlayerPosition(x, d - 1.0D, d, z, true));
+		    }
+		    
+		    d = d - (double)1.0F;
+		    for(int l2 = 0; l2 < 2; l2++)
+		    {
+		    mc.thePlayer.setLocationAndAngles(x, d, z, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
+		    mc.getSendQueue().addToSendQueue(new Packet11PlayerPosition(x, d - 1.0D, d, z, true));
+		    }
+		}
+		
+		if(checkKey(Keyboard.KEY_LEFT))
+		{
+			double x = mc.thePlayer.posX;
+			double y = mc.thePlayer.posY;
+			double z = mc.thePlayer.posZ;
+			
+		    double d = y - (double)7.0F;
+		    for(int l2 = 0; l2 < 2; l2++)
+		    {
+		    mc.thePlayer.setLocationAndAngles(x, d, z, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
+		    mc.getSendQueue().addToSendQueue(new Packet11PlayerPosition(x, d - 1.0D, d, z, true));
+		    }
+
+		}
+		
+		
+		
+		if(checkKey(Keyboard.KEY_UP))
+		{
+			double x = mc.thePlayer.posX;
+			double y = mc.thePlayer.posY;
+			double z = mc.thePlayer.posZ;
+			
+		    double d = y;
+		    for(int l2 = 0; l2 < 2; l2++)
+		    {
+		    mc.thePlayer.setLocationAndAngles(x, d, z, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
+		    mc.getSendQueue().addToSendQueue(new Packet11PlayerPosition(x, d - 1.0D, d, z, true));
+		    }
+		}
+		
 		
 		if(checkKey(Keyboard.KEY_NUMPAD2))
 		{
